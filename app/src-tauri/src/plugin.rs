@@ -15,21 +15,26 @@ pub fn pinia(app: &AppHandle) -> BoxResult<TauriPlugin<Wry>> {
 }
 
 pub fn prevent_default() -> TauriPlugin<Wry> {
-  use tauri_plugin_prevent_default::{Builder, Flags, PlatformOptions};
-  Builder::new()
-    .with_flags(Flags::debug())
-    .platform(
-      PlatformOptions::new()
-        .browser_accelerator_keys(cfg!(debug_assertions))
-        .default_context_menus(cfg!(debug_assertions))
-        .default_script_dialogs(cfg!(debug_assertions))
-        .general_autofill(false)
-        .password_autosave(false)
-        .pinch_zoom(false)
-        .swipe_navigation(false)
-        .zoom_control(false),
-    )
-    .build()
+  #[cfg(windows)]
+  use tauri_plugin_prevent_default::PlatformOptions;
+  use tauri_plugin_prevent_default::{Builder, Flags};
+
+  let builder = Builder::new().with_flags(Flags::debug());
+
+  #[cfg(windows)]
+  let builder = builder.platform(
+    PlatformOptions::new()
+      .browser_accelerator_keys(cfg!(debug_assertions))
+      .default_context_menus(cfg!(debug_assertions))
+      .default_script_dialogs(cfg!(debug_assertions))
+      .general_autofill(false)
+      .password_autosave(false)
+      .pinch_zoom(false)
+      .swipe_navigation(false)
+      .zoom_control(false),
+  );
+
+  builder.build()
 }
 
 pub fn single_instance() -> TauriPlugin<Wry> {
