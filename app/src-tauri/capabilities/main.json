@@ -1,0 +1,26 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main",
+  "description": "Main capabilities",
+  "windows": ["*"],
+  "platforms": ["linux", "windows"],
+  "permissions": [
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "core:path:allow-basename",
+    "core:path:allow-extname",
+    "core:path:allow-join",
+    "core:path:allow-resolve-directory",
+    "dialog:allow-message",
+    "fs:allow-exists",
+    "pinia:default",
+    "process:allow-exit",
+    "process:allow-restart",
+    "os:allow-os-type",
+    "os:allow-platform",
+    "updater:allow-check",
+    "updater:allow-download",
+    "updater:allow-download-and-install",
+    "updater:allow-install"
+  ]
+}
