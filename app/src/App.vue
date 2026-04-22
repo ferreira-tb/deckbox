@@ -6,9 +6,10 @@ import { handleError } from '@/lib/error';
 import { RefreshCwIcon } from '@lucide/vue';
 import { useColorMode } from '@vueuse/core';
 import Loading from '@/components/Loading.vue';
-import { useCards } from '@/composables/useCards';
+import { throttle } from 'es-toolkit/function';
 import { useTrunk } from '@/composables/useTrunk';
 import { exit } from '@tauri-apps/plugin-process';
+import { useDatabase } from '@/composables/useDatabase';
 import { useWishlist } from '@/composables/useWishlist';
 import { onKeyDown, useBreakpoints, useMutex } from '@tb-dev/vue';
 import NavigationMenuItem from '@/components/NavigationMenuItem.vue';
@@ -18,7 +19,7 @@ const { md } = useBreakpoints();
 
 const { locked, lock } = useMutex();
 
-const { loadCards } = useCards();
+const { loadCards } = useDatabase();
 const { loadTrunk } = useTrunk();
 const { loadWishlist } = useWishlist();
 
@@ -32,6 +33,8 @@ onKeyDown('F1', () => go('trunk'));
 onKeyDown('F2', () => go('deck'));
 onKeyDown('F3', () => go('wishlist'));
 onKeyDown('F4', () => go('database'));
+onKeyDown('F5', throttle(loadData, 1000));
+onKeyDown('F6', throttle(refresh, 5000));
 onKeyDown('Escape', () => exit(0).err());
 
 onMounted(async () => {

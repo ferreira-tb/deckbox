@@ -1,10 +1,17 @@
 import { convertFileSrc } from '@tauri-apps/api/core';
-import type { BanlistStatus, Card, CardAttribute, CardRace, CardType } from '@/lib/bindings';
+import type {
+  BanlistStatus,
+  Card,
+  CardAttribute,
+  CardRace,
+  CardType,
+  Db_CardId,
+} from '@/lib/bindings';
 
 export class CardImpl implements Card {
   public readonly name: string;
   public readonly description: string;
-  public readonly cardId: string;
+  public readonly cardId: Db_CardId;
   public readonly cardType: CardType;
   public readonly cardTypeHuman: string | null;
   public readonly cardRace: CardRace;

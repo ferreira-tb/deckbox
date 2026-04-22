@@ -1,13 +1,16 @@
+import { watchImmediate } from '@vueuse/core';
 import type { Db_CardId } from '@/lib/bindings';
 import { useTrunk } from '@/composables/useTrunk';
-import { computed, type MaybeRefOrGetter, toRef } from 'vue';
+import { type MaybeRefOrGetter, readonly, ref, toRef } from 'vue';
 
 export function useAmountInTrunk(cardId: MaybeRefOrGetter<Db_CardId>) {
-  const { trunk } = useTrunk();
   const cardIdRef = toRef(cardId);
+  const { trunk, getTrunkEntryAmount } = useTrunk();
 
-  return computed(() => {
-    const entry = trunk.value.find((item) => item.cardId === cardIdRef.value);
-    return entry?.amount ?? 0;
+  const amount = ref(0);
+  watchImmediate([cardIdRef, trunk], () => {
+    amount.value = getTrunkEntryAmount(cardIdRef.value);
   });
+
+  return readonly(amount);
 }

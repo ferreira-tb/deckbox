@@ -15,7 +15,8 @@ import { computed, onBeforeMount, ref, shallowRef, useTemplateRef, type VNode, w
 interface Props {
   cards: readonly CardImpl[];
   itemsPerPage?: number;
-  onWish?: (cardId: Db_CardId) => void;
+  onAddWish?: (cardId: Db_CardId) => void;
+  onRemoveWish?: (cardId: Db_CardId) => void;
 }
 
 interface SideActionSlotProps {
@@ -46,7 +47,7 @@ const currentChunk = computed(() => {
   return chunks.value.get(currentPage.value) ?? [];
 });
 
-const { next, previous } = useCardCycleList(currentChunk, selected);
+const cycleList = useCardCycleList(currentChunk, selected);
 
 const searchValue = ref<Option<string>>('');
 const searchInput = useTemplateRef('searchInputEl');
@@ -66,18 +67,26 @@ watch(currentPage, () => {
   fallbackSelect();
 });
 
-onKeyDown('ArrowLeft', previous);
-onKeyDown('ArrowRight', next);
-
-onKeyDown(['w', 'W'], () => {
-  if (selected.value) {
-    props.onWish?.(selected.value.cardId);
-  }
-});
+onKeyDown('ArrowLeft', cycleList.previous);
+onKeyDown('ArrowRight', cycleList.next);
+onKeyDown('ArrowUp', cycleList.first);
+onKeyDown('ArrowDown', cycleList.last);
 
 onCtrlKeyDown(['f', 'F'], () => {
   // eslint-disable-next-line
   searchInput.value?.focus();
+});
+
+onKeyDown(['w', 'W'], () => {
+  if (selected.value) {
+    props.onAddWish?.(selected.value.cardId);
+  }
+});
+
+onCtrlKeyDown(['w', 'W'], () => {
+  if (selected.value) {
+    props.onRemoveWish?.(selected.value.cardId);
+  }
 });
 
 onBeforeMount(updateShownCards);

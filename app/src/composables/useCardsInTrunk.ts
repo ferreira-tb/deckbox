@@ -1,10 +1,10 @@
 import { computed, type Ref } from 'vue';
 import type { CardImpl } from '@/lib/model/card';
-import { useCards } from '@/composables/useCards';
 import { useTrunk } from '@/composables/useTrunk';
+import { useDatabase } from '@/composables/useDatabase';
 
 export function useCardsInTrunk(): Readonly<Ref<readonly CardImpl[]>> {
-  const { cards } = useCards();
+  const { cards } = useDatabase();
   const { trunkSet } = useTrunk();
 
   return computed(() => {

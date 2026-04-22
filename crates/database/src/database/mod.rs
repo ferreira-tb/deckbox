@@ -9,6 +9,7 @@ use crate::model::card::{Card, NewCard};
 use crate::model::trunk::{NewTrunkEntry, TrunkEntry};
 use crate::model::wishlist::{NewWish, Wish};
 use crate::sql_types::card_id::Db_CardId;
+use crate::sql_types::trunk_entry_amount::Db_TrunkEntryAmount;
 use diesel::prelude::*;
 use std::fmt;
 use std::sync::Arc;
@@ -79,6 +80,12 @@ impl Database {
       .await
   }
 
+  pub async fn decrease_trunk_entry_amount(&self, card_id: Db_CardId) -> Result<u16> {
+    self
+      .with_blocking(move |db| db.decrease_trunk_entry_amount(&card_id))
+      .await
+  }
+
   pub async fn get_archetypes(&self) -> Result<Vec<String>> {
     self
       .with_blocking(|db| db.get_archetypes())
@@ -123,15 +130,18 @@ impl Database {
       .await
   }
 
-  pub async fn remove_wish(&self, card_id: Db_CardId) -> Result<usize> {
+  pub async fn increase_trunk_entry_amount(
+    &self,
+    card_id: Db_CardId,
+  ) -> Result<Db_TrunkEntryAmount> {
     self
-      .with_blocking(move |db| db.remove_wish(&card_id))
+      .with_blocking(move |db| db.increase_trunk_entry_amount(&card_id))
       .await
   }
 
-  pub async fn set_trunk_entry_amount(&self, card_id: Db_CardId, amount: u16) -> Result<usize> {
+  pub async fn remove_wish(&self, card_id: Db_CardId) -> Result<usize> {
     self
-      .with_blocking(move |db| db.set_trunk_entry_amount(&card_id, amount))
+      .with_blocking(move |db| db.remove_wish(&card_id))
       .await
   }
 }

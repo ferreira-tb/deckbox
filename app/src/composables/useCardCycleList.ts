@@ -32,10 +32,20 @@ export function useCardCycleList<T extends Card>(
     go(currentIndex.value - 1);
   }
 
+  function first() {
+    go(0);
+  }
+
+  function last() {
+    go(cardsRef.value.length - 1);
+  }
+
   return {
     currentIndex,
     go,
     next,
     previous,
+    first,
+    last,
   };
 }
