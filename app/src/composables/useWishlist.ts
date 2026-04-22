@@ -1,7 +1,7 @@
 import { toast } from '@/lib/toast';
 import { handleError } from '@/lib/error';
 import { WishImpl } from '@/lib/model/wish';
-import { useCards } from '@/composables/useCards';
+import { useDatabase } from '@/composables/useDatabase';
 import { tryInjectOrElse, useMutex } from '@tb-dev/vue';
 import { commands, type Db_CardId } from '@/lib/bindings';
 import {
@@ -9,6 +9,7 @@ import {
   effectScope,
   type InjectionKey,
   markRaw,
+  nextTick,
   type Ref,
   shallowRef,
   triggerRef,
@@ -27,6 +28,7 @@ export function useWishlist() {
       loading: value.loading,
       loadWishlist: value.loadWishlist,
       addWish: value.addWish,
+      dangerouslyRemoveLocalWish: value.dangerouslyRemoveLocalWish,
       removeWish: value.removeWish,
       isInWishlist: value.isInWishlist,
     };
@@ -41,7 +43,7 @@ function create() {
     return new Set(wishlist.value.map((wish) => wish.cardId));
   });
 
-  const { withCard } = useCards();
+  const { withCard } = useDatabase();
 
   async function loadWishlist() {
     try {
@@ -89,10 +91,7 @@ function create() {
         await mutex.acquire();
         const rows = await commands.removeWish(cardId);
         if (rows > 0) {
-          wishlist.value = wishlist.value.filter((wish) => {
-            return wish.cardId !== cardId;
-          });
-
+          dangerouslyRemoveLocalWish(cardId);
           withCard(cardId, (card) => {
             toast.success(`Removed "${card.name}" from wishlist`);
           });
@@ -107,6 +106,12 @@ function create() {
     }
   }
 
+  function dangerouslyRemoveLocalWish(cardId: Db_CardId) {
+    wishlist.value = wishlist.value.filter((wish) => {
+      return wish.cardId !== cardId;
+    });
+  }
+
   function isInWishlist(cardId: Db_CardId) {
     return wishSet.value.has(cardId);
   }
@@ -117,7 +122,14 @@ function create() {
     loading: locked,
     loadWishlist,
     addWish,
+    dangerouslyRemoveLocalWish,
     removeWish,
     isInWishlist,
   };
+}
+
+export function dangerouslyRemoveFromLocalWishlist(cardId: Db_CardId) {
+  void nextTick(() => {
+    useWishlist().dangerouslyRemoveLocalWish(cardId);
+  });
 }

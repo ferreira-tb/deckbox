@@ -2,6 +2,7 @@ use crate::error::CmdResult;
 use crate::manager::ManagerExt;
 use deckbox_database::model::trunk::{NewTrunkEntry, TrunkEntry};
 use deckbox_database::sql_types::card_id::Db_CardId;
+use deckbox_database::sql_types::trunk_entry_amount::Db_TrunkEntryAmount;
 use tauri::AppHandle;
 
 #[tauri::command]
@@ -13,6 +14,16 @@ pub async fn create_trunk_entry(app: AppHandle, card_id: Db_CardId) -> CmdResult
     .create_trunk_entry(new)
     .await?
     .try_into()
+    .map_err(Into::into)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn decrease_trunk_entry_amount(app: AppHandle, card_id: Db_CardId) -> CmdResult<u16> {
+  app
+    .database()
+    .decrease_trunk_entry_amount(card_id)
+    .await
     .map_err(Into::into)
 }
 
@@ -51,15 +62,13 @@ pub async fn has_trunk_entry(app: AppHandle, card_id: Db_CardId) -> CmdResult<bo
 
 #[tauri::command]
 #[specta::specta]
-pub async fn set_trunk_entry_amount(
+pub async fn increase_trunk_entry_amount(
   app: AppHandle,
   card_id: Db_CardId,
-  amount: u16,
-) -> CmdResult<u32> {
+) -> CmdResult<Db_TrunkEntryAmount> {
   app
     .database()
-    .set_trunk_entry_amount(card_id, amount)
-    .await?
-    .try_into()
+    .increase_trunk_entry_amount(card_id)
+    .await
     .map_err(Into::into)
 }

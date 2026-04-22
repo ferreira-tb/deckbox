@@ -6,7 +6,7 @@ import { effectScope, type InjectionKey, markRaw, type Ref, shallowRef } from 'v
 
 const SYMBOL = Symbol() as InjectionKey<ReturnType<typeof create>>;
 
-export function useCards() {
+export function useDatabase() {
   return tryInjectOrElse(SYMBOL, () => {
     const scope = effectScope(/* detached */ true);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -1,4 +1,5 @@
 use crate::sql_types::card_id::Db_CardId;
+use crate::sql_types::trunk_entry_amount::Db_TrunkEntryAmount;
 use crate::sql_types::zoned::Db_Zoned;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -10,7 +11,7 @@ use specta::Type;
 #[serde(rename_all = "camelCase")]
 pub struct TrunkEntry {
   pub card_id: Db_CardId,
-  pub amount: i32,
+  pub amount: Db_TrunkEntryAmount,
 }
 
 #[derive(Insertable, Clone, Debug)]

@@ -23,6 +23,9 @@ async getCards() : Promise<Card[]> {
 async createTrunkEntry(cardId: Db_CardId) : Promise<number> {
     return await TAURI_INVOKE("create_trunk_entry", { cardId });
 },
+async decreaseTrunkEntryAmount(cardId: Db_CardId) : Promise<number> {
+    return await TAURI_INVOKE("decrease_trunk_entry_amount", { cardId });
+},
 async getTrunk() : Promise<TrunkEntry[]> {
     return await TAURI_INVOKE("get_trunk");
 },
@@ -31,6 +34,9 @@ async getTrunkEntryByCardId(cardId: Db_CardId) : Promise<TrunkEntry> {
 },
 async hasTrunkEntry(cardId: Db_CardId) : Promise<boolean> {
     return await TAURI_INVOKE("has_trunk_entry", { cardId });
+},
+async increaseTrunkEntryAmount(cardId: Db_CardId) : Promise<Db_TrunkEntryAmount> {
+    return await TAURI_INVOKE("increase_trunk_entry_amount", { cardId });
 },
 async setTrunkEntryAmount(cardId: Db_CardId, amount: number) : Promise<number> {
     return await TAURI_INVOKE("set_trunk_entry_amount", { cardId, amount });
@@ -69,9 +75,10 @@ export type Db_CardAttribute = CardAttribute
 export type Db_CardId = string
 export type Db_CardRace = CardRace
 export type Db_CardType = CardType
+export type Db_TrunkEntryAmount = number
 export type Db_Url = string
 export type Error = string
-export type TrunkEntry = { cardId: Db_CardId; amount: number }
+export type TrunkEntry = { cardId: Db_CardId; amount: Db_TrunkEntryAmount }
 export type Wish = { cardId: Db_CardId }
 
 /** tauri-specta globals **/
