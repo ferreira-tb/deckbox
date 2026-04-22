@@ -8,7 +8,7 @@ use tauri::AppHandle;
 #[tauri::command]
 #[specta::specta]
 pub async fn create_trunk_entry(app: AppHandle, card_id: Db_CardId) -> CmdResult<u32> {
-  let new = Db_NewTrunkEntry::new(card_id);
+  let new = Db_NewTrunkEntry::builder(card_id).build();
   app
     .database()
     .create_trunk_entry(new)

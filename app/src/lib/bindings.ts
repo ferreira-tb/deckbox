@@ -23,6 +23,12 @@ async getCardByCardId(cardId: Db_CardId) : Promise<Db_Card> {
 async getCards() : Promise<Db_Card[]> {
     return await TAURI_INVOKE("get_cards");
 },
+async createDeck(name: string, description: string | null) : Promise<Db_DeckId> {
+    return await TAURI_INVOKE("create_deck", { name, description });
+},
+async getDecks() : Promise<Db_Deck[]> {
+    return await TAURI_INVOKE("get_decks");
+},
 async createTrunkEntry(cardId: Db_CardId) : Promise<number> {
     return await TAURI_INVOKE("create_trunk_entry", { cardId });
 },
@@ -70,11 +76,14 @@ export type CardAttribute = "DARK" | "DIVINE" | "EARTH" | "FIRE" | "LIGHT" | "WA
 export type CardRace = "Abidos the Th" | "Adrian Gecko" | "Alexis Rhodes" | "Amnael" | "Andrew" | "Aqua" | "Arkana" | "Aster Phoenix" | "Axel Brodie" | "Bastion Misaw" | "Beast" | "Beast-Warrior" | "Bonz" | "Camula" | "Chazz Princet" | "Christine" | "Chumley Huffi" | "Continuous" | "Counter" | "Creator God" | "Cyberse" | "David" | "Dinosaur" | "Divine-Beast" | "Don Zaloog" | "Dragon" | "Dr. Vellian C" | "Emma" | "Equip" | "Espa Roba" | "Fairy" | "Field" | "Fiend" | "Fish" | "Illusion" | "Insect" | "Ishizu" | "Ishizu Ishtar" | "Jaden Yuki" | "Jesse Anderso" | "Joey" | "Joey Wheeler" | "Kagemaru" | "Kaiba" | "Keith" | "Lumis and Umb" | "Lumis Umbra" | "Machine" | "Mai" | "Mai Valentine" | "Mako" | "Nightshroud" | "" | "Normal" | "Odion" | "Paradox Broth" | "Pegasus" | "Plant" | "Psychic" | "Pyro" | "Quick-Play" | "Reptile" | "Rex" | "Ritual" | "Rock" | "Sea Serpent" | "Seto Kaiba" | "Spellcaster" | "Syrus Truesda" | "Tania" | "Tea Gardner" | "Thelonious Vi" | "The Supreme K" | "Thunder" | "Titan" | "Tyranno Hassl" | "Warrior" | "Weevil" | "Winged Beast" | "Wyrm" | "Yami Bakura" | "Yami Marik" | "Yami Yugi" | "Yubel" | "Yugi" | "Zane Truesdal" | "Zombie"
 export type CardType = "Effect Monster" | "Flip Effect Monster" | "Flip Tuner Effect Monster" | "Fusion Monster" | "Gemini Monster" | "Link Monster" | "Normal Monster" | "Normal Tuner Monster" | "Pendulum Effect Fusion Monster" | "Pendulum Effect Monster" | "Pendulum Effect Ritual Monster" | "Pendulum Flip Effect Monster" | "Pendulum Normal Monster" | "Pendulum Tuner Effect Monster" | "Ritual Effect Monster" | "Ritual Monster" | "Skill Card" | "Spell Card" | "Spirit Monster" | "Synchro Monster" | "Synchro Pendulum Effect Monster" | "Synchro Tuner Monster" | "Token" | "Toon Monster" | "Trap Card" | "Tuner Monster" | "Union Effect Monster" | "XYZ Monster" | "XYZ Pendulum Effect Monster"
 export type Db_BanlistStatus = BanlistStatus
-export type Db_Card = { name: string; description: string; cardId: Db_CardId; cardType: Db_CardType; cardTypeHuman: string | null; cardRace: Db_CardRace; attack: number | null; defense: number | null; level: number | null; linkval: number | null; attribute: Db_CardAttribute | null; archetype: string | null; banlistStatus: Db_BanlistStatus | null; imageUrl: Db_Url; imageUrlCropped: Db_Url; imageUrlSmall: Db_Url; price: string | null }
+export type Db_Card = { id: Db_CardLocalId; name: string; description: string; cardId: Db_CardId; cardType: Db_CardType; cardTypeHuman: string | null; cardRace: Db_CardRace; attack: number | null; defense: number | null; level: number | null; linkval: number | null; attribute: Db_CardAttribute | null; archetype: string | null; banlistStatus: Db_BanlistStatus | null; imageUrl: Db_Url; imageUrlCropped: Db_Url; imageUrlSmall: Db_Url; price: string | null }
 export type Db_CardAttribute = CardAttribute
 export type Db_CardId = string
+export type Db_CardLocalId = number
 export type Db_CardRace = CardRace
 export type Db_CardType = CardType
+export type Db_Deck = { id: Db_DeckId; name: string; description: string | null }
+export type Db_DeckId = number
 export type Db_TrunkEntry = { cardId: Db_CardId; amount: Db_TrunkEntryAmount }
 export type Db_TrunkEntryAmount = number
 export type Db_Url = string

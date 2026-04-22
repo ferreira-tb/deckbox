@@ -1,4 +1,6 @@
+use crate::sql_types::id::Db_DeckId;
 use crate::sql_types::zoned::Db_Zoned;
+use bon::Builder;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -8,17 +10,23 @@ use specta::Type;
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 #[serde(rename_all = "camelCase")]
 pub struct Db_Deck {
-  pub id: i32,
+  pub id: Db_DeckId,
   pub name: String,
   pub description: Option<String>,
 }
 
-#[derive(Insertable, Clone, Debug, Serialize, Deserialize, Type)]
+#[derive(Builder, Insertable, Clone, Debug)]
 #[diesel(table_name = crate::schema::deck)]
-#[serde(rename_all = "camelCase")]
 pub struct Db_NewDeck {
-  name: String,
-  description: Option<String>,
-  created_at: Db_Zoned,
-  updated_at: Db_Zoned,
+  #[builder(start_fn, into)]
+  pub(crate) name: String,
+
+  #[builder(into)]
+  pub(crate) description: Option<String>,
+
+  #[builder(skip = Db_Zoned::now())]
+  pub(crate) created_at: Db_Zoned,
+
+  #[builder(skip = Db_Zoned::now())]
+  pub(crate) updated_at: Db_Zoned,
 }

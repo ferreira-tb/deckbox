@@ -6,9 +6,11 @@ mod wishlist;
 use crate::error::Result;
 use crate::migration::run_pending_migrations;
 use crate::model::card::{Db_Card, Db_NewCard};
+use crate::model::deck::{Db_Deck, Db_NewDeck};
 use crate::model::trunk::{Db_NewTrunkEntry, Db_TrunkEntry};
 use crate::model::wishlist::{Db_NewWish, Db_Wish};
 use crate::sql_types::card_id::Db_CardId;
+use crate::sql_types::id::Db_DeckId;
 use crate::sql_types::trunk_entry_amount::Db_TrunkEntryAmount;
 use diesel::prelude::*;
 use std::fmt;
@@ -68,6 +70,12 @@ impl Database {
       .await
   }
 
+  pub async fn create_deck(&self, new_deck: Db_NewDeck) -> Result<Db_DeckId> {
+    self
+      .with_blocking(move |db| db.create_deck(&new_deck))
+      .await
+  }
+
   pub async fn create_trunk_entry(&self, new_entry: Db_NewTrunkEntry) -> Result<usize> {
     self
       .with_blocking(move |db| db.create_trunk_entry(&new_entry))
@@ -100,6 +108,10 @@ impl Database {
 
   pub async fn get_cards(&self) -> Result<Vec<Db_Card>> {
     self.with_blocking(|db| db.get_cards()).await
+  }
+
+  pub async fn get_decks(&self) -> Result<Vec<Db_Deck>> {
+    self.with_blocking(|db| db.get_decks()).await
   }
 
   pub async fn get_trunk(&self) -> Result<Vec<Db_TrunkEntry>> {

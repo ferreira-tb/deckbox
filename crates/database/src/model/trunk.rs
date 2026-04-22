@@ -1,6 +1,7 @@
 use crate::sql_types::card_id::Db_CardId;
 use crate::sql_types::trunk_entry_amount::Db_TrunkEntryAmount;
 use crate::sql_types::zoned::Db_Zoned;
+use bon::Builder;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -14,21 +15,15 @@ pub struct Db_TrunkEntry {
   pub amount: Db_TrunkEntryAmount,
 }
 
-#[derive(Insertable, Clone, Debug)]
+#[derive(Builder, Insertable, Clone, Debug)]
 #[diesel(table_name = crate::schema::trunk)]
 pub struct Db_NewTrunkEntry {
+  #[builder(start_fn)]
   pub(crate) card_id: Db_CardId,
-  pub(crate) created_at: Db_Zoned,
-  pub(crate) updated_at: Db_Zoned,
-}
 
-impl Db_NewTrunkEntry {
-  pub fn new(card_id: Db_CardId) -> Self {
-    let now = Db_Zoned::now();
-    Self {
-      card_id,
-      created_at: now.clone(),
-      updated_at: now,
-    }
-  }
+  #[builder(skip = Db_Zoned::now())]
+  pub(crate) created_at: Db_Zoned,
+
+  #[builder(skip = Db_Zoned::now())]
+  pub(crate) updated_at: Db_Zoned,
 }

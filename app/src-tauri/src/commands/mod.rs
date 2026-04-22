@@ -29,9 +29,9 @@ pub async fn export_database_file(app: AppHandle) -> CmdResult<()> {
     .map(FilePath::into_path)
     .transpose()?
   {
-    let version = env!("CARGO_PKG_VERSION");
+    const VERSION: &str = env!("CARGO_PKG_VERSION");
     let now = Zoned::now().strftime("%Y%m%d%H%M%S");
-    let name = format!("deckbox-{version}.{now}.db");
+    let name = format!("deckbox-{VERSION}.{now}.db");
     let path = dir.join(name);
 
     let database = database_file(&app)?;

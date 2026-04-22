@@ -4,11 +4,13 @@ import type {
   Db_Card,
   Db_CardAttribute,
   Db_CardId,
+  Db_CardLocalId,
   Db_CardRace,
   Db_CardType,
 } from '@/lib/bindings';
 
 export class CardImpl implements Db_Card {
+  public readonly id: Db_CardLocalId;
   public readonly name: string;
   public readonly description: string;
   public readonly cardId: Db_CardId;
@@ -32,6 +34,7 @@ export class CardImpl implements Db_Card {
   public readonly imagePathSmall: string;
 
   constructor(card: Db_Card) {
+    this.id = card.id;
     this.name = card.name;
     this.description = card.description;
     this.cardId = card.cardId;
