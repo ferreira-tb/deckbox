@@ -15,6 +15,7 @@ anyhow.workspace = true
 deckbox-database.workspace = true
 futures.workspace = true
 itertools.workspace = true
+jiff.workspace = true
 nil-log.workspace = true
 mimalloc.workspace = true
 reqwest.workspace = true

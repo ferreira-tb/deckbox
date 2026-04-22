@@ -6,6 +6,7 @@ pub fn collect() -> Builder {
   let builder = Builder::<Wry>::new()
     .error_handling(ErrorHandlingMode::Throw)
     .commands(collect_commands![
+      commands::export_database_file,
       commands::show_window,
       commands::card::fetch_cards,
       commands::card::get_archetypes,
