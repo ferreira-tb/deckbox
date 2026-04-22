@@ -26,11 +26,12 @@ export function useWishlist() {
       wishlist: value.wishlist,
       wishSet: value.wishSet,
       loading: value.loading,
-      loadWishlist: value.loadWishlist,
       addWish: value.addWish,
       dangerouslyRemoveLocalWish: value.dangerouslyRemoveLocalWish,
-      removeWish: value.removeWish,
+      getWish: value.getWish,
       isInWishlist: value.isInWishlist,
+      loadWishlist: value.loadWishlist,
+      removeWish: value.removeWish,
     };
   });
 }
@@ -59,6 +60,14 @@ function create() {
     finally {
       mutex.release();
     }
+  }
+
+  function getWish(cardId: Db_CardId) {
+    return wishlist.value.find((wish) => wish.cardId === cardId) ?? null;
+  }
+
+  function isInWishlist(cardId: Db_CardId) {
+    return wishSet.value.has(cardId);
   }
 
   async function addWish(cardId: Db_CardId) {
@@ -112,19 +121,16 @@ function create() {
     });
   }
 
-  function isInWishlist(cardId: Db_CardId) {
-    return wishSet.value.has(cardId);
-  }
-
   return {
     wishlist: wishlist as Readonly<Ref<readonly WishImpl[]>>,
     wishSet: wishSet as Readonly<Ref<ReadonlySet<Db_CardId>>>,
     loading: locked,
-    loadWishlist,
     addWish,
     dangerouslyRemoveLocalWish,
-    removeWish,
+    getWish,
     isInWishlist,
+    loadWishlist,
+    removeWish,
   };
 }
 

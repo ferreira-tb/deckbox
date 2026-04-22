@@ -32,7 +32,14 @@ async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
 
 <template>
   <div class="size-full">
-    <YgoCardGrid :cards @add-wish="addWish" @remove-wish="removeWish">
+    <YgoCardGrid
+      :cards
+      show-trunk
+      show-wish
+      @add-wish="addWish"
+      @remove-wish="removeWish"
+      @update-trunk-entry-amount="updateTrunkEntryAmount"
+    >
       <template #sideAction="{ cardId, inTrunk }">
         <div class="grid grid-cols-3 justify-center items-center gap-2">
           <Button

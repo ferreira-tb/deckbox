@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { Button } from '@tb-dev/vue-components';
+import { useTrunk } from '@/composables/useTrunk';
 import { useWishlist } from '@/composables/useWishlist';
 import { useWishedCards } from '@/composables/useWishedCards';
 import YgoCardGrid from '@/components/ygo-card/YgoCardGrid.vue';
 
+const { updateTrunkEntryAmount } = useTrunk();
+
 const {
-  removeWish,
   loading: isLoadingWishlist,
   isInWishlist,
+  removeWish,
 } = useWishlist();
 
 const wishedCards = useWishedCards();
@@ -15,7 +18,11 @@ const wishedCards = useWishedCards();
 
 <template>
   <div class="size-full">
-    <YgoCardGrid :cards="wishedCards">
+    <YgoCardGrid
+      :cards="wishedCards"
+      @remove-wish="removeWish"
+      @update-trunk-entry-amount="updateTrunkEntryAmount"
+    >
       <template #sideAction="{ cardId, inTrunk }">
         <div class="grid grid-cols-2 justify-center items-center gap-2">
           <Button variant="outline">

@@ -94,14 +94,12 @@ async function loadData() {
       <div class="relative size-full overflow-hidden">
         <RouterView #default="{ Component }">
           <template v-if="Component">
-            <KeepAlive>
-              <Suspense>
-                <component :is="Component" />
-                <template #fallback>
-                  <Loading class="absolute inset-0" />
-                </template>
-              </Suspense>
-            </KeepAlive>
+            <Suspense>
+              <component :is="Component" />
+              <template #fallback>
+                <Loading class="absolute inset-0" />
+              </template>
+            </Suspense>
           </template>
         </RouterView>
       </div>
