@@ -1,6 +1,7 @@
+import { toast } from '@/lib/toast';
 import { handleError } from '@/lib/error';
 import { WishImpl } from '@/lib/model/wish';
-import { tryOnMounted } from '@vueuse/core';
+import { useCards } from '@/composables/useCards';
 import { tryInjectOrElse, useMutex } from '@tb-dev/vue';
 import { commands, type Db_CardId } from '@/lib/bindings';
 import {
@@ -40,6 +41,8 @@ function create() {
     return new Set(wishlist.value.map((wish) => wish.cardId));
   });
 
+  const { withCard } = useCards();
+
   async function loadWishlist() {
     try {
       await mutex.acquire();
@@ -65,6 +68,10 @@ function create() {
           const wish = await commands.getWishByCardId(cardId);
           wishlist.value.push(markRaw(new WishImpl(wish)));
           triggerRef(wishlist);
+
+          withCard(cardId, (card) => {
+            toast.success(`Added "${card.name}" to wishlist`);
+          });
         }
       }
       catch (err) {
@@ -82,7 +89,13 @@ function create() {
         await mutex.acquire();
         const rows = await commands.removeWish(cardId);
         if (rows > 0) {
-          wishlist.value = wishlist.value.filter((wish) => wish.cardId !== cardId);
+          wishlist.value = wishlist.value.filter((wish) => {
+            return wish.cardId !== cardId;
+          });
+
+          withCard(cardId, (card) => {
+            toast.success(`Removed "${card.name}" from wishlist`);
+          });
         }
       }
       catch (err) {
@@ -97,12 +110,6 @@ function create() {
   function isInWishlist(cardId: Db_CardId) {
     return wishSet.value.has(cardId);
   }
-
-  tryOnMounted(() => {
-    if (wishlist.value.length === 0) {
-      void loadWishlist();
-    }
-  });
 
   return {
     wishlist: wishlist as Readonly<Ref<readonly WishImpl[]>>,

@@ -1,5 +1,4 @@
 import { handleError } from '@/lib/error';
-import { tryOnMounted } from '@vueuse/core';
 import { tryInjectOrElse, useMutex } from '@tb-dev/vue';
 import { TrunkEntryImpl } from '@/lib/model/trunk-entry';
 import { commands, type Db_CardId } from '@/lib/bindings';
@@ -45,11 +44,17 @@ function create() {
     }
   }
 
-  tryOnMounted(() => {
-    if (trunk.value.length === 0) {
-      void loadTrunk();
+  async function addToTrunk(cardId: Db_CardId, amount: number) {
+    try {
+      await mutex.acquire();
     }
-  });
+    catch (err) {
+      handleError(err);
+    }
+    finally {
+      mutex.release();
+    }
+  }
 
   return {
     trunk: trunk as Readonly<Ref<readonly TrunkEntryImpl[]>>,
