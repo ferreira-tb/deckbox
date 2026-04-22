@@ -8,6 +8,7 @@ import { router } from '@/router';
 import { createPinia } from 'pinia';
 import { commands } from '@/lib/bindings';
 import { handleError } from '@/lib/error';
+import { checkForUpdates } from '@/lib/updater';
 import { TauriPluginPinia } from '@tauri-store/pinia';
 import { setCurrentApp, setErrorHandler } from '@tb-dev/vue';
 
@@ -35,5 +36,12 @@ setErrorHandler(handleError, app);
 
 app.use(router);
 app.use(pinia);
+
+try {
+  await checkForUpdates();
+}
+catch (err) {
+  handleError(err);
+}
 
 app.mount('#app');
