@@ -14,8 +14,8 @@ export function useDatabase() {
     return {
       cards: value.cards,
       loading: value.loading,
-      loadCards: value.loadCards,
       getCard: value.getCard,
+      loadCards: value.loadCards,
       withCard: value.withCard,
     };
   });
@@ -53,8 +53,8 @@ function create() {
   return {
     cards: cards as Readonly<Ref<readonly CardImpl[]>>,
     loading: locked,
-    loadCards,
     getCard,
+    loadCards,
     withCard,
   };
 }

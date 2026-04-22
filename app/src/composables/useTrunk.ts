@@ -27,9 +27,10 @@ export function useTrunk() {
       trunk: value.trunk,
       trunkSet: value.trunkSet,
       loading: value.loading,
-      loadTrunk: value.loadTrunk,
       getTrunkEntry: value.getTrunkEntry,
       getTrunkEntryAmount: value.getTrunkEntryAmount,
+      isInTrunk: value.isInTrunk,
+      loadTrunk: value.loadTrunk,
       updateTrunkEntryAmount: value.updateTrunkEntryAmount,
     };
   });
@@ -67,6 +68,10 @@ function create() {
 
   function getTrunkEntryAmount(cardId: Db_CardId) {
     return getTrunkEntry(cardId)?.amount ?? 0;
+  }
+
+  function isInTrunk(cardId: Db_CardId) {
+    return trunkSet.value.has(cardId);
   }
 
   async function updateTrunkEntryAmount(cardId: Db_CardId, kind: 'increase' | 'decrease') {
@@ -136,9 +141,10 @@ function create() {
     trunk: trunk as Readonly<Ref<readonly TrunkEntryImpl[]>>,
     trunkSet: trunkSet as Readonly<Ref<ReadonlySet<Db_CardId>>>,
     loading: locked,
-    loadTrunk,
     getTrunkEntry,
     getTrunkEntryAmount,
+    isInTrunk,
+    loadTrunk,
     updateTrunkEntryAmount,
   };
 }

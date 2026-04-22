@@ -5,6 +5,7 @@ import { watchDebounced } from '@vueuse/core';
 import type { Db_CardId } from '@/lib/bindings';
 import type { CardImpl } from '@/lib/model/card';
 import { onCtrlKeyDown, onKeyDown } from '@tb-dev/vue';
+import { useWishlist } from '@/composables/useWishlist';
 import { useCardCycleList } from '@/composables/useCardCycleList';
 import YgoCardGridItem from '@/components/ygo-card/YgoCardGridItem.vue';
 import YgoCardGridSide from '@/components/ygo-card/YgoCardGridSide.vue';
@@ -15,8 +16,12 @@ import { computed, onBeforeMount, ref, shallowRef, useTemplateRef, type VNode, w
 interface Props {
   cards: readonly CardImpl[];
   itemsPerPage?: number;
+  showTrunk?: boolean;
+  showWish?: boolean;
+
   onAddWish?: (cardId: Db_CardId) => void;
   onRemoveWish?: (cardId: Db_CardId) => void;
+  onUpdateTrunkEntryAmount?: (cardId: Db_CardId, kind: 'increase' | 'decrease') => void;
 }
 
 interface SideActionSlotProps {
@@ -49,6 +54,8 @@ const currentChunk = computed(() => {
 
 const cycleList = useCardCycleList(currentChunk, selected);
 
+const { isInWishlist } = useWishlist();
+
 const searchValue = ref<Option<string>>('');
 const searchInput = useTemplateRef('searchInputEl');
 
@@ -77,15 +84,28 @@ onCtrlKeyDown(['f', 'F'], () => {
   searchInput.value?.focus();
 });
 
-onKeyDown(['w', 'W'], () => {
+onKeyDown(['t', 'T'], () => {
   if (selected.value) {
-    props.onAddWish?.(selected.value.cardId);
+    const cardId = selected.value.cardId;
+    props.onUpdateTrunkEntryAmount?.(cardId, 'increase');
   }
 });
 
-onCtrlKeyDown(['w', 'W'], () => {
+onCtrlKeyDown(['t', 'T'], () => {
   if (selected.value) {
-    props.onRemoveWish?.(selected.value.cardId);
+    const cardId = selected.value.cardId;
+    props.onUpdateTrunkEntryAmount?.(cardId, 'decrease');
+  }
+});
+
+onKeyDown(['w', 'W'], () => {
+  if (selected.value) {
+    if (isInWishlist(selected.value.cardId)) {
+      props.onRemoveWish?.(selected.value.cardId);
+    }
+    else {
+      props.onAddWish?.(selected.value.cardId);
+    }
   }
 });
 
@@ -146,7 +166,12 @@ function isCardBeingShown(card: CardImpl) {
           class="grid grid-cols-6 sm:grid-cols-8 xl:grid-cols-10 gap-2 px-1 pb-0 md:px-4 overflow-x-hidden overflow-y-auto"
         >
           <div v-for="(card, idx) of currentChunk" :key="idx">
-            <YgoCardGridItem :card @click="() => void (selected = card)" />
+            <YgoCardGridItem
+              :card
+              :show-trunk
+              :show-wish
+              @click="() => void (selected = card)"
+            />
           </div>
         </div>
 
