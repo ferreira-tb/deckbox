@@ -1,12 +1,12 @@
 use super::BlockingDatabase;
 use crate::error::{Error, Result};
-use crate::model::card::{Card, NewCard};
+use crate::model::card::{Db_Card, Db_NewCard};
 use crate::sql_types::card_id::Db_CardId;
 use crate::sql_types::zoned::Db_Zoned;
 use diesel::prelude::*;
 
 impl BlockingDatabase {
-  pub fn create_card(&self, new_card: &NewCard) -> Result<usize> {
+  pub fn create_card(&self, new_card: &Db_NewCard) -> Result<usize> {
     use crate::schema::card;
     diesel::insert_into(card::table)
       .values(new_card)
@@ -36,19 +36,19 @@ impl BlockingDatabase {
     Ok(archetypes.into_iter().flatten().collect())
   }
 
-  pub fn get_card_by_card_id(&self, card_id: &Db_CardId) -> Result<Card> {
+  pub fn get_card_by_card_id(&self, card_id: &Db_CardId) -> Result<Db_Card> {
     use crate::schema::card;
     card::table
       .filter(card::card_id.eq(card_id))
-      .select(Card::as_select())
+      .select(Db_Card::as_select())
       .first(&mut *self.conn())
       .map_err(Error::from)
   }
 
-  pub fn get_cards(&self) -> Result<Vec<Card>> {
+  pub fn get_cards(&self) -> Result<Vec<Db_Card>> {
     use crate::schema::card;
     card::table
-      .select(Card::as_select())
+      .select(Db_Card::as_select())
       .load(&mut *self.conn())
       .map_err(Error::from)
   }

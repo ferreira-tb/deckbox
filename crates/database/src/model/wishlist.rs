@@ -8,19 +8,19 @@ use specta::Type;
 #[diesel(table_name = crate::schema::wishlist)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 #[serde(rename_all = "camelCase")]
-pub struct Wish {
+pub struct Db_Wish {
   pub card_id: Db_CardId,
 }
 
 #[derive(Insertable, Clone, Debug)]
 #[diesel(table_name = crate::schema::wishlist)]
-pub struct NewWish {
+pub struct Db_NewWish {
   pub(crate) card_id: Db_CardId,
   pub(crate) created_at: Db_Zoned,
 }
 
-impl NewWish {
+impl Db_NewWish {
   pub fn new(card_id: Db_CardId) -> Self {
-    NewWish { card_id, created_at: Db_Zoned::now() }
+    Self { card_id, created_at: Db_Zoned::now() }
   }
 }

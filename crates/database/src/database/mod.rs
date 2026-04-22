@@ -5,9 +5,9 @@ mod wishlist;
 
 use crate::error::Result;
 use crate::migration::run_pending_migrations;
-use crate::model::card::{Card, NewCard};
-use crate::model::trunk::{NewTrunkEntry, TrunkEntry};
-use crate::model::wishlist::{NewWish, Wish};
+use crate::model::card::{Db_Card, Db_NewCard};
+use crate::model::trunk::{Db_NewTrunkEntry, Db_TrunkEntry};
+use crate::model::wishlist::{Db_NewWish, Db_Wish};
 use crate::sql_types::card_id::Db_CardId;
 use crate::sql_types::trunk_entry_amount::Db_TrunkEntryAmount;
 use diesel::prelude::*;
@@ -62,19 +62,19 @@ impl Database {
     spawn_blocking(move || f(blocking)).await?
   }
 
-  pub async fn create_card(&self, new_card: NewCard) -> Result<usize> {
+  pub async fn create_card(&self, new_card: Db_NewCard) -> Result<usize> {
     self
       .with_blocking(move |db| db.create_card(&new_card))
       .await
   }
 
-  pub async fn create_trunk_entry(&self, new_entry: NewTrunkEntry) -> Result<usize> {
+  pub async fn create_trunk_entry(&self, new_entry: Db_NewTrunkEntry) -> Result<usize> {
     self
       .with_blocking(move |db| db.create_trunk_entry(&new_entry))
       .await
   }
 
-  pub async fn create_wish(&self, new_wish: NewWish) -> Result<usize> {
+  pub async fn create_wish(&self, new_wish: Db_NewWish) -> Result<usize> {
     self
       .with_blocking(move |db| db.create_wish(&new_wish))
       .await
@@ -92,33 +92,33 @@ impl Database {
       .await
   }
 
-  pub async fn get_card_by_card_id(&self, card_id: Db_CardId) -> Result<Card> {
+  pub async fn get_card_by_card_id(&self, card_id: Db_CardId) -> Result<Db_Card> {
     self
       .with_blocking(move |db| db.get_card_by_card_id(&card_id))
       .await
   }
 
-  pub async fn get_cards(&self) -> Result<Vec<Card>> {
+  pub async fn get_cards(&self) -> Result<Vec<Db_Card>> {
     self.with_blocking(|db| db.get_cards()).await
   }
 
-  pub async fn get_trunk(&self) -> Result<Vec<TrunkEntry>> {
+  pub async fn get_trunk(&self) -> Result<Vec<Db_TrunkEntry>> {
     self.with_blocking(|db| db.get_trunk()).await
   }
 
-  pub async fn get_trunk_entry_by_card_id(&self, card_id: Db_CardId) -> Result<TrunkEntry> {
+  pub async fn get_trunk_entry_by_card_id(&self, card_id: Db_CardId) -> Result<Db_TrunkEntry> {
     self
       .with_blocking(move |db| db.get_trunk_entry_by_card_id(&card_id))
       .await
   }
 
-  pub async fn get_wish_by_card_id(&self, card_id: Db_CardId) -> Result<Wish> {
+  pub async fn get_wish_by_card_id(&self, card_id: Db_CardId) -> Result<Db_Wish> {
     self
       .with_blocking(move |db| db.get_wish_by_card_id(&card_id))
       .await
   }
 
-  pub async fn get_wishlist(&self) -> Result<Vec<Wish>> {
+  pub async fn get_wishlist(&self) -> Result<Vec<Db_Wish>> {
     self
       .with_blocking(|db| db.get_wishlist())
       .await

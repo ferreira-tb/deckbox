@@ -1,27 +1,27 @@
 import { convertFileSrc } from '@tauri-apps/api/core';
 import type {
-  BanlistStatus,
-  Card,
-  CardAttribute,
-  CardRace,
-  CardType,
+  Db_BanlistStatus,
+  Db_Card,
+  Db_CardAttribute,
   Db_CardId,
+  Db_CardRace,
+  Db_CardType,
 } from '@/lib/bindings';
 
-export class CardImpl implements Card {
+export class CardImpl implements Db_Card {
   public readonly name: string;
   public readonly description: string;
   public readonly cardId: Db_CardId;
-  public readonly cardType: CardType;
+  public readonly cardType: Db_CardType;
   public readonly cardTypeHuman: string | null;
-  public readonly cardRace: CardRace;
+  public readonly cardRace: Db_CardRace;
   public readonly attack: number | null;
   public readonly defense: number | null;
   public readonly level: number | null;
   public readonly linkval: number | null;
-  public readonly attribute: CardAttribute | null;
+  public readonly attribute: Db_CardAttribute | null;
   public readonly archetype: string | null;
-  public readonly banlistStatus: BanlistStatus | null;
+  public readonly banlistStatus: Db_BanlistStatus | null;
   public readonly imageUrl: string;
   public readonly imageUrlCropped: string;
   public readonly imageUrlSmall: string;
@@ -31,7 +31,7 @@ export class CardImpl implements Card {
   public readonly imagePathCropped: string;
   public readonly imagePathSmall: string;
 
-  constructor(card: Card) {
+  constructor(card: Db_Card) {
     this.name = card.name;
     this.description = card.description;
     this.cardId = card.cardId;

@@ -14,10 +14,10 @@ async fetchCards() : Promise<null> {
 async getArchetypes() : Promise<string[]> {
     return await TAURI_INVOKE("get_archetypes");
 },
-async getCardByCardId(cardId: Db_CardId) : Promise<Card> {
+async getCardByCardId(cardId: Db_CardId) : Promise<Db_Card> {
     return await TAURI_INVOKE("get_card_by_card_id", { cardId });
 },
-async getCards() : Promise<Card[]> {
+async getCards() : Promise<Db_Card[]> {
     return await TAURI_INVOKE("get_cards");
 },
 async createTrunkEntry(cardId: Db_CardId) : Promise<number> {
@@ -26,10 +26,10 @@ async createTrunkEntry(cardId: Db_CardId) : Promise<number> {
 async decreaseTrunkEntryAmount(cardId: Db_CardId) : Promise<number> {
     return await TAURI_INVOKE("decrease_trunk_entry_amount", { cardId });
 },
-async getTrunk() : Promise<TrunkEntry[]> {
+async getTrunk() : Promise<Db_TrunkEntry[]> {
     return await TAURI_INVOKE("get_trunk");
 },
-async getTrunkEntryByCardId(cardId: Db_CardId) : Promise<TrunkEntry> {
+async getTrunkEntryByCardId(cardId: Db_CardId) : Promise<Db_TrunkEntry> {
     return await TAURI_INVOKE("get_trunk_entry_by_card_id", { cardId });
 },
 async hasTrunkEntry(cardId: Db_CardId) : Promise<boolean> {
@@ -38,16 +38,13 @@ async hasTrunkEntry(cardId: Db_CardId) : Promise<boolean> {
 async increaseTrunkEntryAmount(cardId: Db_CardId) : Promise<Db_TrunkEntryAmount> {
     return await TAURI_INVOKE("increase_trunk_entry_amount", { cardId });
 },
-async setTrunkEntryAmount(cardId: Db_CardId, amount: number) : Promise<number> {
-    return await TAURI_INVOKE("set_trunk_entry_amount", { cardId, amount });
-},
 async createWish(cardId: Db_CardId) : Promise<number> {
     return await TAURI_INVOKE("create_wish", { cardId });
 },
-async getWishByCardId(cardId: Db_CardId) : Promise<Wish> {
+async getWishByCardId(cardId: Db_CardId) : Promise<Db_Wish> {
     return await TAURI_INVOKE("get_wish_by_card_id", { cardId });
 },
-async getWishlist() : Promise<Wish[]> {
+async getWishlist() : Promise<Db_Wish[]> {
     return await TAURI_INVOKE("get_wishlist");
 },
 async removeWish(cardId: Db_CardId) : Promise<number> {
@@ -66,20 +63,20 @@ async removeWish(cardId: Db_CardId) : Promise<number> {
 /** user-defined types **/
 
 export type BanlistStatus = "Forbidden" | "Limited" | "Semi-Limited"
-export type Card = { name: string; description: string; cardId: Db_CardId; cardType: Db_CardType; cardTypeHuman: string | null; cardRace: Db_CardRace; attack: number | null; defense: number | null; level: number | null; linkval: number | null; attribute: Db_CardAttribute | null; archetype: string | null; banlistStatus: Db_BanlistStatus | null; imageUrl: Db_Url; imageUrlCropped: Db_Url; imageUrlSmall: Db_Url; price: string | null }
 export type CardAttribute = "DARK" | "DIVINE" | "EARTH" | "FIRE" | "LIGHT" | "WATER" | "WIND"
 export type CardRace = "Abidos the Th" | "Adrian Gecko" | "Alexis Rhodes" | "Amnael" | "Andrew" | "Aqua" | "Arkana" | "Aster Phoenix" | "Axel Brodie" | "Bastion Misaw" | "Beast" | "Beast-Warrior" | "Bonz" | "Camula" | "Chazz Princet" | "Christine" | "Chumley Huffi" | "Continuous" | "Counter" | "Creator God" | "Cyberse" | "David" | "Dinosaur" | "Divine-Beast" | "Don Zaloog" | "Dragon" | "Dr. Vellian C" | "Emma" | "Equip" | "Espa Roba" | "Fairy" | "Field" | "Fiend" | "Fish" | "Illusion" | "Insect" | "Ishizu" | "Ishizu Ishtar" | "Jaden Yuki" | "Jesse Anderso" | "Joey" | "Joey Wheeler" | "Kagemaru" | "Kaiba" | "Keith" | "Lumis and Umb" | "Lumis Umbra" | "Machine" | "Mai" | "Mai Valentine" | "Mako" | "Nightshroud" | "" | "Normal" | "Odion" | "Paradox Broth" | "Pegasus" | "Plant" | "Psychic" | "Pyro" | "Quick-Play" | "Reptile" | "Rex" | "Ritual" | "Rock" | "Sea Serpent" | "Seto Kaiba" | "Spellcaster" | "Syrus Truesda" | "Tania" | "Tea Gardner" | "Thelonious Vi" | "The Supreme K" | "Thunder" | "Titan" | "Tyranno Hassl" | "Warrior" | "Weevil" | "Winged Beast" | "Wyrm" | "Yami Bakura" | "Yami Marik" | "Yami Yugi" | "Yubel" | "Yugi" | "Zane Truesdal" | "Zombie"
 export type CardType = "Effect Monster" | "Flip Effect Monster" | "Flip Tuner Effect Monster" | "Fusion Monster" | "Gemini Monster" | "Link Monster" | "Normal Monster" | "Normal Tuner Monster" | "Pendulum Effect Fusion Monster" | "Pendulum Effect Monster" | "Pendulum Effect Ritual Monster" | "Pendulum Flip Effect Monster" | "Pendulum Normal Monster" | "Pendulum Tuner Effect Monster" | "Ritual Effect Monster" | "Ritual Monster" | "Skill Card" | "Spell Card" | "Spirit Monster" | "Synchro Monster" | "Synchro Pendulum Effect Monster" | "Synchro Tuner Monster" | "Token" | "Toon Monster" | "Trap Card" | "Tuner Monster" | "Union Effect Monster" | "XYZ Monster" | "XYZ Pendulum Effect Monster"
 export type Db_BanlistStatus = BanlistStatus
+export type Db_Card = { name: string; description: string; cardId: Db_CardId; cardType: Db_CardType; cardTypeHuman: string | null; cardRace: Db_CardRace; attack: number | null; defense: number | null; level: number | null; linkval: number | null; attribute: Db_CardAttribute | null; archetype: string | null; banlistStatus: Db_BanlistStatus | null; imageUrl: Db_Url; imageUrlCropped: Db_Url; imageUrlSmall: Db_Url; price: string | null }
 export type Db_CardAttribute = CardAttribute
 export type Db_CardId = string
 export type Db_CardRace = CardRace
 export type Db_CardType = CardType
+export type Db_TrunkEntry = { cardId: Db_CardId; amount: Db_TrunkEntryAmount }
 export type Db_TrunkEntryAmount = number
 export type Db_Url = string
+export type Db_Wish = { cardId: Db_CardId }
 export type Error = string
-export type TrunkEntry = { cardId: Db_CardId; amount: Db_TrunkEntryAmount }
-export type Wish = { cardId: Db_CardId }
 
 /** tauri-specta globals **/
 

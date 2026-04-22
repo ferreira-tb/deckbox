@@ -1,11 +1,11 @@
 use super::BlockingDatabase;
 use crate::error::{Error, Result};
-use crate::model::wishlist::{NewWish, Wish};
+use crate::model::wishlist::{Db_NewWish, Db_Wish};
 use crate::sql_types::card_id::Db_CardId;
 use diesel::prelude::*;
 
 impl BlockingDatabase {
-  pub fn create_wish(&self, new_wish: &NewWish) -> Result<usize> {
+  pub fn create_wish(&self, new_wish: &Db_NewWish) -> Result<usize> {
     use crate::schema::wishlist;
     if self.has_trunk_entry(&new_wish.card_id)? {
       Ok(0)
@@ -19,19 +19,19 @@ impl BlockingDatabase {
     }
   }
 
-  pub fn get_wish_by_card_id(&self, card_id: &Db_CardId) -> Result<Wish> {
+  pub fn get_wish_by_card_id(&self, card_id: &Db_CardId) -> Result<Db_Wish> {
     use crate::schema::wishlist;
     wishlist::table
       .filter(wishlist::card_id.eq(card_id))
-      .select(Wish::as_select())
+      .select(Db_Wish::as_select())
       .first(&mut *self.conn())
       .map_err(Error::from)
   }
 
-  pub fn get_wishlist(&self) -> Result<Vec<Wish>> {
+  pub fn get_wishlist(&self) -> Result<Vec<Db_Wish>> {
     use crate::schema::wishlist;
     wishlist::table
-      .select(Wish::as_select())
+      .select(Db_Wish::as_select())
       .load(&mut *self.conn())
       .map_err(Error::from)
   }

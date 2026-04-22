@@ -1,6 +1,6 @@
 use crate::error::CmdResult;
 use crate::manager::ManagerExt;
-use deckbox_database::model::trunk::{NewTrunkEntry, TrunkEntry};
+use deckbox_database::model::trunk::{Db_NewTrunkEntry, Db_TrunkEntry};
 use deckbox_database::sql_types::card_id::Db_CardId;
 use deckbox_database::sql_types::trunk_entry_amount::Db_TrunkEntryAmount;
 use tauri::AppHandle;
@@ -8,7 +8,7 @@ use tauri::AppHandle;
 #[tauri::command]
 #[specta::specta]
 pub async fn create_trunk_entry(app: AppHandle, card_id: Db_CardId) -> CmdResult<u32> {
-  let new = NewTrunkEntry::new(card_id);
+  let new = Db_NewTrunkEntry::new(card_id);
   app
     .database()
     .create_trunk_entry(new)
@@ -29,7 +29,7 @@ pub async fn decrease_trunk_entry_amount(app: AppHandle, card_id: Db_CardId) -> 
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_trunk(app: AppHandle) -> CmdResult<Vec<TrunkEntry>> {
+pub async fn get_trunk(app: AppHandle) -> CmdResult<Vec<Db_TrunkEntry>> {
   app
     .database()
     .get_trunk()
@@ -42,7 +42,7 @@ pub async fn get_trunk(app: AppHandle) -> CmdResult<Vec<TrunkEntry>> {
 pub async fn get_trunk_entry_by_card_id(
   app: AppHandle,
   card_id: Db_CardId,
-) -> CmdResult<TrunkEntry> {
+) -> CmdResult<Db_TrunkEntry> {
   app
     .database()
     .get_trunk_entry_by_card_id(card_id)

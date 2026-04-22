@@ -1,8 +1,8 @@
-import type { Card } from '@/lib/bindings';
 import type { Option } from '@tb-dev/utils';
+import type { Db_Card } from '@/lib/bindings';
 import { computed, type MaybeRefOrGetter, type Ref, toRef } from 'vue';
 
-export function useCardCycleList<T extends Card>(
+export function useCardCycleList<T extends Db_Card>(
   cards: MaybeRefOrGetter<T[]>,
   current: Ref<Option<T>>,
 ) {
