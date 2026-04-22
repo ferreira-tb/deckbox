@@ -1,7 +1,7 @@
 use crate::error::CmdResult;
 use crate::http::get_bytes;
 use crate::manager::ManagerExt;
-use deckbox_database::model::card::{Card, NewCard};
+use deckbox_database::model::card::{Db_Card, Db_NewCard};
 use deckbox_database::sql_types::card_id::Db_CardId;
 use deckbox_database::sql_types::url::Db_Url;
 use futures::try_join;
@@ -39,7 +39,7 @@ pub async fn fetch_cards(app: AppHandle) -> CmdResult<()> {
   for card in ygo::all()
     .await?
     .into_iter()
-    .filter_map(NewCard::from_ygo_card)
+    .filter_map(Db_NewCard::from_ygo_card)
   {
     database.create_card(card.clone()).await?;
     set.spawn({
@@ -113,7 +113,7 @@ pub async fn get_archetypes(app: AppHandle) -> CmdResult<Vec<String>> {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_card_by_card_id(app: AppHandle, card_id: Db_CardId) -> CmdResult<Card> {
+pub async fn get_card_by_card_id(app: AppHandle, card_id: Db_CardId) -> CmdResult<Db_Card> {
   app
     .database()
     .get_card_by_card_id(card_id)
@@ -123,7 +123,7 @@ pub async fn get_card_by_card_id(app: AppHandle, card_id: Db_CardId) -> CmdResul
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_cards(app: AppHandle) -> CmdResult<Vec<Card>> {
+pub async fn get_cards(app: AppHandle) -> CmdResult<Vec<Db_Card>> {
   app
     .database()
     .get_cards()

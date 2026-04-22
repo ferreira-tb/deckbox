@@ -14,7 +14,7 @@ use specta::Type;
 #[diesel(table_name = crate::schema::card)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 #[serde(rename_all = "camelCase")]
-pub struct Card {
+pub struct Db_Card {
   pub name: String,
   pub description: String,
   pub card_id: Db_CardId,
@@ -36,7 +36,7 @@ pub struct Card {
 
 #[derive(Insertable, Clone, Debug)]
 #[diesel(table_name = crate::schema::card)]
-pub struct NewCard {
+pub struct Db_NewCard {
   pub(crate) name: String,
   pub(crate) description: String,
   pub(crate) card_id: Db_CardId,
@@ -58,7 +58,7 @@ pub struct NewCard {
   pub(crate) updated_at: Db_Zoned,
 }
 
-impl NewCard {
+impl Db_NewCard {
   pub fn from_ygo_card(mut card: ygo::Card) -> Option<Self> {
     let card_id = card.id?;
     let now = Db_Zoned::now();

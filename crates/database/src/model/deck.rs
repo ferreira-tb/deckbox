@@ -7,7 +7,7 @@ use specta::Type;
 #[diesel(table_name = crate::schema::deck)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 #[serde(rename_all = "camelCase")]
-pub struct Deck {
+pub struct Db_Deck {
   pub id: i32,
   pub name: String,
   pub description: Option<String>,
@@ -16,7 +16,7 @@ pub struct Deck {
 #[derive(Insertable, Clone, Debug, Serialize, Deserialize, Type)]
 #[diesel(table_name = crate::schema::deck)]
 #[serde(rename_all = "camelCase")]
-pub struct NewDeck {
+pub struct Db_NewDeck {
   name: String,
   description: Option<String>,
   created_at: Db_Zoned,
