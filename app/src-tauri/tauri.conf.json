@@ -45,7 +45,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdDREJEQTFBQUVCN0ZBQkMKUldTOCtyZXVHdHJiZklxc0wwaTVYSmZ4VjFoWjlUUldVWEJVVGsvNHBneXhZRFlCNFl1czlBWEwK",
       "endpoints": ["https://github.com/ferreira-tb/deckbox/releases/latest/download/latest.json"],
       "windows": {
         "installMode": "passive"
