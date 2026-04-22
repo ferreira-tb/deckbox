@@ -34,28 +34,40 @@ onKeyDown('F3', () => go('wishlist'));
 onKeyDown('F4', () => go('database'));
 onKeyDown('Escape', () => exit(0).err());
 
-onMounted(() => {
-  void commands.showWindow();
+onMounted(async () => {
+  try {
+    await loadData();
+  }
+  catch (err) {
+    handleError(err);
+  }
+  finally {
+    void commands.showWindow();
+  }
 });
 
 async function refresh() {
   await lock(async () => {
     try {
       await commands.fetchCards();
-      await loadCards();
-      await loadTrunk();
-      await loadWishlist();
+      await loadData();
     }
     catch (err) {
       handleError(err);
     }
   });
 }
+
+async function loadData() {
+  await loadCards();
+  await loadTrunk();
+  await loadWishlist();
+}
 </script>
 
 <template>
   <main class="fixed inset-0 select-none pb-safe">
-    <Sonner :position="md ? 'bottom-left' : 'top-center'" />
+    <Sonner :position="md ? 'bottom-right' : 'top-center'" />
     <div class="size-full flex flex-col overflow-hidden">
       <div class="flex justify-between items-center p-2">
         <div class="w-full">

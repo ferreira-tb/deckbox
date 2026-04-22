@@ -1,8 +1,7 @@
-import { commands } from '@/lib/bindings';
 import { handleError } from '@/lib/error';
 import { CardImpl } from '@/lib/model/card';
-import { tryOnMounted } from '@vueuse/core';
 import { tryInjectOrElse, useMutex } from '@tb-dev/vue';
+import { commands, type Db_CardId } from '@/lib/bindings';
 import { effectScope, type InjectionKey, markRaw, type Ref, shallowRef } from 'vue';
 
 const SYMBOL = Symbol() as InjectionKey<ReturnType<typeof create>>;
@@ -16,6 +15,8 @@ export function useCards() {
       cards: value.cards,
       loading: value.loading,
       loadCards: value.loadCards,
+      getCard: value.getCard,
+      withCard: value.withCard,
     };
   });
 }
@@ -40,15 +41,20 @@ function create() {
     }
   }
 
-  tryOnMounted(() => {
-    if (cards.value.length === 0) {
-      void loadCards();
-    }
-  });
+  function getCard(cardId: Db_CardId) {
+    return cards.value.find((card) => card.cardId === cardId) ?? null;
+  }
+
+  function withCard<T>(cardId: Db_CardId, fn: (card: CardImpl) => T): T | null {
+    const card = getCard(cardId);
+    return card ? fn(card) : null;
+  }
 
   return {
     cards: cards as Readonly<Ref<readonly CardImpl[]>>,
     loading: locked,
     loadCards,
+    getCard,
+    withCard,
   };
 }
