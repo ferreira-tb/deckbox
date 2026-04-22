@@ -3,6 +3,7 @@ use crate::sql_types::card_attribute::Db_CardAttribute;
 use crate::sql_types::card_id::Db_CardId;
 use crate::sql_types::card_race::Db_CardRace;
 use crate::sql_types::card_type::Db_CardType;
+use crate::sql_types::id::Db_CardLocalId;
 use crate::sql_types::url::Db_Url;
 use crate::sql_types::zoned::Db_Zoned;
 use diesel::prelude::*;
@@ -15,6 +16,7 @@ use specta::Type;
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 #[serde(rename_all = "camelCase")]
 pub struct Db_Card {
+  pub id: Db_CardLocalId,
   pub name: String,
   pub description: String,
   pub card_id: Db_CardId,

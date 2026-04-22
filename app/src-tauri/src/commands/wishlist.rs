@@ -7,7 +7,7 @@ use tauri::AppHandle;
 #[tauri::command]
 #[specta::specta]
 pub async fn create_wish(app: AppHandle, card_id: Db_CardId) -> CmdResult<u32> {
-  let new = Db_NewWish::new(card_id);
+  let new = Db_NewWish::builder(card_id).build();
   app
     .database()
     .create_wish(new)

@@ -847,6 +847,7 @@ name = "deckbox-database"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "bon",
  "derive_more 2.1.1",
  "diesel",
  "diesel_migrations",

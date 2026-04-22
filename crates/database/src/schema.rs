@@ -39,7 +39,9 @@ diesel::table! {
     deck_card (deck_id, card_id) {
         deck_id -> Integer,
         card_id -> Integer,
-        quantity -> Integer,
+        amount_main -> Integer,
+        amount_extra -> Integer,
+        amount_side -> Integer,
     }
 }
 

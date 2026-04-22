@@ -1,5 +1,6 @@
 use crate::sql_types::card_id::Db_CardId;
 use crate::sql_types::zoned::Db_Zoned;
+use bon::Builder;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -12,15 +13,12 @@ pub struct Db_Wish {
   pub card_id: Db_CardId,
 }
 
-#[derive(Insertable, Clone, Debug)]
+#[derive(Builder, Insertable, Clone, Debug)]
 #[diesel(table_name = crate::schema::wishlist)]
 pub struct Db_NewWish {
+  #[builder(start_fn)]
   pub(crate) card_id: Db_CardId,
-  pub(crate) created_at: Db_Zoned,
-}
 
-impl Db_NewWish {
-  pub fn new(card_id: Db_CardId) -> Self {
-    Self { card_id, created_at: Db_Zoned::now() }
-  }
+  #[builder(skip = Db_Zoned::now())]
+  pub(crate) created_at: Db_Zoned,
 }
