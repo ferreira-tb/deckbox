@@ -51,13 +51,20 @@ const { next, previous } = useCardCycleList(currentChunk, selected);
 const searchValue = ref<Option<string>>('');
 const searchInput = useTemplateRef('searchInputEl');
 
+const grid = useTemplateRef('gridEl');
+
 watch(() => props.cards, updateShownCards);
+
 watchDebounced(searchValue, updateShownCards, {
   debounce: 300,
   maxWait: 1000,
 });
 
-onBeforeMount(updateShownCards);
+watch(currentPage, () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  grid.value?.scrollTo({ top: 0, behavior: 'instant' });
+  fallbackSelect();
+});
 
 onKeyDown('ArrowLeft', previous);
 onKeyDown('ArrowRight', next);
@@ -72,6 +79,8 @@ onCtrlKeyDown(['f', 'F'], () => {
   // eslint-disable-next-line
   searchInput.value?.focus();
 });
+
+onBeforeMount(updateShownCards);
 
 function updateShownCards() {
   if (searchValue.value) {
@@ -89,7 +98,7 @@ function updateShownCards() {
 
 function fallbackSelect() {
   if (selected.value) {
-    if (!shownCards.value.includes(selected.value)) {
+    if (!isCardBeingShown(selected.value)) {
       const card = shownCards.value.at(0);
       if (card) selected.value = card;
     }
@@ -97,6 +106,10 @@ function fallbackSelect() {
   else {
     selected.value = currentChunk.value.at(0) ?? shownCards.value.at(0);
   }
+}
+
+function isCardBeingShown(card: CardImpl) {
+  return shownCards.value.some((it) => it.cardId === card.cardId);
 }
 </script>
 
@@ -120,6 +133,7 @@ function fallbackSelect() {
       <div class="size-full flex flex-col justify-between overflow-hidden">
         <div
           v-if="currentChunk.length > 0"
+          ref="gridEl"
           class="grid grid-cols-6 sm:grid-cols-8 xl:grid-cols-10 gap-2 px-1 pb-0 md:px-4 overflow-x-hidden overflow-y-auto"
         >
           <div v-for="(card, idx) of currentChunk" :key="idx">
