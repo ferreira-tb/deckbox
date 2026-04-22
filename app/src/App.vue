@@ -3,7 +3,6 @@ import { go } from '@/router';
 import { onMounted } from 'vue';
 import { commands } from '@/lib/bindings';
 import { handleError } from '@/lib/error';
-import { RefreshCwIcon } from '@lucide/vue';
 import { useColorMode } from '@vueuse/core';
 import Loading from '@/components/Loading.vue';
 import { throttle } from 'es-toolkit/function';
@@ -12,6 +11,7 @@ import { exit } from '@tauri-apps/plugin-process';
 import { useDatabase } from '@/composables/useDatabase';
 import { useWishlist } from '@/composables/useWishlist';
 import { onKeyDown, useBreakpoints, useMutex } from '@tb-dev/vue';
+import { HardDriveDownloadIcon, RefreshCwIcon } from '@lucide/vue';
 import NavigationMenuItem from '@/components/NavigationMenuItem.vue';
 import { Button, NavigationMenu, NavigationMenuList, Sonner } from '@tb-dev/vue-components';
 
@@ -87,6 +87,9 @@ async function loadData() {
         <div class="flex items-center gap-2 pr-2">
           <Button variant="outline" :disabled="locked" @click="refresh">
             <RefreshCwIcon class="size-6" />
+          </Button>
+          <Button variant="outline" @click="commands.exportDatabaseFile">
+            <HardDriveDownloadIcon class="size-6" />
           </Button>
         </div>
       </div>
