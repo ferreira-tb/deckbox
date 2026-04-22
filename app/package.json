@@ -1,0 +1,12 @@
+{
+  "name": "app",
+  "type": "module",
+  "packageManager": "pnpm@10.33.1",
+  "license": "GPL-3.0-only",
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "type-check": "vue-tsc --noEmit"
+  }
+}

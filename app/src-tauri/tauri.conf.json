@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0.0",
+  "productName": "Deckbox",
+  "version": "0.1.0",
+  "identifier": "tsukilabs.deckbox",
+  "build": {
+    "beforeDevCommand": "pnpm run -F app dev",
+    "beforeBuildCommand": "pnpm run -F app build",
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist",
+    "removeUnusedCommands": true
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "security": {
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["$APPCACHE/**", "$APPCONFIG/**", "$APPDATA/**", "$HOME/.tsukilabs/deckbox/**"]
+      },
+      "csp": {
+        "default-src": "'self'",
+        "connect-src": "ipc: http://ipc.localhost http://tauri.localhost",
+        "img-src": "'self' asset: http://asset.localhost blob: data:",
+        "style-src": "'self' 'unsafe-inline'"
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "publisher": "Tsukilabs",
+    "shortDescription": "Yu-Gi-Oh! collection manager",
+    "license": "GPL-3.0-only",
+    "licenseFile": "./LICENSE",
+    "homepage": "https://github.com/ferreira-tb/deckbox",
+    "targets": ["nsis", "deb", "rpm"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/64x64.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico",
+      "icons/icon.png"
+    ]
+  }
+}

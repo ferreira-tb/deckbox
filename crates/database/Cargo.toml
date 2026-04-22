@@ -1,0 +1,26 @@
+[package]
+name = "deckbox-database"
+publish = false
+
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+anyhow.workspace = true
+derive_more.workspace = true
+diesel.workspace = true
+diesel_migrations.workspace = true
+jiff.workspace = true
+libsqlite3-sys.workspace = true
+num-traits.workspace = true
+serde.workspace = true
+specta.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+url.workspace = true
+ygo.workspace = true

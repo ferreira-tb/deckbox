@@ -1,0 +1,120 @@
+use crate::sql_types::banlist_status::Db_BanlistStatus;
+use crate::sql_types::card_attribute::Db_CardAttribute;
+use crate::sql_types::card_id::Db_CardId;
+use crate::sql_types::card_race::Db_CardRace;
+use crate::sql_types::card_type::Db_CardType;
+use crate::sql_types::url::Db_Url;
+use crate::sql_types::zoned::Db_Zoned;
+use diesel::prelude::*;
+use num_traits::ToPrimitive;
+use serde::{Deserialize, Serialize};
+use specta::Type;
+
+#[derive(Queryable, Selectable, Clone, Debug, Serialize, Deserialize, Type)]
+#[diesel(table_name = crate::schema::card)]
+#[diesel(check_for_backend(diesel::sqlite::Sqlite))]
+#[serde(rename_all = "camelCase")]
+pub struct Card {
+  pub name: String,
+  pub description: String,
+  pub card_id: Db_CardId,
+  pub card_type: Db_CardType,
+  pub card_type_human: Option<String>,
+  pub card_race: Db_CardRace,
+  pub attack: Option<i32>,
+  pub defense: Option<i32>,
+  pub level: Option<i32>,
+  pub linkval: Option<i32>,
+  pub attribute: Option<Db_CardAttribute>,
+  pub archetype: Option<String>,
+  pub banlist_status: Option<Db_BanlistStatus>,
+  pub image_url: Db_Url,
+  pub image_url_cropped: Db_Url,
+  pub image_url_small: Db_Url,
+  pub price: Option<String>,
+}
+
+#[derive(Insertable, Clone, Debug)]
+#[diesel(table_name = crate::schema::card)]
+pub struct NewCard {
+  pub(crate) name: String,
+  pub(crate) description: String,
+  pub(crate) card_id: Db_CardId,
+  pub(crate) card_type: Db_CardType,
+  pub(crate) card_type_human: Option<String>,
+  pub(crate) card_race: Db_CardRace,
+  pub(crate) attack: Option<i32>,
+  pub(crate) defense: Option<i32>,
+  pub(crate) level: Option<i32>,
+  pub(crate) linkval: Option<i32>,
+  pub(crate) attribute: Option<Db_CardAttribute>,
+  pub(crate) archetype: Option<String>,
+  pub(crate) banlist_status: Option<Db_BanlistStatus>,
+  pub(crate) image_url: Db_Url,
+  pub(crate) image_url_cropped: Db_Url,
+  pub(crate) image_url_small: Db_Url,
+  pub(crate) price: Option<String>,
+  pub(crate) created_at: Db_Zoned,
+  pub(crate) updated_at: Db_Zoned,
+}
+
+impl NewCard {
+  pub fn from_ygo_card(mut card: ygo::Card) -> Option<Self> {
+    let card_id = card.id?;
+    let now = Db_Zoned::now();
+
+    let image = card
+      .card_images
+      .iter_mut()
+      .find(|it| it.id == Some(u32::from(card_id)))?;
+
+    let banlist_status = card
+      .banlist_info
+      .and_then(|it| it.ban_tcg)
+      .map(Db_BanlistStatus::from);
+
+    let price = card
+      .card_prices
+      .first_mut()?
+      .tcgplayer_price
+      .take();
+
+    Some(Self {
+      name: card.name?,
+      description: card.desc?,
+      card_id: Db_CardId::from(card_id),
+      card_type: Db_CardType::from(card.r#type?),
+      card_type_human: card.human_readable_card_type,
+      card_race: Db_CardRace::from(card.race?),
+      attack: card.atk.and_then(|it| it.to_i32()),
+      defense: card.def.and_then(|it| it.to_i32()),
+      level: card.level.and_then(|it| it.to_i32()),
+      linkval: card.linkval.and_then(|it| it.to_i32()),
+      attribute: card.attribute.map(Db_CardAttribute::from),
+      archetype: card.archetype,
+      banlist_status,
+      image_url: image.image_url.take()?.into(),
+      image_url_cropped: image.image_url_cropped.take()?.into(),
+      image_url_small: image.image_url_small.take()?.into(),
+      price,
+      created_at: now.clone(),
+      updated_at: now,
+    })
+  }
+
+  pub fn card_id(&self) -> &Db_CardId {
+    &self.card_id
+  }
+
+  pub fn image_url(&self) -> &Db_Url {
+    &self.image_url
+  }
+
+  pub fn image_url_cropped(&self) -> &Db_Url {
+    &self.image_url_cropped
+  }
+
+  pub fn image_url_small(&self) -> &Db_Url {
+    &self.image_url_small
+  }
+}

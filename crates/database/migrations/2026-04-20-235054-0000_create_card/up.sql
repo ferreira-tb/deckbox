@@ -1,0 +1,22 @@
+CREATE TABLE card (
+  id INTEGER NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  card_id TEXT NOT NULL UNIQUE,
+  card_type TEXT NOT NULL,
+  card_type_human TEXT,
+  card_race TEXT NOT NULL,
+  attack INTEGER,
+  defense INTEGER,
+  level INTEGER,
+  linkval INTEGER,
+  attribute TEXT,
+  archetype TEXT,
+  banlist_status TEXT,
+  image_url TEXT NOT NULL,
+  image_url_cropped TEXT NOT NULL,
+  image_url_small TEXT NOT NULL,
+  price TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);

@@ -1,0 +1,161 @@
+[workspace]
+resolver = "3"
+members = ["app/src-tauri", "crates/database"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.97"
+license = "GPL-3.0-only"
+
+[profile.release]
+codegen-units = 1
+lto = "fat"
+opt-level = 3
+panic = "abort"
+strip = "symbols"
+
+[profile.preview]
+inherits = "release"
+incremental = true
+codegen-units = 16
+lto = "off"
+opt-level = 0
+debug = true
+debug-assertions = true
+
+[workspace.dependencies]
+anyhow = "1.0"
+bon = "3.9"
+futures = "0.3"
+itertools = "0.14"
+nil-log = "=0.4.22"
+num-traits = "=0.2.19"
+serde_json = "1.0"
+specta-typescript = "=0.0.9"
+tap = "=1.0.1"
+tauri-plugin-clipboard-manager = "2.3"
+tauri-plugin-dialog = "2.7"
+tauri-plugin-fs = "2.5"
+tauri-plugin-opener = "2.5"
+tauri-plugin-os = "2.3"
+tauri-plugin-persisted-scope = "2.3"
+tauri-plugin-process = "2.3"
+tauri-plugin-single-instance = "2.4"
+thiserror = "2.0"
+
+[workspace.dependencies.deckbox-database]
+version = "*"
+path = "./crates/database"
+
+[workspace.dependencies.derive_more]
+version = "2.1"
+features = ["deref", "deref_mut", "display", "from", "into"]
+
+[workspace.dependencies.diesel]
+version = "2.3"
+default-features = false
+features = ["32-column-tables", "returning_clauses_for_sqlite_3_35", "sqlite"]
+
+[workspace.dependencies.diesel_migrations]
+version = "2.3"
+features = ["sqlite"]
+
+[workspace.dependencies.jiff]
+version = "0.2"
+features = ["serde"]
+
+[workspace.dependencies.libsqlite3-sys]
+version = "0.36"
+features = ["bundled"]
+
+[workspace.dependencies.mimalloc]
+version = "0.1"
+features = ["v3"]
+
+[workspace.dependencies.reqwest]
+version = "0.12"
+default-features = false
+features = ["json", "rustls-tls"]
+
+[workspace.dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+[workspace.dependencies.specta]
+version = "=2.0.0-rc.22"
+features = ["serde", "serde_json"]
+
+[workspace.dependencies.strum]
+version = "0.28"
+features = ["derive"]
+
+[workspace.dependencies.tauri-plugin-pinia]
+version = "4.2"
+features = ["marshaler-toml", "preserve-order"]
+
+[workspace.dependencies.tauri-plugin-prevent-default]
+version = "5"
+features = ["platform-windows"]
+
+[workspace.dependencies.tauri-specta]
+version = "=2.0.0-rc.21"
+features = ["derive", "typescript"]
+
+[workspace.dependencies.tokio]
+version = "1.52"
+features = ["full"]
+
+[workspace.dependencies.tracing]
+version = "0.1"
+features = ["release_max_level_off"]
+
+[workspace.dependencies.tracing-subscriber]
+version = "0.3"
+features = ["env-filter"]
+
+[workspace.dependencies.url]
+version = "2.5"
+features = ["serde"]
+
+[workspace.dependencies.ygo]
+version = "0.1"
+package = "ygo-core"
+features = ["specta"]
+
+[workspace.lints.rust]
+async_fn_in_trait = "allow"
+dangling_pointers_from_temporaries = "deny"
+unfulfilled_lint_expectations = "deny"
+unsafe_op_in_unsafe_fn = "deny"
+variant_size_differences = "warn"
+
+[workspace.lints.clippy]
+clone_on_ref_ptr = "deny"
+dbg_macro = "deny"
+enum_glob_use = "allow"
+filetype_is_file = "allow"
+get_unwrap = "deny"
+large_enum_variant = "deny"
+map_unwrap_or = "allow"
+match_wildcard_for_single_variants = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+missing_safety_doc = "deny"
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+needless_borrow = "deny"
+needless_for_each = "allow"
+obfuscated_if_else = "allow"
+rc_buffer = "deny"
+rc_mutex = "deny"
+rest_pat_in_fully_bound_structs = "deny"
+similar_names = "allow"
+struct_field_names = "allow"
+unnecessary_safety_comment = "deny"
+unsafe_derive_deserialize = "allow"
+useless_conversion = "deny"
+
+[workspace.lints.clippy.pedantic]
+level = "deny"
+priority = -1

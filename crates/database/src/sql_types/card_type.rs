@@ -1,0 +1,44 @@
+use derive_more::{Deref, Display, From, Into};
+use diesel::backend::Backend;
+use diesel::deserialize::{self as de, FromSql, FromSqlRow};
+use diesel::expression::AsExpression;
+use diesel::serialize::{self as ser, IsNull, Output, ToSql};
+use diesel::sql_types::Text;
+use diesel::sqlite::Sqlite;
+use serde::{Deserialize, Serialize};
+use specta::Type;
+use std::str::FromStr;
+
+#[derive(
+  FromSqlRow,
+  AsExpression,
+  Clone,
+  Copy,
+  Debug,
+  Deref,
+  Display,
+  From,
+  Into,
+  Deserialize,
+  Serialize,
+  Type,
+)]
+#[diesel(sql_type = Text)]
+pub struct Db_CardType(ygo::CardType);
+
+impl FromSql<Text, Sqlite> for Db_CardType {
+  fn from_sql(bytes: <Sqlite as Backend>::RawValue<'_>) -> de::Result<Self> {
+    let value = <String as FromSql<Text, Sqlite>>::from_sql(bytes)?;
+    Ok(Db_CardType(ygo::CardType::from_str(value.as_str())?))
+  }
+}
+
+impl ToSql<Text, Sqlite> for Db_CardType
+where
+  String: ToSql<Text, Sqlite>,
+{
+  fn to_sql<'b>(&'b self, out: &mut Output<'b, '_, Sqlite>) -> ser::Result {
+    out.set_value(self.to_string());
+    Ok(IsNull::No)
+  }
+}

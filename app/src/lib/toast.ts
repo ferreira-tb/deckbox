@@ -1,0 +1,24 @@
+import { type ExternalToast, toast as sonner } from '@tb-dev/vue-sonner';
+
+type ToastOptions = Partial<ExternalToast>;
+
+const defaultToastOptions: ToastOptions = {
+  closeButton: false,
+  dismissible: true,
+  duration: 5000,
+};
+
+export const toast = {
+  error(text: string, options: ToastOptions = {}) {
+    sonner.error(text, { ...defaultToastOptions, ...options });
+  },
+  info(text: string, options: ToastOptions = {}) {
+    sonner.info(text, { ...defaultToastOptions, ...options });
+  },
+  success(text: string, options: ToastOptions = {}) {
+    sonner.success(text, { ...defaultToastOptions, ...options });
+  },
+  warning(text: string, options: ToastOptions = {}) {
+    sonner.warning(text, { ...defaultToastOptions, ...options });
+  },
+} as const;
