@@ -84,6 +84,7 @@ impl Db_NewCard {
       .iter()
       .filter_map(|it| it.tcgplayer_price.as_deref())
       .filter_map(to_price_f64)
+      .filter(|it| *it > 0.0)
       .min_by(f64::total_cmp)
       .map(|it| it.to_string());
 
