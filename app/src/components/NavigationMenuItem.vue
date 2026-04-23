@@ -18,7 +18,9 @@ const currentRoute = useRoute();
       :active="currentRoute.name === route"
       :class="navigationMenuTriggerStyle()"
     >
-      <RouterLink :to="{ name: route }">{{ label }}</RouterLink>
+      <RouterLink :to="{ name: route }" :data-active="currentRoute.name === route">
+        <span>{{ label }}</span>
+      </RouterLink>
     </NavigationMenuLink>
   </NavigationMenuItem>
 </template>

@@ -20,7 +20,7 @@ const { isInWishlist } = useWishlist();
 </script>
 
 <template>
-  <div :class="cn('relative', showWish && isInWishlist(card.cardId) ? 'ring-2 ring-green-500' : '')">
+  <div :class="cn('relative', showWish && isInWishlist(card.cardId) ? 'ring-3 ring-yellow-500' : '')">
     <img
       :src="card.imagePathSmall"
       :alt="card.name"

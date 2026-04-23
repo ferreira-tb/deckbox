@@ -164,7 +164,7 @@ function isCardBeingShown(card: CardImpl) {
         <div
           v-if="currentChunk.length > 0"
           ref="gridEl"
-          class="grid grid-cols-6 sm:grid-cols-8 xl:grid-cols-10 gap-2 px-1 pb-0 md:px-4 overflow-x-hidden overflow-y-auto"
+          class="grid grid-cols-6 sm:grid-cols-8 xl:grid-cols-10 gap-2 p-1 md:px-4 overflow-x-hidden overflow-y-auto"
         >
           <div v-for="(card, idx) of currentChunk" :key="idx">
             <YgoCardGridItem
