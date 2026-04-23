@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { sessionRef } from '@tb-dev/vue';
+import { commands } from '@/lib/bindings';
 import { Button } from '@tb-dev/vue-components';
 import { useTrunk } from '@/composables/useTrunk';
 import { useWishlist } from '@/composables/useWishlist';
@@ -24,11 +25,12 @@ const searchValue = sessionRef('search:wishlist', '');
     <YgoCardGrid
       v-model:search="searchValue"
       :cards="wishedCards"
+      @buy-card="(id) => commands.openStoreWebsite(id)"
       @remove-wish="removeWish"
       @update-trunk-entry-amount="updateTrunkEntryAmount"
     >
       <template #sideAction="{ cardId, inTrunk }">
-        <div class="grid grid-cols-2 justify-center items-center gap-2">
+        <div class="grid grid-cols-3 justify-center items-center gap-2">
           <Button variant="outline">
             <span v-if="inTrunk === 0">Trunk</span>
             <span v-else>Trunk ({{ inTrunk }})</span>
@@ -40,6 +42,10 @@ const searchValue = sessionRef('search:wishlist', '');
             @click="() => removeWish(cardId)"
           >
             <span>Remove</span>
+          </Button>
+
+          <Button variant="outline" @click="() => commands.openStoreWebsite(cardId)">
+            <span>Buy</span>
           </Button>
         </div>
       </template>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { chunk } from 'es-toolkit/array';
-import type { Option } from '@tb-dev/utils';
 import { watchDebounced } from '@vueuse/core';
 import type { Db_CardId } from '@/lib/bindings';
 import type { CardImpl } from '@/lib/model/card';
 import { onCtrlKeyDown, onKeyDown } from '@tb-dev/vue';
 import { useWishlist } from '@/composables/useWishlist';
+import type { MaybePromise, Option } from '@tb-dev/utils';
 import { useCardCycleList } from '@/composables/useCardCycleList';
 import YgoCardGridItem from '@/components/ygo-card/YgoCardGridItem.vue';
 import YgoCardGridSide from '@/components/ygo-card/YgoCardGridSide.vue';
@@ -20,6 +20,7 @@ interface Props {
   showWish?: boolean;
 
   onAddWish?: (cardId: Db_CardId) => void;
+  onBuyCard?: (cardId: Db_CardId) => MaybePromise<unknown>;
   onRemoveWish?: (cardId: Db_CardId) => void;
   onUpdateTrunkEntryAmount?: (cardId: Db_CardId, kind: 'increase' | 'decrease') => void;
 }
@@ -79,6 +80,12 @@ onKeyDown('ArrowLeft', cycleList.previous);
 onKeyDown('ArrowRight', cycleList.next);
 onKeyDown('ArrowUp', cycleList.first);
 onKeyDown('ArrowDown', cycleList.last);
+
+onKeyDown(['b', 'B'], async () => {
+  if (selected.value) {
+    await props.onBuyCard?.(selected.value.cardId);
+  }
+});
 
 onCtrlKeyDown(['f', 'F'], () => {
   // eslint-disable-next-line

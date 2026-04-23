@@ -7,6 +7,7 @@ pub fn collect() -> Builder {
     .error_handling(ErrorHandlingMode::Throw)
     .commands(collect_commands![
       commands::export_database_file,
+      commands::open_store_website,
       commands::show_window,
       commands::card::fetch_cards,
       commands::card::get_archetypes,

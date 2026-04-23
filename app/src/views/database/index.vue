@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { sessionRef } from '@tb-dev/vue';
-import type { Db_CardId } from '@/lib/bindings';
 import { Button } from '@tb-dev/vue-components';
 import { useTrunk } from '@/composables/useTrunk';
 import { useDatabase } from '@/composables/useDatabase';
 import { useWishlist } from '@/composables/useWishlist';
+import { commands, type Db_CardId } from '@/lib/bindings';
 import YgoCardGrid from '@/components/ygo-card/YgoCardGrid.vue';
 
 const { cards } = useDatabase();
@@ -41,6 +41,7 @@ async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
       show-trunk
       show-wish
       @add-wish="addWish"
+      @buy-card="(id) => commands.openStoreWebsite(id)"
       @remove-wish="removeWish"
       @update-trunk-entry-amount="updateTrunkEntryAmount"
     >
@@ -60,11 +61,19 @@ async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
           </Button>
 
           <Button
+            v-if="inTrunk === 0 && !isInWishlist(cardId)"
             variant="outline"
-            :disabled="isLoadingWishlist || inTrunk !== 0 || isInWishlist(cardId)"
+            :disabled="isLoadingWishlist"
             @click="() => addWish(cardId)"
           >
             <span>Wish</span>
+          </Button>
+          <Button
+            v-else
+            variant="outline"
+            @click="() => commands.openStoreWebsite(cardId)"
+          >
+            <span>Buy</span>
           </Button>
         </div>
       </template>

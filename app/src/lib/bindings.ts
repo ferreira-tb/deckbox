@@ -8,6 +8,9 @@ export const commands = {
 async exportDatabaseFile() : Promise<null> {
     return await TAURI_INVOKE("export_database_file");
 },
+async openStoreWebsite(cardId: Db_CardId) : Promise<null> {
+    return await TAURI_INVOKE("open_store_website", { cardId });
+},
 async showWindow() : Promise<null> {
     return await TAURI_INVOKE("show_window");
 },
