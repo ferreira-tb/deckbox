@@ -26,6 +26,7 @@ export function useWishlist() {
       wishlist: value.wishlist,
       wishSet: value.wishSet,
       loading: value.loading,
+      totalInWishlist: value.totalInWishlist,
       addWish: value.addWish,
       dangerouslyRemoveLocalWish: value.dangerouslyRemoveLocalWish,
       getWish: value.getWish,
@@ -42,6 +43,10 @@ function create() {
 
   const wishSet = computed(() => {
     return new Set(wishlist.value.map((wish) => wish.cardId));
+  });
+
+  const totalInWishlist = computed(() => {
+    return wishlist.value.length;
   });
 
   const { withCard } = useDatabase();
@@ -125,6 +130,7 @@ function create() {
     wishlist: wishlist as Readonly<Ref<readonly WishImpl[]>>,
     wishSet: wishSet as Readonly<Ref<ReadonlySet<Db_CardId>>>,
     loading: locked,
+    totalInWishlist,
     addWish,
     dangerouslyRemoveLocalWish,
     getWish,

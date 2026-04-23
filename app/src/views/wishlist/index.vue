@@ -11,6 +11,7 @@ const { updateTrunkEntryAmount } = useTrunk();
 
 const {
   loading: isLoadingWishlist,
+  totalInWishlist,
   isInWishlist,
   removeWish,
 } = useWishlist();
@@ -29,6 +30,13 @@ const searchValue = sessionRef('search:wishlist', '');
       @remove-wish="removeWish"
       @update-trunk-entry-amount="updateTrunkEntryAmount"
     >
+      <template #header>
+        <div class="text-sm text-muted-foreground whitespace-nowrap">
+          <span v-if="totalInWishlist === 1">1 card</span>
+          <span v-else-if="totalInWishlist > 1">{{ `${totalInWishlist} cards` }}</span>
+        </div>
+      </template>
+
       <template #sideAction="{ cardId, inTrunk }">
         <div class="grid grid-cols-3 justify-center items-center gap-2">
           <Button variant="outline">

@@ -7,7 +7,7 @@ import { useWishlist } from '@/composables/useWishlist';
 import { commands, type Db_CardId } from '@/lib/bindings';
 import YgoCardGrid from '@/components/ygo-card/YgoCardGrid.vue';
 
-const { cards } = useDatabase();
+const { cards, totalInDatabase } = useDatabase();
 
 const {
   loading: isLoadingTrunk,
@@ -45,6 +45,13 @@ async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
       @remove-wish="removeWish"
       @update-trunk-entry-amount="updateTrunkEntryAmount"
     >
+      <template #header>
+        <div class="text-sm text-muted-foreground whitespace-nowrap">
+          <span v-if="totalInDatabase === 1">1 card</span>
+          <span v-else-if="totalInDatabase > 1">{{ `${totalInDatabase} cards` }}</span>
+        </div>
+      </template>
+
       <template #sideAction="{ cardId, inTrunk }">
         <div class="grid grid-cols-3 justify-center items-center gap-2">
           <Button

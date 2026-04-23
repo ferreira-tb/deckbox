@@ -10,6 +10,7 @@ const cards = useCardsInTrunk();
 
 const {
   loading: isLoadingTrunk,
+  totalInTrunk,
   updateTrunkEntryAmount,
 } = useTrunk();
 
@@ -34,6 +35,13 @@ async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
       @buy-card="(id) => commands.openStoreWebsite(id)"
       @update-trunk-entry-amount="updateTrunkEntryAmount"
     >
+      <template #header>
+        <div class="text-sm text-muted-foreground whitespace-nowrap">
+          <span v-if="totalInTrunk === 1">1 card</span>
+          <span v-else-if="totalInTrunk > 1">{{ `${totalInTrunk} cards` }}</span>
+        </div>
+      </template>
+
       <template #sideAction="{ cardId, inTrunk }">
         <div class="grid grid-cols-3 justify-center items-center gap-2">
           <Button

@@ -39,6 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
 const searchValue = defineModel<string>('search', { required: true });
 
 defineSlots<{
+  header?: () => VNode;
   sideAction?: (props: SideActionSlotProps) => VNode;
 }>();
 
@@ -163,8 +164,13 @@ function isCardBeingShown(card: CardImpl) {
 
 <template>
   <div class="size-full flex flex-col">
-    <div class="flex items-center py-2 px-4">
-      <YgoCardGridSearch ref="searchInputEl" v-model="searchValue" class="w-68" />
+    <div class="flex justify-between items-center py-2 px-4">
+      <div class="w-full flex items-center">
+        <YgoCardGridSearch ref="searchInputEl" v-model="searchValue" class="w-68" />
+      </div>
+      <div v-if="$slots.header" class="max-w-min">
+        <slot name="header"></slot>
+      </div>
     </div>
 
     <div class="size-full flex overflow-hidden">

@@ -2,7 +2,7 @@ import { handleError } from '@/lib/error';
 import { CardImpl } from '@/lib/model/card';
 import { tryInjectOrElse, useMutex } from '@tb-dev/vue';
 import { commands, type Db_CardId } from '@/lib/bindings';
-import { effectScope, type InjectionKey, markRaw, type Ref, shallowRef } from 'vue';
+import { computed, effectScope, type InjectionKey, markRaw, type Ref, shallowRef } from 'vue';
 
 const SYMBOL = Symbol() as InjectionKey<ReturnType<typeof create>>;
 
@@ -14,6 +14,7 @@ export function useDatabase() {
     return {
       cards: value.cards,
       loading: value.loading,
+      totalInDatabase: value.totalInDatabase,
       getCard: value.getCard,
       loadCards: value.loadCards,
       withCard: value.withCard,
@@ -24,6 +25,10 @@ export function useDatabase() {
 function create() {
   const cards = shallowRef<CardImpl[]>([]);
   const { locked, ...mutex } = useMutex();
+
+  const totalInDatabase = computed(() => {
+    return cards.value.length;
+  });
 
   async function loadCards() {
     try {
@@ -53,6 +58,7 @@ function create() {
   return {
     cards: cards as Readonly<Ref<readonly CardImpl[]>>,
     loading: locked,
+    totalInDatabase,
     getCard,
     loadCards,
     withCard,
