@@ -12,7 +12,7 @@ import YgoCardGridItem from '@/components/ygo-card/YgoCardGridItem.vue';
 import YgoCardGridSide from '@/components/ygo-card/YgoCardGridSide.vue';
 import YgoCardGridSearch from '@/components/ygo-card/YgoCardGridSearch.vue';
 import YgoCardGridPagination from '@/components/ygo-card/YgoCardGridPagination.vue';
-import { computed, onBeforeMount, ref, shallowRef, useTemplateRef, type VNode, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, shallowRef, useTemplateRef, type VNode, watch } from 'vue';
 
 interface Props {
   cards: readonly CardImpl[];
@@ -128,7 +128,9 @@ onKeyDown(['w', 'W'], () => {
   }
 });
 
-onBeforeMount(updateShownCards);
+onMounted(() => {
+  void nextTick(updateShownCards);
+});
 
 function updateShownCards() {
   const search = searchValue.value.trim();
