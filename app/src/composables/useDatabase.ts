@@ -28,7 +28,7 @@ function create() {
   async function loadCards() {
     try {
       await mutex.acquire();
-      const result = await commands.getTcgCards();
+      const result = await commands.getCards();
       cards.value = result.map((card) => {
         return markRaw(new CardImpl(card));
       });

@@ -54,35 +54,6 @@ impl BlockingDatabase {
   pub fn get_cards(&self) -> Result<Vec<Db_Card>> {
     use crate::schema::card;
     card::table
-      .filter(card::card_race.ne(Db_CardRace::from(CardRace::None)))
-      .filter(card::card_type.ne_all([
-        Db_CardType::from(CardType::SkillCard),
-        Db_CardType::from(CardType::Token),
-      ]))
-      .order(card::name.asc())
-      .select(Db_Card::as_select())
-      .load(&mut *self.conn())
-      .map_err(Error::from)
-  }
-
-  pub fn get_ocg_cards(&self) -> Result<Vec<Db_Card>> {
-    use crate::schema::card;
-    card::table
-      .filter(card::ocg_date.is_not_null())
-      .filter(card::card_race.ne(Db_CardRace::from(CardRace::None)))
-      .filter(card::card_type.ne_all([
-        Db_CardType::from(CardType::SkillCard),
-        Db_CardType::from(CardType::Token),
-      ]))
-      .order(card::name.asc())
-      .select(Db_Card::as_select())
-      .load(&mut *self.conn())
-      .map_err(Error::from)
-  }
-
-  pub fn get_tcg_cards(&self) -> Result<Vec<Db_Card>> {
-    use crate::schema::card;
-    card::table
       .filter(card::tcg_date.is_not_null())
       .filter(card::card_race.ne(Db_CardRace::from(CardRace::None)))
       .filter(card::card_type.ne_all([

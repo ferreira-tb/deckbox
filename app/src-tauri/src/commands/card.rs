@@ -130,23 +130,3 @@ pub async fn get_cards(app: AppHandle) -> CmdResult<Vec<Db_Card>> {
     .await
     .map_err(Into::into)
 }
-
-#[tauri::command]
-#[specta::specta]
-pub async fn get_ocg_cards(app: AppHandle) -> CmdResult<Vec<Db_Card>> {
-  app
-    .database()
-    .get_ocg_cards()
-    .await
-    .map_err(Into::into)
-}
-
-#[tauri::command]
-#[specta::specta]
-pub async fn get_tcg_cards(app: AppHandle) -> CmdResult<Vec<Db_Card>> {
-  app
-    .database()
-    .get_tcg_cards()
-    .await
-    .map_err(Into::into)
-}
