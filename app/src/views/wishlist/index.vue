@@ -9,12 +9,7 @@ import YgoCardGrid from '@/components/ygo-card/YgoCardGrid.vue';
 
 const { updateTrunkEntryAmount } = useTrunk();
 
-const {
-  loading: isLoadingWishlist,
-  totalInWishlist,
-  isInWishlist,
-  removeWish,
-} = useWishlist();
+const { totalInWishlist, removeWish } = useWishlist();
 
 const wishedCards = useWishedCards();
 
@@ -38,18 +33,10 @@ const searchValue = sessionRef('search:wishlist', '');
       </template>
 
       <template #sideAction="{ cardId, inTrunk }">
-        <div class="grid grid-cols-3 justify-center items-center gap-2">
+        <div class="grid grid-cols-2 justify-center items-center gap-2">
           <Button variant="outline">
             <span v-if="inTrunk === 0">Trunk</span>
             <span v-else>Trunk ({{ inTrunk }})</span>
-          </Button>
-
-          <Button
-            variant="outline"
-            :disabled="isLoadingWishlist || !isInWishlist(cardId)"
-            @click="() => removeWish(cardId)"
-          >
-            <span>Remove</span>
           </Button>
 
           <Button variant="outline" @click="() => commands.openStoreWebsite(cardId)">
