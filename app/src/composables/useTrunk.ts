@@ -112,6 +112,17 @@ function create() {
             trunk.value = trunk.value
               .filter((it) => it.cardId !== cardId)
               .concat(entry);
+
+            if (newAmount > currentAmount) {
+              withCard(cardId, (card) => {
+                toast.success(`Added "${card.name}" to trunk`);
+              });
+            }
+            else if (newAmount < currentAmount) {
+              withCard(cardId, (card) => {
+                toast.success(`Removed "${card.name}" from trunk`);
+              });
+            }
           }
         }
       }
