@@ -1,5 +1,6 @@
 use super::BlockingDatabase;
 use crate::error::{Error, Result};
+use crate::model::card::Db_Card;
 use crate::model::trunk::{Db_NewTrunkEntry, Db_TrunkEntry};
 use crate::sql_types::card_id::Db_CardId;
 use crate::sql_types::trunk_entry_amount::Db_TrunkEntryAmount;
@@ -61,6 +62,16 @@ impl BlockingDatabase {
     trunk::table
       .filter(trunk::amount.gt(0))
       .select(Db_TrunkEntry::as_select())
+      .load(&mut *self.conn())
+      .map_err(Error::from)
+  }
+
+  pub fn get_trunk_cards(&self) -> Result<Vec<(Db_Card, Db_TrunkEntryAmount)>> {
+    use crate::schema::{card, trunk};
+    card::table
+      .inner_join(trunk::table.on(card::card_id.eq(trunk::card_id)))
+      .filter(trunk::amount.gt(0))
+      .select((Db_Card::as_select(), trunk::amount))
       .load(&mut *self.conn())
       .map_err(Error::from)
   }

@@ -118,6 +118,12 @@ impl Database {
     self.with_blocking(|db| db.get_trunk()).await
   }
 
+  pub async fn get_trunk_cards(&self) -> Result<Vec<(Db_Card, Db_TrunkEntryAmount)>> {
+    self
+      .with_blocking(|db| db.get_trunk_cards())
+      .await
+  }
+
   pub async fn get_trunk_entry_by_card_id(&self, card_id: Db_CardId) -> Result<Db_TrunkEntry> {
     self
       .with_blocking(move |db| db.get_trunk_entry_by_card_id(&card_id))
