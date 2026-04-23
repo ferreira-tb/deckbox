@@ -26,6 +26,7 @@ export function useTrunk() {
     return {
       trunk: value.trunk,
       trunkSet: value.trunkSet,
+      totalInTrunk: value.totalInTrunk,
       loading: value.loading,
       getTrunkEntry: value.getTrunkEntry,
       getTrunkEntryAmount: value.getTrunkEntryAmount,
@@ -42,6 +43,10 @@ function create() {
 
   const trunkSet = computed(() => {
     return new Set(trunk.value.map((entry) => entry.cardId));
+  });
+
+  const totalInTrunk = computed(() => {
+    return trunk.value.reduce((sum, entry) => sum + entry.amount, 0);
   });
 
   const { withCard } = useDatabase();
@@ -151,6 +156,7 @@ function create() {
   return {
     trunk: trunk as Readonly<Ref<readonly TrunkEntryImpl[]>>,
     trunkSet: trunkSet as Readonly<Ref<ReadonlySet<Db_CardId>>>,
+    totalInTrunk,
     loading: locked,
     getTrunkEntry,
     getTrunkEntryAmount,
