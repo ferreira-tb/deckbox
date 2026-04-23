@@ -29,8 +29,10 @@ impl BlockingDatabase {
   }
 
   pub fn get_wishlist(&self) -> Result<Vec<Db_Wish>> {
-    use crate::schema::wishlist;
+    use crate::schema::{card, wishlist};
     wishlist::table
+      .inner_join(card::table.on(card::card_id.eq(wishlist::card_id)))
+      .order(card::name.asc())
       .select(Db_Wish::as_select())
       .load(&mut *self.conn())
       .map_err(Error::from)

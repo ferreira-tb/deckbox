@@ -29,6 +29,7 @@ impl BlockingDatabase {
     use crate::schema::card;
     let archetypes: Vec<Option<String>> = card::table
       .filter(card::archetype.is_not_null())
+      .order(card::archetype.asc())
       .select(card::archetype)
       .distinct()
       .load(&mut *self.conn())?;
@@ -48,6 +49,7 @@ impl BlockingDatabase {
   pub fn get_cards(&self) -> Result<Vec<Db_Card>> {
     use crate::schema::card;
     card::table
+      .order(card::name.asc())
       .select(Db_Card::as_select())
       .load(&mut *self.conn())
       .map_err(Error::from)

@@ -58,9 +58,11 @@ impl BlockingDatabase {
   }
 
   pub fn get_trunk(&self) -> Result<Vec<Db_TrunkEntry>> {
-    use crate::schema::trunk;
+    use crate::schema::{card, trunk};
     trunk::table
+      .inner_join(card::table.on(card::card_id.eq(trunk::card_id)))
       .filter(trunk::amount.gt(0))
+      .order(card::name.asc())
       .select(Db_TrunkEntry::as_select())
       .load(&mut *self.conn())
       .map_err(Error::from)
@@ -71,6 +73,7 @@ impl BlockingDatabase {
     card::table
       .inner_join(trunk::table.on(card::card_id.eq(trunk::card_id)))
       .filter(trunk::amount.gt(0))
+      .order(card::name.asc())
       .select((Db_Card::as_select(), trunk::amount))
       .load(&mut *self.conn())
       .map_err(Error::from)
