@@ -24,6 +24,7 @@ impl BlockingDatabase {
   pub fn get_decks(&self) -> Result<Vec<Db_Deck>> {
     use crate::schema::deck;
     deck::table
+      .order(deck::name.asc())
       .select(Db_Deck::as_select())
       .load(&mut *self.conn())
       .map_err(Error::from)
