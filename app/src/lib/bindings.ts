@@ -35,8 +35,14 @@ async createTrunkEntry(cardId: Db_CardId) : Promise<number> {
 async decreaseTrunkEntryAmount(cardId: Db_CardId) : Promise<number> {
     return await TAURI_INVOKE("decrease_trunk_entry_amount", { cardId });
 },
+async exportTrunk() : Promise<null> {
+    return await TAURI_INVOKE("export_trunk");
+},
 async getTrunk() : Promise<Db_TrunkEntry[]> {
     return await TAURI_INVOKE("get_trunk");
+},
+async getTrunkCards() : Promise<([Db_Card, Db_TrunkEntryAmount])[]> {
+    return await TAURI_INVOKE("get_trunk_cards");
 },
 async getTrunkEntryByCardId(cardId: Db_CardId) : Promise<Db_TrunkEntry> {
     return await TAURI_INVOKE("get_trunk_entry_by_card_id", { cardId });

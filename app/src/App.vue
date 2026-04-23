@@ -11,8 +11,8 @@ import { exit } from '@tauri-apps/plugin-process';
 import { useDatabase } from '@/composables/useDatabase';
 import { useWishlist } from '@/composables/useWishlist';
 import { onKeyDown, useBreakpoints, useMutex } from '@tb-dev/vue';
-import { HardDriveDownloadIcon, RefreshCwIcon } from '@lucide/vue';
 import NavigationMenuItem from '@/components/NavigationMenuItem.vue';
+import { DatabaseBackupIcon, FileInputIcon, RefreshCwIcon } from '@lucide/vue';
 import { Button, NavigationMenu, NavigationMenuList, Sonner } from '@tb-dev/vue-components';
 
 const { md } = useBreakpoints();
@@ -89,7 +89,10 @@ async function loadData() {
             <RefreshCwIcon class="size-6" />
           </Button>
           <Button variant="outline" @click="commands.exportDatabaseFile">
-            <HardDriveDownloadIcon class="size-6" />
+            <DatabaseBackupIcon class="size-6" />
+          </Button>
+          <Button variant="outline" @click="commands.exportTrunk">
+            <FileInputIcon class="size-6" />
           </Button>
         </div>
       </div>
