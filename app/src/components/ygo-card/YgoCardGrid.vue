@@ -33,6 +33,8 @@ const props = withDefaults(defineProps<Props>(), {
   itemsPerPage: 300,
 });
 
+const searchValue = defineModel<string>('search', { required: true });
+
 defineSlots<{
   sideAction?: (props: SideActionSlotProps) => VNode;
 }>();
@@ -56,7 +58,6 @@ const cycleList = useCardCycleList(currentChunk, selected);
 
 const { isInWishlist } = useWishlist();
 
-const searchValue = ref<Option<string>>('');
 const searchInput = useTemplateRef('searchInputEl');
 
 const grid = useTemplateRef('gridEl');

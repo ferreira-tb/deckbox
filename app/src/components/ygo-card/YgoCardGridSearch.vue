@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
 import { SearchIcon } from '@lucide/vue';
-import type { Option } from '@tb-dev/utils';
 import { Input } from '@tb-dev/vue-components';
 
-const searchValue = defineModel<Option<string>>({ required: true });
+const searchValue = defineModel<string>({ required: true });
 const searchInput = useTemplateRef('searchInputEl');
 
 defineExpose({

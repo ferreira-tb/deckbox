@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { sessionRef } from '@tb-dev/vue';
 import type { Db_CardId } from '@/lib/bindings';
 import { Button } from '@tb-dev/vue-components';
 import { useTrunk } from '@/composables/useTrunk';
@@ -20,6 +21,8 @@ const {
   removeWish,
 } = useWishlist();
 
+const searchValue = sessionRef('search:database', '');
+
 async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
   if (e.ctrlKey) {
     await updateTrunkEntryAmount(cardId, 'decrease');
@@ -33,6 +36,7 @@ async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
 <template>
   <div class="size-full">
     <YgoCardGrid
+      v-model:search="searchValue"
       :cards
       show-trunk
       show-wish

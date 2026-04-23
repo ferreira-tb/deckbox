@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { sessionRef } from '@tb-dev/vue';
 import { Button } from '@tb-dev/vue-components';
 import { useTrunk } from '@/composables/useTrunk';
 import { useWishlist } from '@/composables/useWishlist';
@@ -14,11 +15,14 @@ const {
 } = useWishlist();
 
 const wishedCards = useWishedCards();
+
+const searchValue = sessionRef('search:wishlist', '');
 </script>
 
 <template>
   <div class="size-full">
     <YgoCardGrid
+      v-model:search="searchValue"
       :cards="wishedCards"
       @remove-wish="removeWish"
       @update-trunk-entry-amount="updateTrunkEntryAmount"
