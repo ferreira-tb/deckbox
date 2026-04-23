@@ -36,7 +36,7 @@ pub async fn fetch_cards(app: AppHandle) -> CmdResult<()> {
   let mut set = JoinSet::new();
   let semaphore = Arc::new(Semaphore::new(5));
 
-  for card in ygo::all()
+  for card in ygo::all_with_misc()
     .await?
     .into_iter()
     .filter_map(Db_NewCard::from_ygo_card)
@@ -127,6 +127,26 @@ pub async fn get_cards(app: AppHandle) -> CmdResult<Vec<Db_Card>> {
   app
     .database()
     .get_cards()
+    .await
+    .map_err(Into::into)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_ocg_cards(app: AppHandle) -> CmdResult<Vec<Db_Card>> {
+  app
+    .database()
+    .get_ocg_cards()
+    .await
+    .map_err(Into::into)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_tcg_cards(app: AppHandle) -> CmdResult<Vec<Db_Card>> {
+  app
+    .database()
+    .get_tcg_cards()
     .await
     .map_err(Into::into)
 }

@@ -114,6 +114,18 @@ impl Database {
     self.with_blocking(|db| db.get_decks()).await
   }
 
+  pub async fn get_ocg_cards(&self) -> Result<Vec<Db_Card>> {
+    self
+      .with_blocking(|db| db.get_ocg_cards())
+      .await
+  }
+
+  pub async fn get_tcg_cards(&self) -> Result<Vec<Db_Card>> {
+    self
+      .with_blocking(|db| db.get_tcg_cards())
+      .await
+  }
+
   pub async fn get_trunk(&self) -> Result<Vec<Db_TrunkEntry>> {
     self.with_blocking(|db| db.get_trunk()).await
   }

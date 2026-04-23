@@ -1,0 +1,2 @@
+ALTER TABLE card DROP COLUMN ocg_date;
+ALTER TABLE card DROP COLUMN tcg_date;

@@ -13,6 +13,8 @@ pub fn collect() -> Builder {
       commands::card::get_archetypes,
       commands::card::get_card_by_card_id,
       commands::card::get_cards,
+      commands::card::get_ocg_cards,
+      commands::card::get_tcg_cards,
       commands::deck::create_deck,
       commands::deck::get_decks,
       commands::trunk::create_trunk_entry,

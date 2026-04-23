@@ -3,6 +3,7 @@ use crate::sql_types::card_attribute::Db_CardAttribute;
 use crate::sql_types::card_id::Db_CardId;
 use crate::sql_types::card_race::Db_CardRace;
 use crate::sql_types::card_type::Db_CardType;
+use crate::sql_types::date::Db_Date;
 use crate::sql_types::id::Db_CardLocalId;
 use crate::sql_types::url::Db_Url;
 use crate::sql_types::zoned::Db_Zoned;
@@ -10,6 +11,7 @@ use diesel::prelude::*;
 use num_traits::ToPrimitive;
 use serde::{Deserialize, Serialize};
 use specta::Type;
+use std::str::FromStr;
 
 #[derive(Queryable, Selectable, Clone, Debug, Serialize, Deserialize, Type)]
 #[diesel(table_name = crate::schema::card)]
@@ -58,6 +60,8 @@ pub struct Db_NewCard {
   pub(crate) price: Option<String>,
   pub(crate) created_at: Db_Zoned,
   pub(crate) updated_at: Db_Zoned,
+  pub(crate) ocg_date: Option<Db_Date>,
+  pub(crate) tcg_date: Option<Db_Date>,
 }
 
 impl Db_NewCard {
@@ -77,9 +81,21 @@ impl Db_NewCard {
 
     let price = card
       .card_prices
-      .first_mut()?
-      .tcgplayer_price
-      .take();
+      .iter()
+      .filter_map(|it| it.tcgplayer_price.as_deref())
+      .filter_map(to_price_f64)
+      .min_by(f64::total_cmp)
+      .map(|it| it.to_string());
+
+    let ocg_date = card
+      .misc_info
+      .iter()
+      .find_map(|it| it.ocg_date.as_deref().and_then(to_date));
+
+    let tcg_date = card
+      .misc_info
+      .iter()
+      .find_map(|it| it.tcg_date.as_deref().and_then(to_date));
 
     Some(Self {
       name: card.name?,
@@ -101,6 +117,8 @@ impl Db_NewCard {
       price,
       created_at: now.clone(),
       updated_at: now,
+      ocg_date,
+      tcg_date,
     })
   }
 
@@ -118,5 +136,31 @@ impl Db_NewCard {
 
   pub fn image_url_small(&self) -> &Db_Url {
     &self.image_url_small
+  }
+}
+
+fn to_date(date: &str) -> Option<Db_Date> {
+  match jiff::civil::Date::from_str(date) {
+    Ok(date) => Some(Db_Date::from(date)),
+    #[cfg(debug_assertions)]
+    Err(err) => {
+      tracing::warn!("failed to parse date: {date}, error: {err}");
+      None
+    }
+    #[cfg(not(debug_assertions))]
+    Err(_) => None,
+  }
+}
+
+fn to_price_f64(price: &str) -> Option<f64> {
+  match price.parse::<f64>() {
+    Ok(price) => Some(price),
+    #[cfg(debug_assertions)]
+    Err(err) => {
+      tracing::warn!("failed to parse price: {price}, error: {err}");
+      None
+    }
+    #[cfg(not(debug_assertions))]
+    Err(_) => None,
   }
 }

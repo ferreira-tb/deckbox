@@ -23,5 +23,6 @@ serde.workspace = true
 specta.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
+tracing.workspace = true
 url.workspace = true
 ygo.workspace = true

@@ -1,7 +1,7 @@
 import { handleError } from '@/lib/error';
 import { CardImpl } from '@/lib/model/card';
 import { tryInjectOrElse, useMutex } from '@tb-dev/vue';
-import { commands, type Db_Card, type Db_CardId } from '@/lib/bindings';
+import { commands, type Db_CardId } from '@/lib/bindings';
 import { effectScope, type InjectionKey, markRaw, type Ref, shallowRef } from 'vue';
 
 const SYMBOL = Symbol() as InjectionKey<ReturnType<typeof create>>;
@@ -28,10 +28,10 @@ function create() {
   async function loadCards() {
     try {
       await mutex.acquire();
-      const result = await commands.getCards();
-      cards.value = result
-        .filter(shouldKeepCard)
-        .map((card) => markRaw(new CardImpl(card)));
+      const result = await commands.getTcgCards();
+      cards.value = result.map((card) => {
+        return markRaw(new CardImpl(card));
+      });
     }
     catch (err) {
       handleError(err);
@@ -57,12 +57,4 @@ function create() {
     loadCards,
     withCard,
   };
-}
-
-function shouldKeepCard(card: Db_Card) {
-  return (
-    card.cardType !== 'Skill Card' &&
-    card.cardType !== 'Token' &&
-    card.cardRace.length > 0
-  );
 }
