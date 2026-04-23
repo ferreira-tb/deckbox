@@ -22,6 +22,8 @@ diesel::table! {
         price -> Nullable<Text>,
         created_at -> Text,
         updated_at -> Text,
+        ocg_date -> Nullable<Text>,
+        tcg_date -> Nullable<Text>,
     }
 }
 

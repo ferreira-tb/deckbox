@@ -869,6 +869,7 @@ dependencies = [
  "specta",
  "thiserror 2.0.18",
  "tokio",
+ "tracing",
  "url",
  "ygo-core",
 ]
@@ -7109,9 +7110,9 @@ dependencies = [
 
 [[package]]
 name = "ygo-core"
-version = "0.1.8"
+version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "46a823fc981973ef911cda0b047af60b31ad2ee810c3f71c462b3816545c52c4"
+checksum = "1fa2b43f7543a93016bb7446198e88f59c842eab755d31f3ecf8d920eccb9ace"
 dependencies = [
  "derive_more 2.1.1",
  "http",

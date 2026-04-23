@@ -1,0 +1,2 @@
+ALTER TABLE card ADD COLUMN ocg_date TEXT;
+ALTER TABLE card ADD COLUMN tcg_date TEXT;

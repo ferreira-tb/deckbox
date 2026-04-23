@@ -36,7 +36,7 @@ pub async fn fetch_cards(app: AppHandle) -> CmdResult<()> {
   let mut set = JoinSet::new();
   let semaphore = Arc::new(Semaphore::new(5));
 
-  for card in ygo::all()
+  for card in ygo::all_with_misc()
     .await?
     .into_iter()
     .filter_map(Db_NewCard::from_ygo_card)
