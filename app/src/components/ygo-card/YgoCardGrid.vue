@@ -29,6 +29,7 @@ interface Props {
 interface SideActionSlotProps {
   cardId: Db_CardId;
   inTrunk: number;
+  price: Option<number>;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -168,11 +169,11 @@ function isCardBeingShown(card: CardImpl) {
 
     <div class="size-full flex overflow-hidden">
       <YgoCardGridSide v-if="selected" class="max-w-72 lg:max-w-80" :card="selected">
-        <template #action="{ cardId, inTrunk }">
+        <template #action="{ cardId, inTrunk, price }">
           <slot
             v-if="$slots.sideAction"
             name="sideAction"
-            v-bind="{ cardId, inTrunk }"
+            v-bind="{ cardId, inTrunk, price }"
           ></slot>
         </template>
       </YgoCardGridSide>
