@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Fuse from 'fuse.js/basic';
 import { chunk } from 'es-toolkit/array';
 import { watchDebounced } from '@vueuse/core';
 import type { Db_CardId } from '@/lib/bindings';
@@ -59,15 +60,23 @@ const cycleList = useCardCycleList(currentChunk, selected);
 
 const { isInWishlist } = useWishlist();
 
+const grid = useTemplateRef('gridEl');
 const searchInput = useTemplateRef('searchInputEl');
 
-const grid = useTemplateRef('gridEl');
+const fuse = computed(() => {
+  return new Fuse(props.cards, {
+    keys: ['name', 'archetype'],
+    threshold: 0.2,
+    ignoreLocation: true,
+    isCaseSensitive: false,
+  });
+});
 
 watch(() => props.cards, updateShownCards);
 
 watchDebounced(searchValue, updateShownCards, {
-  debounce: 300,
-  maxWait: 1000,
+  debounce: 500,
+  maxWait: 2000,
 });
 
 watch(currentPage, () => {
@@ -120,10 +129,11 @@ onKeyDown(['w', 'W'], () => {
 onBeforeMount(updateShownCards);
 
 function updateShownCards() {
-  if (searchValue.value) {
-    const value = searchValue.value.toLowerCase();
-    shownCards.value = props.cards.filter((card) => {
-      return card.name.toLowerCase().includes(value);
+  const search = searchValue.value.trim();
+  if (search) {
+    const results = fuse.value.search(search);
+    shownCards.value = results.map((result) => {
+      return result.item;
     });
   }
   else {
