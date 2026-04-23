@@ -5,12 +5,14 @@ pub mod wishlist;
 
 use crate::error::CmdResult;
 use crate::state::database_file;
+use deckbox_database::sql_types::card_id::Db_CardId;
 use jiff::Zoned;
 use tauri::{AppHandle, WebviewWindow};
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_fs::FilePath;
 use tokio::fs;
 use tokio::sync::oneshot;
+use url::Url;
 
 #[tauri::command]
 #[specta::specta]
@@ -40,6 +42,22 @@ pub async fn export_database_file(app: AppHandle) -> CmdResult<()> {
     #[cfg(debug_assertions)]
     tracing::info!("Exported database to {}", path.display());
   }
+
+  Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn open_store_website(app: AppHandle, card_id: Db_CardId) -> CmdResult<()> {
+  let card = card::get_card_by_card_id(app, card_id).await?;
+  let mut url = Url::parse("https://www.ligayugioh.com.br")?;
+  url
+    .query_pairs_mut()
+    .append_pair("view", "cards/search")
+    .append_pair("card", &card.name)
+    .append_pair("orderBy", "3");
+
+  open::that_detached(url.as_str())?;
 
   Ok(())
 }
