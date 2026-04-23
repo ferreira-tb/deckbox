@@ -75,8 +75,8 @@ const fuse = computed(() => {
 watch(() => props.cards, updateShownCards);
 
 watchDebounced(searchValue, updateShownCards, {
-  debounce: 500,
-  maxWait: 2000,
+  debounce: 300,
+  maxWait: 1000,
 });
 
 watch(currentPage, () => {
