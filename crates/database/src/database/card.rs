@@ -33,6 +33,7 @@ impl BlockingDatabase {
   pub fn get_archetypes(&self) -> Result<Vec<String>> {
     use crate::schema::card;
     let archetypes: Vec<Option<String>> = card::table
+      .filter(card::tcg_date.is_not_null())
       .filter(card::archetype.is_not_null())
       .order(card::archetype.asc())
       .select(card::archetype)
