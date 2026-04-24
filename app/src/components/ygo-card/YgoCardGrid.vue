@@ -67,7 +67,7 @@ const cycleList = useCardCycleList(currentChunk, selected);
 
 const { isInWishlist } = useWishlist();
 
-const grid = useTemplateRef('gridEl');
+const grid = useTemplateRef<HTMLElement>('gridEl');
 const searchInput = useTemplateRef('searchInputEl');
 
 const fuse = computed(() => {
@@ -87,7 +87,6 @@ watchDebounced(searchValue, updateShownCards, {
 });
 
 watch(currentPage, () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   grid.value?.scrollTo({ top: 0, behavior: 'instant' });
   fallbackSelect();
 });

@@ -15,12 +15,12 @@ const { canEdit } = storeToRefs(settings);
 const { cards, totalInDatabase } = useDatabase();
 
 const {
-  loading: isLoadingTrunk,
+  loading: isTrunkLoading,
   updateTrunkEntryAmount,
 } = useTrunk();
 
 const {
-  loading: isLoadingWishlist,
+  loading: isWishlistLoading,
   addWish,
   isInWishlist,
   removeWish,
@@ -61,7 +61,7 @@ async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
         <div class="grid grid-cols-3 justify-center items-center gap-2">
           <Button
             variant="outline"
-            :disabled="!canEdit || isLoadingTrunk"
+            :disabled="!canEdit || isTrunkLoading"
             @click="(e: MouseEvent) => onUpdateTrunkEntry(e, cardId)"
           >
             <span v-if="inTrunk === 0">Trunk</span>
@@ -75,7 +75,7 @@ async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
           <Button
             v-if="inTrunk === 0 && !isInWishlist(cardId)"
             variant="outline"
-            :disabled="!canEdit || isLoadingWishlist"
+            :disabled="!canEdit || isWishlistLoading"
             @click="() => addWish(cardId)"
           >
             <span>Wish</span>

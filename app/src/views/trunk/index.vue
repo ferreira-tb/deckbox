@@ -14,7 +14,7 @@ const { canEdit } = storeToRefs(settings);
 const cards = useCardsInTrunk();
 
 const {
-  loading: isLoadingTrunk,
+  loading: isTrunkLoading,
   totalInTrunk,
   updateTrunkEntryAmount,
 } = useTrunk();
@@ -51,7 +51,7 @@ async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
         <div class="grid grid-cols-3 justify-center items-center gap-2">
           <Button
             variant="outline"
-            :disabled="!canEdit || isLoadingTrunk"
+            :disabled="!canEdit || isTrunkLoading"
             @click="(e: MouseEvent) => onUpdateTrunkEntry(e, cardId)"
           >
             <span v-if="inTrunk === 0">Trunk</span>

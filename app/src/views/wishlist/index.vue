@@ -1,24 +1,28 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { sessionRef } from '@tb-dev/vue';
-import { commands } from '@/lib/bindings';
 import { useSettings } from '@/stores/settings';
 import { Button } from '@tb-dev/vue-components';
 import { useTrunk } from '@/composables/useTrunk';
 import { useWishlist } from '@/composables/useWishlist';
+import { commands, type Db_CardId } from '@/lib/bindings';
 import { useWishedCards } from '@/composables/useWishedCards';
 import YgoCardGrid from '@/components/ygo-card/YgoCardGrid.vue';
 
 const settings = useSettings();
 const { canEdit } = storeToRefs(settings);
 
-const { updateTrunkEntryAmount } = useTrunk();
+const { updateTrunkEntryAmount, loading: isTrunkLoading } = useTrunk();
 
 const { totalInWishlist, removeWish } = useWishlist();
 
 const wishedCards = useWishedCards();
 
 const searchValue = sessionRef('search:wishlist', '');
+
+async function onUpdateTrunkEntry(cardId: Db_CardId) {
+  await updateTrunkEntryAmount(cardId, 'increase');
+}
 </script>
 
 <template>
@@ -37,11 +41,14 @@ const searchValue = sessionRef('search:wishlist', '');
         </div>
       </template>
 
-      <template #sideAction="{ cardId, inTrunk }">
+      <template #sideAction="{ cardId }">
         <div class="grid grid-cols-2 justify-center items-center gap-2">
-          <Button variant="outline" :disabled="!canEdit">
-            <span v-if="inTrunk === 0">Trunk</span>
-            <span v-else>Trunk ({{ inTrunk }})</span>
+          <Button
+            variant="outline"
+            :disabled="!canEdit || isTrunkLoading"
+            @click="() => onUpdateTrunkEntry(cardId)"
+          >
+            <span>Trunk</span>
           </Button>
 
           <Button variant="outline" @click="() => commands.openStoreWebsite(cardId)">

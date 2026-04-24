@@ -61,9 +61,11 @@ async function refresh() {
 }
 
 async function loadData() {
-  await loadCards();
-  await loadTrunk();
-  await loadWishlist();
+  await Promise.all([
+    loadCards(),
+    loadTrunk(),
+    loadWishlist(),
+  ]);
 }
 </script>
 
