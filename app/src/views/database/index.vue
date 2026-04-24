@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { sessionRef } from '@tb-dev/vue';
+import { useSettings } from '@/stores/settings';
 import { Button } from '@tb-dev/vue-components';
 import { useTrunk } from '@/composables/useTrunk';
 import { useDatabase } from '@/composables/useDatabase';
 import { useWishlist } from '@/composables/useWishlist';
 import { commands, type Db_CardId } from '@/lib/bindings';
 import YgoCardGrid from '@/components/ygo-card/YgoCardGrid.vue';
+
+const settings = useSettings();
+const { canEdit } = storeToRefs(settings);
 
 const { cards, totalInDatabase } = useDatabase();
 
@@ -56,7 +61,7 @@ async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
         <div class="grid grid-cols-3 justify-center items-center gap-2">
           <Button
             variant="outline"
-            :disabled="isLoadingTrunk"
+            :disabled="!canEdit || isLoadingTrunk"
             @click="(e: MouseEvent) => onUpdateTrunkEntry(e, cardId)"
           >
             <span v-if="inTrunk === 0">Trunk</span>
@@ -70,7 +75,7 @@ async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
           <Button
             v-if="inTrunk === 0 && !isInWishlist(cardId)"
             variant="outline"
-            :disabled="isLoadingWishlist"
+            :disabled="!canEdit || isLoadingWishlist"
             @click="() => addWish(cardId)"
           >
             <span>Wish</span>

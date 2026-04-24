@@ -1,6 +1,8 @@
 import { toast } from '@/lib/toast';
+import { storeToRefs } from 'pinia';
 import { handleError } from '@/lib/error';
 import type { Option } from '@tb-dev/utils';
+import { useSettings } from '@/stores/settings';
 import { useDatabase } from '@/composables/useDatabase';
 import { tryInjectOrElse, useMutex } from '@tb-dev/vue';
 import { TrunkEntryImpl } from '@/lib/model/trunk-entry';
@@ -49,6 +51,9 @@ function create() {
     return trunk.value.reduce((sum, entry) => sum + entry.amount, 0);
   });
 
+  const settings = useSettings();
+  const { canEdit } = storeToRefs(settings);
+
   const { withCard } = useDatabase();
 
   async function loadTrunk() {
@@ -80,6 +85,10 @@ function create() {
   }
 
   async function updateTrunkEntryAmount(cardId: Db_CardId, kind: 'increase' | 'decrease') {
+    if (!canEdit.value) {
+      return;
+    }
+
     try {
       await mutex.acquire();
 

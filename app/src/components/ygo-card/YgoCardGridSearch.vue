@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
 import { SearchIcon } from '@lucide/vue';
+import { unref, useTemplateRef } from 'vue';
 import { Input } from '@tb-dev/vue-components';
 
 const searchValue = defineModel<string>({ required: true });
 const searchInput = useTemplateRef('searchInputEl');
 
-defineExpose({
-  // eslint-disable-next-line
-  focus: () => searchInput.value?.$el?.focus(),
-});
+function focus() {
+  const el = unref(searchInput.value?.$el);
+  if (el && el instanceof HTMLInputElement) {
+    el.focus();
+    el.select();
+  }
+}
+
+defineExpose({ focus });
 </script>
 
 <template>

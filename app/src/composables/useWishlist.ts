@@ -1,6 +1,8 @@
 import { toast } from '@/lib/toast';
+import { storeToRefs } from 'pinia';
 import { handleError } from '@/lib/error';
 import { WishImpl } from '@/lib/model/wish';
+import { useSettings } from '@/stores/settings';
 import { useDatabase } from '@/composables/useDatabase';
 import { tryInjectOrElse, useMutex } from '@tb-dev/vue';
 import { commands, type Db_CardId } from '@/lib/bindings';
@@ -49,6 +51,9 @@ function create() {
     return wishlist.value.length;
   });
 
+  const settings = useSettings();
+  const { canEdit } = storeToRefs(settings);
+
   const { withCard } = useDatabase();
 
   async function loadWishlist() {
@@ -76,7 +81,7 @@ function create() {
   }
 
   async function addWish(cardId: Db_CardId) {
-    if (!isInWishlist(cardId)) {
+    if (canEdit.value && !isInWishlist(cardId)) {
       try {
         await mutex.acquire();
         const rows = await commands.createWish(cardId);
@@ -100,7 +105,7 @@ function create() {
   }
 
   async function removeWish(cardId: Db_CardId) {
-    if (isInWishlist(cardId)) {
+    if (canEdit.value && isInWishlist(cardId)) {
       try {
         await mutex.acquire();
         const rows = await commands.removeWish(cardId);
@@ -121,9 +126,11 @@ function create() {
   }
 
   function dangerouslyRemoveLocalWish(cardId: Db_CardId) {
-    wishlist.value = wishlist.value.filter((wish) => {
-      return wish.cardId !== cardId;
-    });
+    if (canEdit.value) {
+      wishlist.value = wishlist.value.filter((wish) => {
+        return wish.cardId !== cardId;
+      });
+    }
   }
 
   return {

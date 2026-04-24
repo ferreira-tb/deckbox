@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { sessionRef } from '@tb-dev/vue';
 import { commands } from '@/lib/bindings';
+import { useSettings } from '@/stores/settings';
 import { Button } from '@tb-dev/vue-components';
 import { useTrunk } from '@/composables/useTrunk';
 import { useWishlist } from '@/composables/useWishlist';
 import { useWishedCards } from '@/composables/useWishedCards';
 import YgoCardGrid from '@/components/ygo-card/YgoCardGrid.vue';
+
+const settings = useSettings();
+const { canEdit } = storeToRefs(settings);
 
 const { updateTrunkEntryAmount } = useTrunk();
 
@@ -34,7 +39,7 @@ const searchValue = sessionRef('search:wishlist', '');
 
       <template #sideAction="{ cardId, inTrunk }">
         <div class="grid grid-cols-2 justify-center items-center gap-2">
-          <Button variant="outline">
+          <Button variant="outline" :disabled="!canEdit">
             <span v-if="inTrunk === 0">Trunk</span>
             <span v-else>Trunk ({{ inTrunk }})</span>
           </Button>

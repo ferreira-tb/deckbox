@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import Fuse from 'fuse.js/basic';
+import { storeToRefs } from 'pinia';
 import { chunk } from 'es-toolkit/array';
 import { watchDebounced } from '@vueuse/core';
 import type { Db_CardId } from '@/lib/bindings';
+import { useSettings } from '@/stores/settings';
 import type { CardImpl } from '@/lib/model/card';
 import { onCtrlKeyDown, onKeyDown } from '@tb-dev/vue';
 import { useWishlist } from '@/composables/useWishlist';
@@ -42,6 +44,9 @@ defineSlots<{
   header?: () => VNode;
   sideAction?: (props: SideActionSlotProps) => VNode;
 }>();
+
+const settings = useSettings();
+const { canEdit } = storeToRefs(settings);
 
 const shownCards = shallowRef<readonly CardImpl[]>([]);
 const selected = shallowRef<Option<CardImpl>>();
@@ -108,6 +113,8 @@ onKeyDown(['t', 'T'], () => {
     const cardId = selected.value.cardId;
     props.onUpdateTrunkEntryAmount?.(cardId, 'increase');
   }
+}, {
+  enabled: canEdit,
 });
 
 onCtrlKeyDown(['t', 'T'], () => {
@@ -115,6 +122,8 @@ onCtrlKeyDown(['t', 'T'], () => {
     const cardId = selected.value.cardId;
     props.onUpdateTrunkEntryAmount?.(cardId, 'decrease');
   }
+}, {
+  enabled: canEdit,
 });
 
 onKeyDown(['w', 'W'], () => {
@@ -126,6 +135,8 @@ onKeyDown(['w', 'W'], () => {
       props.onAddWish?.(selected.value.cardId);
     }
   }
+}, {
+  enabled: canEdit,
 });
 
 onMounted(() => {

@@ -6,14 +6,17 @@ import { handleError } from '@/lib/error';
 import { useColorMode } from '@vueuse/core';
 import Loading from '@/components/Loading.vue';
 import { throttle } from 'es-toolkit/function';
+import { useSettings } from '@/stores/settings';
 import { useTrunk } from '@/composables/useTrunk';
 import { exit } from '@tauri-apps/plugin-process';
 import { useDatabase } from '@/composables/useDatabase';
 import { useWishlist } from '@/composables/useWishlist';
-import { onKeyDown, useBreakpoints, useMutex } from '@tb-dev/vue';
 import NavigationMenuItem from '@/components/NavigationMenuItem.vue';
 import { DatabaseBackupIcon, FileInputIcon, RefreshCwIcon } from '@lucide/vue';
+import { onCtrlKeyDown, onKeyDown, useBreakpoints, useMutex } from '@tb-dev/vue';
 import { Button, NavigationMenu, NavigationMenuList, Sonner } from '@tb-dev/vue-components';
+
+const settings = useSettings();
 
 const { md } = useBreakpoints();
 
@@ -37,16 +40,12 @@ onKeyDown('F5', throttle(loadData, 1000));
 onKeyDown('F6', throttle(refresh, 5000));
 onKeyDown('Escape', () => exit(0).err());
 
-onMounted(async () => {
-  try {
-    await loadData();
-  }
-  catch (err) {
-    handleError(err);
-  }
-  finally {
-    void commands.showWindow();
-  }
+onCtrlKeyDown(['e', 'E'], settings.toggleEdit);
+
+onMounted(() => {
+  loadData()
+    .catch((err: unknown) => handleError(err))
+    .finally(() => void commands.showWindow());
 });
 
 async function refresh() {
@@ -88,10 +87,10 @@ async function loadData() {
           <Button variant="outline" :disabled="locked" @click="refresh">
             <RefreshCwIcon class="size-6" />
           </Button>
-          <Button variant="outline" @click="commands.exportDatabaseFile">
+          <Button variant="outline" :disabled="locked" @click="commands.exportDatabaseFile">
             <DatabaseBackupIcon class="size-6" />
           </Button>
-          <Button variant="outline" @click="commands.exportTrunk">
+          <Button variant="outline" :disabled="locked" @click="commands.exportTrunk">
             <FileInputIcon class="size-6" />
           </Button>
         </div>
