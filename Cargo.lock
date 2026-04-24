@@ -7110,9 +7110,9 @@ dependencies = [
 
 [[package]]
 name = "ygo-core"
-version = "0.1.11"
+version = "0.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1fa2b43f7543a93016bb7446198e88f59c842eab755d31f3ecf8d920eccb9ace"
+checksum = "ce783183953a11a4c7d85b7c8feb4cb8a057fd1cab485fcf73fa20da0b2838a0"
 dependencies = [
  "derive_more 2.1.1",
  "http",
