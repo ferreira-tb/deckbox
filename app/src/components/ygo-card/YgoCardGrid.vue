@@ -97,6 +97,26 @@ onKeyDown('ArrowRight', cycleList.next);
 onKeyDown('ArrowUp', cycleList.first);
 onKeyDown('ArrowDown', cycleList.last);
 
+onCtrlKeyDown('ArrowLeft', () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1;
+  }
+});
+
+onCtrlKeyDown('ArrowRight', () => {
+  if (currentPage.value < chunks.value.size) {
+    currentPage.value += 1;
+  }
+});
+
+onCtrlKeyDown('ArrowUp', () => {
+  currentPage.value = 1;
+});
+
+onCtrlKeyDown('ArrowDown', () => {
+  currentPage.value = chunks.value.size;
+});
+
 onKeyDown(['b', 'B'], async () => {
   if (selected.value) {
     await props.onBuyCard?.(selected.value.cardId);
@@ -155,6 +175,7 @@ function updateShownCards() {
     shownCards.value = props.cards;
   }
 
+  currentPage.value = 1;
   fallbackSelect();
 }
 
