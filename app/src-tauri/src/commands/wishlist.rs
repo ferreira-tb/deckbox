@@ -2,17 +2,17 @@ use crate::error::CmdResult;
 use crate::manager::ManagerExt;
 use deckbox_database::model::wishlist::{Db_NewWish, Db_Wish};
 use deckbox_database::sql_types::card_id::Db_CardId;
+use deckbox_database::sql_types::num::Db_WishId;
 use tauri::AppHandle;
 
 #[tauri::command]
 #[specta::specta]
-pub async fn create_wish(app: AppHandle, card_id: Db_CardId) -> CmdResult<u32> {
+pub async fn create_wish(app: AppHandle, card_id: Db_CardId) -> CmdResult<Option<Db_WishId>> {
   let new = Db_NewWish::builder(card_id).build();
   app
     .database()
     .create_wish(new)
-    .await?
-    .try_into()
+    .await
     .map_err(Into::into)
 }
 

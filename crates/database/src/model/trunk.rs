@@ -1,5 +1,5 @@
 use crate::sql_types::card_id::Db_CardId;
-use crate::sql_types::trunk_entry_amount::Db_TrunkEntryAmount;
+use crate::sql_types::num::{Db_TrunkEntryAmount, Db_TrunkEntryId};
 use crate::sql_types::zoned::Db_Zoned;
 use bon::Builder;
 use diesel::prelude::*;
@@ -11,6 +11,7 @@ use specta::Type;
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 #[serde(rename_all = "camelCase")]
 pub struct Db_TrunkEntry {
+  pub id: Db_TrunkEntryId,
   pub card_id: Db_CardId,
   pub amount: Db_TrunkEntryAmount,
 }

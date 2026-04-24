@@ -1,4 +1,5 @@
 use crate::sql_types::card_id::Db_CardId;
+use crate::sql_types::num::Db_WishId;
 use crate::sql_types::zoned::Db_Zoned;
 use bon::Builder;
 use diesel::prelude::*;
@@ -10,6 +11,7 @@ use specta::Type;
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 #[serde(rename_all = "camelCase")]
 pub struct Db_Wish {
+  pub id: Db_WishId,
   pub card_id: Db_CardId,
 }
 

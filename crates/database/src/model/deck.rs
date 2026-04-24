@@ -1,4 +1,4 @@
-use crate::sql_types::id::Db_DeckId;
+use crate::sql_types::num::Db_DeckId;
 use crate::sql_types::zoned::Db_Zoned;
 use bon::Builder;
 use diesel::prelude::*;

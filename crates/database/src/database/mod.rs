@@ -10,8 +10,7 @@ use crate::model::deck::{Db_Deck, Db_NewDeck};
 use crate::model::trunk::{Db_NewTrunkEntry, Db_TrunkEntry};
 use crate::model::wishlist::{Db_NewWish, Db_Wish};
 use crate::sql_types::card_id::Db_CardId;
-use crate::sql_types::id::Db_DeckId;
-use crate::sql_types::trunk_entry_amount::Db_TrunkEntryAmount;
+use crate::sql_types::num::{Db_DeckId, Db_TrunkEntryAmount, Db_TrunkEntryId, Db_WishId};
 use diesel::prelude::*;
 use std::fmt;
 use std::sync::Arc;
@@ -76,19 +75,22 @@ impl Database {
       .await
   }
 
-  pub async fn create_trunk_entry(&self, new_entry: Db_NewTrunkEntry) -> Result<usize> {
+  pub async fn create_trunk_entry(&self, new_entry: Db_NewTrunkEntry) -> Result<Db_TrunkEntryId> {
     self
       .with_blocking(move |db| db.create_trunk_entry(&new_entry))
       .await
   }
 
-  pub async fn create_wish(&self, new_wish: Db_NewWish) -> Result<usize> {
+  pub async fn create_wish(&self, new_wish: Db_NewWish) -> Result<Option<Db_WishId>> {
     self
       .with_blocking(move |db| db.create_wish(&new_wish))
       .await
   }
 
-  pub async fn decrease_trunk_entry_amount(&self, card_id: Db_CardId) -> Result<u16> {
+  pub async fn decrease_trunk_entry_amount(
+    &self,
+    card_id: Db_CardId,
+  ) -> Result<Db_TrunkEntryAmount> {
     self
       .with_blocking(move |db| db.decrease_trunk_entry_amount(&card_id))
       .await

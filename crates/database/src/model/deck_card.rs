@@ -1,7 +1,7 @@
 use crate::model::card::Db_Card;
 use crate::model::deck::Db_Deck;
 use crate::sql_types::deck_card_amount::Db_DeckCardAmount;
-use crate::sql_types::id::{Db_CardLocalId, Db_DeckId};
+use crate::sql_types::num::{Db_CardLocalId, Db_DeckId};
 use bon::Builder;
 use diesel::prelude::*;
 
