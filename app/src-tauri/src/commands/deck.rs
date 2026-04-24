@@ -1,7 +1,7 @@
 use crate::error::CmdResult;
 use crate::manager::ManagerExt;
 use deckbox_database::model::deck::{Db_Deck, Db_NewDeck};
-use deckbox_database::sql_types::id::Db_DeckId;
+use deckbox_database::sql_types::num::Db_DeckId;
 use tauri::AppHandle;
 
 #[tauri::command]

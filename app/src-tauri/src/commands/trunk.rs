@@ -3,7 +3,7 @@ use crate::manager::ManagerExt;
 use deckbox_database::model::card::Db_Card;
 use deckbox_database::model::trunk::{Db_NewTrunkEntry, Db_TrunkEntry};
 use deckbox_database::sql_types::card_id::Db_CardId;
-use deckbox_database::sql_types::trunk_entry_amount::Db_TrunkEntryAmount;
+use deckbox_database::sql_types::num::{Db_TrunkEntryAmount, Db_TrunkEntryId};
 use itertools::Itertools;
 use serde_json::json;
 use tap::Pipe;
@@ -15,19 +15,21 @@ use tokio::sync::oneshot;
 
 #[tauri::command]
 #[specta::specta]
-pub async fn create_trunk_entry(app: AppHandle, card_id: Db_CardId) -> CmdResult<u32> {
+pub async fn create_trunk_entry(app: AppHandle, card_id: Db_CardId) -> CmdResult<Db_TrunkEntryId> {
   let new = Db_NewTrunkEntry::builder(card_id).build();
   app
     .database()
     .create_trunk_entry(new)
-    .await?
-    .try_into()
+    .await
     .map_err(Into::into)
 }
 
 #[tauri::command]
 #[specta::specta]
-pub async fn decrease_trunk_entry_amount(app: AppHandle, card_id: Db_CardId) -> CmdResult<u16> {
+pub async fn decrease_trunk_entry_amount(
+  app: AppHandle,
+  card_id: Db_CardId,
+) -> CmdResult<Db_TrunkEntryAmount> {
   app
     .database()
     .decrease_trunk_entry_amount(card_id)

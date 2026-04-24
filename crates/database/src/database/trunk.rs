@@ -3,7 +3,7 @@ use crate::error::{Error, Result};
 use crate::model::card::Db_Card;
 use crate::model::trunk::{Db_NewTrunkEntry, Db_TrunkEntry};
 use crate::sql_types::card_id::Db_CardId;
-use crate::sql_types::trunk_entry_amount::Db_TrunkEntryAmount;
+use crate::sql_types::num::{Db_TrunkEntryAmount, Db_TrunkEntryId};
 use crate::sql_types::zoned::Db_Zoned;
 use diesel::prelude::*;
 
@@ -11,24 +11,23 @@ impl BlockingDatabase {
   /// Creates a new trunk entry with an initial amount of 1.
   ///
   /// If the card is in the wishlist, it will be removed from there.
-  pub fn create_trunk_entry(&self, new_entry: &Db_NewTrunkEntry) -> Result<usize> {
+  pub fn create_trunk_entry(&self, new_entry: &Db_NewTrunkEntry) -> Result<Db_TrunkEntryId> {
     use crate::schema::trunk;
-    let mut rows = diesel::insert_into(trunk::table)
+    let id = diesel::insert_into(trunk::table)
       .values(new_entry)
-      .execute(&mut *self.conn())?;
+      .returning(trunk::id)
+      .get_result(&mut *self.conn())?;
 
-    if rows > 0 {
-      rows += self.remove_wish(&new_entry.card_id)?;
-    }
+    self.remove_wish(&new_entry.card_id)?;
 
-    Ok(rows)
+    Ok(id)
   }
 
   /// Decreases the amount of a trunk entry by 1.
   /// If the amount is already 1, deletes the trunk entry instead.
   ///
   /// Returns the new amount of the trunk entry after the decrease, or 0 if the trunk entry was deleted.
-  pub fn decrease_trunk_entry_amount(&self, card_id: &Db_CardId) -> Result<u16> {
+  pub fn decrease_trunk_entry_amount(&self, card_id: &Db_CardId) -> Result<Db_TrunkEntryAmount> {
     use crate::schema::trunk;
     let new_amount: Option<Db_TrunkEntryAmount> = diesel::update(
       trunk::table
@@ -44,7 +43,7 @@ impl BlockingDatabase {
     .optional()?;
 
     if let Some(new_amount) = new_amount {
-      Ok(u16::from(new_amount))
+      Ok(new_amount)
     } else {
       diesel::delete(
         trunk::table
@@ -53,7 +52,7 @@ impl BlockingDatabase {
       )
       .execute(&mut *self.conn())?;
 
-      Ok(0)
+      Ok(Db_TrunkEntryAmount::from(0u16))
     }
   }
 

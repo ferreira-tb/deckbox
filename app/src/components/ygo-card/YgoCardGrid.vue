@@ -67,7 +67,7 @@ const cycleList = useCardCycleList(currentChunk, selected);
 
 const { isInWishlist } = useWishlist();
 
-const grid = useTemplateRef('gridEl');
+const grid = useTemplateRef<HTMLElement>('gridEl');
 const searchInput = useTemplateRef('searchInputEl');
 
 const fuse = computed(() => {
@@ -87,7 +87,6 @@ watchDebounced(searchValue, updateShownCards, {
 });
 
 watch(currentPage, () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   grid.value?.scrollTo({ top: 0, behavior: 'instant' });
   fallbackSelect();
 });
@@ -96,6 +95,26 @@ onKeyDown('ArrowLeft', cycleList.previous);
 onKeyDown('ArrowRight', cycleList.next);
 onKeyDown('ArrowUp', cycleList.first);
 onKeyDown('ArrowDown', cycleList.last);
+
+onCtrlKeyDown('ArrowLeft', () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1;
+  }
+});
+
+onCtrlKeyDown('ArrowRight', () => {
+  if (currentPage.value < chunks.value.size) {
+    currentPage.value += 1;
+  }
+});
+
+onCtrlKeyDown('ArrowUp', () => {
+  currentPage.value = 1;
+});
+
+onCtrlKeyDown('ArrowDown', () => {
+  currentPage.value = chunks.value.size;
+});
 
 onKeyDown(['b', 'B'], async () => {
   if (selected.value) {
@@ -155,6 +174,7 @@ function updateShownCards() {
     shownCards.value = props.cards;
   }
 
+  currentPage.value = 1;
   fallbackSelect();
 }
 

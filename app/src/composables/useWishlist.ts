@@ -84,8 +84,8 @@ function create() {
     if (canEdit.value && !isInWishlist(cardId)) {
       try {
         await mutex.acquire();
-        const rows = await commands.createWish(cardId);
-        if (rows > 0) {
+        const wishId = await commands.createWish(cardId);
+        if (wishId) {
           const wish = await commands.getWishByCardId(cardId);
           wishlist.value.push(markRaw(new WishImpl(wish)));
           triggerRef(wishlist);

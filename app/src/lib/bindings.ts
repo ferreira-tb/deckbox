@@ -32,10 +32,10 @@ async createDeck(name: string, description: string | null) : Promise<Db_DeckId> 
 async getDecks() : Promise<Db_Deck[]> {
     return await TAURI_INVOKE("get_decks");
 },
-async createTrunkEntry(cardId: Db_CardId) : Promise<number> {
+async createTrunkEntry(cardId: Db_CardId) : Promise<Db_TrunkEntryId> {
     return await TAURI_INVOKE("create_trunk_entry", { cardId });
 },
-async decreaseTrunkEntryAmount(cardId: Db_CardId) : Promise<number> {
+async decreaseTrunkEntryAmount(cardId: Db_CardId) : Promise<Db_TrunkEntryAmount> {
     return await TAURI_INVOKE("decrease_trunk_entry_amount", { cardId });
 },
 async exportTrunk() : Promise<null> {
@@ -56,7 +56,7 @@ async hasTrunkEntry(cardId: Db_CardId) : Promise<boolean> {
 async increaseTrunkEntryAmount(cardId: Db_CardId) : Promise<Db_TrunkEntryAmount> {
     return await TAURI_INVOKE("increase_trunk_entry_amount", { cardId });
 },
-async createWish(cardId: Db_CardId) : Promise<number> {
+async createWish(cardId: Db_CardId) : Promise<Db_WishId | null> {
     return await TAURI_INVOKE("create_wish", { cardId });
 },
 async getWishByCardId(cardId: Db_CardId) : Promise<Db_Wish> {
@@ -93,10 +93,12 @@ export type Db_CardRace = CardRace
 export type Db_CardType = CardType
 export type Db_Deck = { id: Db_DeckId; name: string; description: string | null }
 export type Db_DeckId = number
-export type Db_TrunkEntry = { cardId: Db_CardId; amount: Db_TrunkEntryAmount }
+export type Db_TrunkEntry = { id: Db_TrunkEntryId; cardId: Db_CardId; amount: Db_TrunkEntryAmount }
 export type Db_TrunkEntryAmount = number
+export type Db_TrunkEntryId = number
 export type Db_Url = string
-export type Db_Wish = { cardId: Db_CardId }
+export type Db_Wish = { id: Db_WishId; cardId: Db_CardId }
+export type Db_WishId = number
 export type Error = string
 
 /** tauri-specta globals **/

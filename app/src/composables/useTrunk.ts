@@ -150,16 +150,14 @@ function create() {
   }
 
   async function createTrunkEntry(cardId: Db_CardId) {
-    const rows = await commands.createTrunkEntry(cardId);
-    if (rows > 0) {
-      const entry = await commands.getTrunkEntryByCardId(cardId);
-      trunk.value.push(markRaw(new TrunkEntryImpl(entry)));
-      triggerRef(trunk);
+    await commands.createTrunkEntry(cardId);
+    const entry = await commands.getTrunkEntryByCardId(cardId);
+    trunk.value.push(markRaw(new TrunkEntryImpl(entry)));
+    triggerRef(trunk);
 
-      withCard(cardId, (card) => {
-        toast.success(`Added "${card.name}" to trunk`);
-      });
-    }
+    withCard(cardId, (card) => {
+      toast.success(`Added "${card.name}" to trunk`);
+    });
   }
 
   return {

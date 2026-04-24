@@ -2,19 +2,20 @@ use super::BlockingDatabase;
 use crate::error::{Error, Result};
 use crate::model::wishlist::{Db_NewWish, Db_Wish};
 use crate::sql_types::card_id::Db_CardId;
+use crate::sql_types::num::Db_WishId;
 use diesel::prelude::*;
 
 impl BlockingDatabase {
-  pub fn create_wish(&self, new_wish: &Db_NewWish) -> Result<usize> {
+  pub fn create_wish(&self, new_wish: &Db_NewWish) -> Result<Option<Db_WishId>> {
     use crate::schema::wishlist;
     if self.has_trunk_entry(&new_wish.card_id)? {
-      Ok(0)
+      Ok(None)
     } else {
       diesel::insert_into(wishlist::table)
         .values(new_wish)
-        .on_conflict(wishlist::card_id)
-        .do_nothing()
-        .execute(&mut *self.conn())
+        .returning(wishlist::id)
+        .get_result(&mut *self.conn())
+        .map(Some)
         .map_err(Error::from)
     }
   }
