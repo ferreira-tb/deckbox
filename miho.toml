@@ -3,7 +3,6 @@ exclude = []
 
 [update]
 exclude = [
-  "libsqlite3-sys",
   "reqwest",
   "specta",
   "specta-typescript",

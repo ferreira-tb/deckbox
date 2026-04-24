@@ -3,7 +3,7 @@ resolver = "3"
 members = ["app/src-tauri", "crates/database"]
 
 [workspace.package]
-version = "0.1.5"
+version = "0.1.6"
 edition = "2024"
 rust-version = "1.97"
 license = "GPL-3.0-only"
@@ -68,7 +68,7 @@ version = "0.2"
 features = ["serde"]
 
 [workspace.dependencies.libsqlite3-sys]
-version = "0.36"
+version = "0.37"
 features = ["bundled"]
 
 [workspace.dependencies.open]
