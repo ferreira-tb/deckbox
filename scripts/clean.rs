@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1.0"
-nil-util = "=0.4.22"
+nil-util = "=0.4.23"
 
 [dependencies.clap]
 version = "4.6"

@@ -51,9 +51,33 @@ const description = computed(() => {
       <div class="flex flex-col gap-1 overflow-x-hidden overflow-y-auto pr-2">
         <div class="flex justify-between gap-2">
           <h1 class="font-bold">{{ card.name }}</h1>
-          <Badge v-if="price" variant="outline" class="max-h-max">
-            <span>{{ `$${price.toFixed(2)}` }}</span>
-          </Badge>
+          <div class="flex justify-end items-center gap-1">
+            <Badge
+              v-if="card.banlistStatus === 'Forbidden'"
+              variant="outline"
+              class="max-h-max text-red-500"
+            >
+              <span>F</span>
+            </Badge>
+            <Badge
+              v-else-if="card.banlistStatus === 'Limited'"
+              variant="outline"
+              class="max-h-max text-orange-500"
+            >
+              <span>L</span>
+            </Badge>
+            <Badge
+              v-else-if="card.banlistStatus === 'Semi-Limited'"
+              variant="outline"
+              class="max-h-max text-yellow-500"
+            >
+              <span>S</span>
+            </Badge>
+
+            <Badge v-if="price" variant="outline" class="max-h-max">
+              <span>{{ `$${price.toFixed(2)}` }}</span>
+            </Badge>
+          </div>
         </div>
 
         <p v-for="(line, idx) of description" :key="idx">{{ line }}</p>

@@ -815,7 +815,7 @@ dependencies = [
 
 [[package]]
 name = "deckbox"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "anyhow",
  "deckbox-database",
@@ -855,7 +855,7 @@ dependencies = [
 
 [[package]]
 name = "deckbox-database"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "anyhow",
  "bon",
@@ -1139,14 +1139,14 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 
 [[package]]
 name = "embed-resource"
-version = "3.0.8"
+version = "3.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "63a1d0de4f2249aa0ff5884d7080814f446bb241a559af6c170a41e878ed2d45"
+checksum = "c31a88c8d26de40ed18fe748c547845aa39de1db3afd958f8cb91579f3644bcb"
 dependencies = [
  "cc",
  "memchr",
  "rustc_version",
- "toml 0.9.12+spec-1.1.0",
+ "toml 1.1.2+spec-1.1.0",
  "vswhom",
  "winreg",
 ]
@@ -2736,9 +2736,9 @@ checksum = "650eef8c711430f1a879fdd01d4745a7deea475becfb90269c06775983bbf086"
 
 [[package]]
 name = "nil-log"
-version = "0.4.22"
+version = "0.4.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "14f3d99644eca5dd0872f30e5b0e682745ed1d7eec81fa4d97d6484e9496e115"
+checksum = "25fb473a36925e78bbee5dd5b35851e94c2a0bdbeb8a9c9342528409025882ee"
 dependencies = [
  "anyhow",
  "bitflags 2.11.1",
