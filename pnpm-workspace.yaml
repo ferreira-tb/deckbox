@@ -1,6 +1,9 @@
 packages:
   - "app"
 
+allowBuilds:
+  vue-demi: false
+
 ignoreWorkspaceRootCheck: true
 
 overrides:

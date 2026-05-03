@@ -45,9 +45,9 @@ url.workspace = true
 ygo.workspace = true
 
 [dependencies.tauri]
-version = "2.10"
+version = "2.11"
 features = ["protocol-asset", "rustls-tls"]
 
 [build-dependencies.tauri-build]
-version = "2.5"
+version = "2.6"
 features = []
