@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1.0"
-nil-util = "=0.4.23"
+nil-util = "=0.5.10"
 
 [dependencies.clap]
 version = "4.6"
@@ -27,14 +27,11 @@ struct Args {
 fn main() -> Result<()> {
   let args = Args::parse();
 
-  spawn!("cargo clean --verbose")?;
   remove_dir("app/src-tauri/target")?;
-
   remove_dir("app/dist")?;
 
   if args.node {
-    remove_dir("node_modules")?;
-    remove_dir("app/node_modules")?;
+    spawn!("pnpm purge")?;
   }
 
   Ok(())
