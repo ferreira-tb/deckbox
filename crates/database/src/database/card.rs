@@ -18,9 +18,11 @@ impl BlockingDatabase {
       .set((
         card::archetype.eq(&new_card.archetype),
         card::banlist_status.eq(&new_card.banlist_status),
+        card::description_pt.eq(&new_card.description_pt),
         card::image_url.eq(&new_card.image_url),
         card::image_url_cropped.eq(&new_card.image_url_cropped),
         card::image_url_small.eq(&new_card.image_url_small),
+        card::name_pt.eq(&new_card.name_pt),
         card::ocg_date.eq(&new_card.ocg_date),
         card::price.eq(&new_card.price),
         card::tcg_date.eq(&new_card.tcg_date),

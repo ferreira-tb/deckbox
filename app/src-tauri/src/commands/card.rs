@@ -5,6 +5,7 @@ use deckbox_database::model::card::{Db_Card, Db_NewCard};
 use deckbox_database::sql_types::card_id::Db_CardId;
 use deckbox_database::sql_types::url::Db_Url;
 use futures::try_join;
+use nil_util::iter::IterExt;
 use std::path::Path;
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
@@ -16,6 +17,7 @@ use tokio::fs;
 use tokio::sync::Semaphore;
 use tokio::task::JoinSet;
 use tokio::time::sleep;
+use ygo::{Card, CardId, CardRace, CardType};
 
 #[tauri::command]
 #[specta::specta]
@@ -36,12 +38,26 @@ pub async fn fetch_cards(app: AppHandle) -> CmdResult<()> {
   let mut set = JoinSet::new();
   let semaphore = Arc::new(Semaphore::new(5));
 
-  for card in ygo::all_with_misc()
+  let mut cards_pt = ygo::all_pt()
     .await?
     .into_iter()
-    .filter_map(Db_NewCard::from_ygo_card)
+    .filter_map(|card| Some((card.id?, card)))
+    .collect_map();
+
+  sleep(Duration::from_millis(500)).await;
+
+  for (card_id, mut card) in ygo::all_with_misc()
+    .await?
+    .into_iter()
+    .filter_map(filter_map)
   {
+    if let Some(card_pt) = cards_pt.remove(&card_id) {
+      card.name_pt = card_pt.name;
+      card.description_pt = card_pt.desc;
+    }
+
     database.create_card(card.clone()).await?;
+
     set.spawn({
       let semaphore = Arc::clone(&semaphore);
       let img_dir = Arc::clone(&img_dir);
@@ -94,11 +110,27 @@ pub async fn fetch_cards(app: AppHandle) -> CmdResult<()> {
     });
   }
 
+  drop(cards_pt);
+
   while let Some(result) = set.join_next().await {
     let _ = result?.tap_err_dbg(|error| tracing::warn!(%error));
   }
 
   Ok(())
+}
+
+fn filter_map(card: Card) -> Option<(CardId, Db_NewCard)> {
+  if matches!(card.race?, CardRace::None)
+    || matches!(card.r#type?, CardType::SkillCard | CardType::Token)
+    || card
+      .misc_info
+      .iter()
+      .all(|it| it.tcg_date.is_none())
+  {
+    return None;
+  }
+
+  Some((card.id?, Db_NewCard::from_ygo_card(card)?))
 }
 
 #[tauri::command]

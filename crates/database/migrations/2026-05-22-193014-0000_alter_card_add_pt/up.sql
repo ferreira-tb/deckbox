@@ -1,0 +1,2 @@
+ALTER TABLE card ADD COLUMN name_pt TEXT;
+ALTER TABLE card ADD COLUMN description_pt TEXT;
