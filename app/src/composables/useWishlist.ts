@@ -1,11 +1,11 @@
-import { toast } from '@/lib/toast';
-import { storeToRefs } from 'pinia';
-import { handleError } from '@/lib/error';
-import { WishImpl } from '@/lib/model/wish';
-import { useSettings } from '@/stores/settings';
-import { useDatabase } from '@/composables/useDatabase';
-import { tryInjectOrElse, useMutex } from '@tb-dev/vue';
-import { commands, type Db_CardId } from '@/lib/bindings';
+import { toast } from "@/lib/toast";
+import { storeToRefs } from "pinia";
+import { handleError } from "@/lib/error";
+import { WishImpl } from "@/lib/model/wish";
+import { useSettings } from "@/stores/settings";
+import { useDatabase } from "@/composables/useDatabase";
+import { tryInjectOrElse, useMutex } from "@tb-dev/vue";
+import { commands, type Db_CardId } from "@/lib/bindings";
 import {
   computed,
   effectScope,
@@ -15,7 +15,7 @@ import {
   type Ref,
   shallowRef,
   triggerRef,
-} from 'vue';
+} from "vue";
 
 const SYMBOL = Symbol() as InjectionKey<ReturnType<typeof create>>;
 

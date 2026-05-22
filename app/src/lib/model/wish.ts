@@ -1,4 +1,4 @@
-import type { Db_CardId, Db_Wish, Db_WishId } from '@/lib/bindings';
+import type { Db_CardId, Db_Wish, Db_WishId } from "@/lib/bindings";
 
 export class WishImpl implements Db_Wish {
   public readonly id: Db_WishId;

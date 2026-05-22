@@ -1,5 +1,5 @@
-import { toast } from '@/lib/toast';
-import type { Option } from '@tb-dev/utils';
+import { toast } from "@/lib/toast";
+import type { Option } from "@tb-dev/utils";
 
 export function handleError(err: unknown, message?: Option<string>) {
   if (__DEBUG_ASSERTIONS__ && err) {

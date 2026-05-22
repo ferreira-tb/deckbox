@@ -1,4 +1,4 @@
-import { type ExternalToast, toast as sonner } from '@tb-dev/vue-sonner';
+import { type ExternalToast, toast as sonner } from "@tb-dev/vue-sonner";
 
 type ToastOptions = Partial<ExternalToast>;
 

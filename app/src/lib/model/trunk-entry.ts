@@ -3,7 +3,7 @@ import type {
   Db_TrunkEntry,
   Db_TrunkEntryAmount,
   Db_TrunkEntryId,
-} from '@/lib/bindings';
+} from "@/lib/bindings";
 
 export class TrunkEntryImpl implements Db_TrunkEntry {
   public readonly id: Db_TrunkEntryId;

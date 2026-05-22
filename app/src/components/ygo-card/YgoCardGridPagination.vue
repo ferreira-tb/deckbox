@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button, Pagination, PaginationEllipsis, PaginationList, PaginationListItem } from '@tb-dev/vue-components';
+import { Button, Pagination, PaginationEllipsis, PaginationList, PaginationListItem } from "@tb-dev/vue-components";
 
 interface Props {
   itemsPerPage: number;
@@ -8,7 +8,7 @@ interface Props {
 
 defineProps<Props>();
 
-const currentPage = defineModel<number>('page', { required: true });
+const currentPage = defineModel<number>("page", { required: true });
 </script>
 
 <template>

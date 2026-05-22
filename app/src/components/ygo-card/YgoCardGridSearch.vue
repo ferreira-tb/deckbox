@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
-import { SearchIcon } from '@lucide/vue';
-import { Input } from '@tb-dev/vue-components';
+import { useTemplateRef } from "vue";
+import { SearchIcon } from "@lucide/vue";
+import { Input } from "@tb-dev/vue-components";
 
 const searchValue = defineModel<string>({ required: true });
-const searchInput = useTemplateRef('searchInputEl');
+const searchInput = useTemplateRef("searchInputEl");
 
 function focus() {
   const el = searchInput.value?.$el;

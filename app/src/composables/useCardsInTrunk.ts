@@ -1,7 +1,7 @@
-import { computed, type Ref } from 'vue';
-import type { CardImpl } from '@/lib/model/card';
-import { useTrunk } from '@/composables/useTrunk';
-import { useDatabase } from '@/composables/useDatabase';
+import { computed, type Ref } from "vue";
+import type { CardImpl } from "@/lib/model/card";
+import { useTrunk } from "@/composables/useTrunk";
+import { useDatabase } from "@/composables/useDatabase";
 
 export function useCardsInTrunk(): Readonly<Ref<readonly CardImpl[]>> {
   const { cards } = useDatabase();

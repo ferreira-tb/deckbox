@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, type VNode } from 'vue';
-import type { Option } from '@tb-dev/utils';
-import { Badge } from '@tb-dev/vue-components';
-import type { Db_CardId } from '@/lib/bindings';
-import type { CardImpl } from '@/lib/model/card';
-import { useAmountInTrunk } from '@/composables/useAmountInTrunk';
+import { computed, type VNode } from "vue";
+import type { Option } from "@tb-dev/utils";
+import { Badge } from "@tb-dev/vue-components";
+import type { Db_CardId } from "@/lib/bindings";
+import type { CardImpl } from "@/lib/model/card";
+import { useAmountInTrunk } from "@/composables/useAmountInTrunk";
 
 interface Props {
   card: CardImpl;
@@ -38,7 +38,7 @@ const price = computed(() => {
 
 const description = computed(() => {
   return props.card.description
-    .split('\n')
+    .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
 });

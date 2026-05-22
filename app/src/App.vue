@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { go } from '@/router';
-import { onMounted } from 'vue';
-import { commands } from '@/lib/bindings';
-import { handleError } from '@/lib/error';
-import { useColorMode } from '@vueuse/core';
-import Loading from '@/components/Loading.vue';
-import { throttle } from 'es-toolkit/function';
-import { useSettings } from '@/stores/settings';
-import { useTrunk } from '@/composables/useTrunk';
-import { exit } from '@tauri-apps/plugin-process';
-import { useDatabase } from '@/composables/useDatabase';
-import { useWishlist } from '@/composables/useWishlist';
-import NavigationMenuItem from '@/components/NavigationMenuItem.vue';
-import { DatabaseBackupIcon, FileInputIcon, RefreshCwIcon } from '@lucide/vue';
-import { onCtrlKeyDown, onKeyDown, useBreakpoints, useMutex } from '@tb-dev/vue';
-import { Button, NavigationMenu, NavigationMenuList, Sonner } from '@tb-dev/vue-components';
+import { go } from "@/router";
+import { onMounted } from "vue";
+import { commands } from "@/lib/bindings";
+import { handleError } from "@/lib/error";
+import { useColorMode } from "@vueuse/core";
+import Loading from "@/components/Loading.vue";
+import { throttle } from "es-toolkit/function";
+import { useSettings } from "@/stores/settings";
+import { useTrunk } from "@/composables/useTrunk";
+import { exit } from "@tauri-apps/plugin-process";
+import { useDatabase } from "@/composables/useDatabase";
+import { useWishlist } from "@/composables/useWishlist";
+import NavigationMenuItem from "@/components/NavigationMenuItem.vue";
+import { DatabaseBackupIcon, FileInputIcon, RefreshCwIcon } from "@lucide/vue";
+import { onCtrlKeyDown, onKeyDown, useBreakpoints, useMutex } from "@tb-dev/vue";
+import { Button, NavigationMenu, NavigationMenuList, Sonner } from "@tb-dev/vue-components";
 
 const settings = useSettings();
 
@@ -27,20 +27,20 @@ const { loadTrunk } = useTrunk();
 const { loadWishlist } = useWishlist();
 
 useColorMode({
-  initialValue: 'dark',
+  initialValue: "dark",
   onError: handleError,
   writeDefaults: true,
 });
 
-onKeyDown('F1', () => go('trunk'));
-onKeyDown('F2', () => go('deck'));
-onKeyDown('F3', () => go('wishlist'));
-onKeyDown('F4', () => go('database'));
-onKeyDown('F5', throttle(loadData, 1000));
-onKeyDown('F6', throttle(refresh, 5000));
-onKeyDown('Escape', () => exit(0).err());
+onKeyDown("F1", () => go("trunk"));
+onKeyDown("F2", () => go("deck"));
+onKeyDown("F3", () => go("wishlist"));
+onKeyDown("F4", () => go("database"));
+onKeyDown("F5", throttle(loadData, 1000));
+onKeyDown("F6", throttle(refresh, 5000));
+onKeyDown("Escape", () => exit(0).err());
 
-onCtrlKeyDown(['e', 'E'], settings.toggleEdit);
+onCtrlKeyDown(["e", "E"], settings.toggleEdit);
 
 onMounted(() => {
   loadData()

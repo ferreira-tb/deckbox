@@ -1,13 +1,13 @@
-import { toast } from '@/lib/toast';
-import { storeToRefs } from 'pinia';
-import { handleError } from '@/lib/error';
-import type { Option } from '@tb-dev/utils';
-import { useSettings } from '@/stores/settings';
-import { useDatabase } from '@/composables/useDatabase';
-import { tryInjectOrElse, useMutex } from '@tb-dev/vue';
-import { TrunkEntryImpl } from '@/lib/model/trunk-entry';
-import { commands, type Db_CardId } from '@/lib/bindings';
-import { dangerouslyRemoveFromLocalWishlist } from '@/composables/useWishlist';
+import { toast } from "@/lib/toast";
+import { storeToRefs } from "pinia";
+import { handleError } from "@/lib/error";
+import type { Option } from "@tb-dev/utils";
+import { useSettings } from "@/stores/settings";
+import { useDatabase } from "@/composables/useDatabase";
+import { tryInjectOrElse, useMutex } from "@tb-dev/vue";
+import { TrunkEntryImpl } from "@/lib/model/trunk-entry";
+import { commands, type Db_CardId } from "@/lib/bindings";
+import { dangerouslyRemoveFromLocalWishlist } from "@/composables/useWishlist";
 import {
   computed,
   effectScope,
@@ -16,7 +16,7 @@ import {
   type Ref,
   shallowRef,
   triggerRef,
-} from 'vue';
+} from "vue";
 
 const SYMBOL = Symbol() as InjectionKey<ReturnType<typeof create>>;
 
@@ -84,7 +84,7 @@ function create() {
     return trunkSet.value.has(cardId);
   }
 
-  async function updateTrunkEntryAmount(cardId: Db_CardId, kind: 'increase' | 'decrease') {
+  async function updateTrunkEntryAmount(cardId: Db_CardId, kind: "increase" | "decrease") {
     if (!canEdit.value) {
       return;
     }
@@ -95,7 +95,7 @@ function create() {
       let newAmount: Option<number> = null;
       const currentAmount = getTrunkEntryAmount(cardId);
 
-      if (kind === 'increase') {
+      if (kind === "increase") {
         if (currentAmount === 0) {
           await createTrunkEntry(cardId);
           dangerouslyRemoveFromLocalWishlist(cardId);
@@ -109,7 +109,7 @@ function create() {
         newAmount = await commands.decreaseTrunkEntryAmount(cardId);
       }
 
-      if (typeof newAmount === 'number') {
+      if (typeof newAmount === "number") {
         if (newAmount === 0) {
           trunk.value = trunk.value.filter((entry) => {
             return entry.cardId !== cardId;

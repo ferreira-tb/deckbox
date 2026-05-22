@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { sessionRef } from '@tb-dev/vue';
-import { useSettings } from '@/stores/settings';
-import { Button } from '@tb-dev/vue-components';
-import { useTrunk } from '@/composables/useTrunk';
-import { useWishlist } from '@/composables/useWishlist';
-import { commands, type Db_CardId } from '@/lib/bindings';
-import { useWishedCards } from '@/composables/useWishedCards';
-import YgoCardGrid from '@/components/ygo-card/YgoCardGrid.vue';
+import { storeToRefs } from "pinia";
+import { sessionRef } from "@tb-dev/vue";
+import { useSettings } from "@/stores/settings";
+import { Button } from "@tb-dev/vue-components";
+import { useTrunk } from "@/composables/useTrunk";
+import { useWishlist } from "@/composables/useWishlist";
+import { commands, type Db_CardId } from "@/lib/bindings";
+import { useWishedCards } from "@/composables/useWishedCards";
+import YgoCardGrid from "@/components/ygo-card/YgoCardGrid.vue";
 
 const settings = useSettings();
 const { canEdit } = storeToRefs(settings);
@@ -18,10 +18,10 @@ const { totalInWishlist, removeWish } = useWishlist();
 
 const wishedCards = useWishedCards();
 
-const searchValue = sessionRef('search:wishlist', '');
+const searchValue = sessionRef("search:wishlist", "");
 
 async function onUpdateTrunkEntry(cardId: Db_CardId) {
-  await updateTrunkEntryAmount(cardId, 'increase');
+  await updateTrunkEntryAmount(cardId, "increase");
 }
 </script>
 
