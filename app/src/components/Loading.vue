@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { cn } from '@tb-dev/vue-components';
-import { LoaderCircleIcon } from '@lucide/vue';
-import type { Component, HTMLAttributes } from 'vue';
+import { cn } from "@tb-dev/vue-components";
+import { LoaderCircleIcon } from "@lucide/vue";
+import type { Component, HTMLAttributes } from "vue";
 
 const props = defineProps<{
-  class?: HTMLAttributes['class'];
+  class?: HTMLAttributes["class"];
   icon?: Component;
-  iconClass?: HTMLAttributes['class'];
+  iconClass?: HTMLAttributes["class"];
 }>();
 </script>
 

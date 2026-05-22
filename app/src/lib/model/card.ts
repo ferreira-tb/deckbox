@@ -1,4 +1,4 @@
-import { convertFileSrc } from '@tauri-apps/api/core';
+import { convertFileSrc } from "@tauri-apps/api/core";
 import type {
   Db_BanlistStatus,
   Db_Card,
@@ -7,7 +7,7 @@ import type {
   Db_CardLocalId,
   Db_CardRace,
   Db_CardType,
-} from '@/lib/bindings';
+} from "@/lib/bindings";
 
 export class CardImpl implements Db_Card {
   public readonly id: Db_CardLocalId;

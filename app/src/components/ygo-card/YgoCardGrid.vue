@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import Fuse from 'fuse.js/basic';
-import { storeToRefs } from 'pinia';
-import { chunk } from 'es-toolkit/array';
-import { watchDebounced } from '@vueuse/core';
-import type { Db_CardId } from '@/lib/bindings';
-import { useSettings } from '@/stores/settings';
-import type { CardImpl } from '@/lib/model/card';
-import { onCtrlKeyDown, onKeyDown } from '@tb-dev/vue';
-import { useWishlist } from '@/composables/useWishlist';
-import type { MaybePromise, Option } from '@tb-dev/utils';
-import { useCardCycleList } from '@/composables/useCardCycleList';
-import YgoCardGridItem from '@/components/ygo-card/YgoCardGridItem.vue';
-import YgoCardGridSide from '@/components/ygo-card/YgoCardGridSide.vue';
-import YgoCardGridSearch from '@/components/ygo-card/YgoCardGridSearch.vue';
-import YgoCardGridPagination from '@/components/ygo-card/YgoCardGridPagination.vue';
-import { computed, nextTick, onMounted, ref, shallowRef, useTemplateRef, type VNode, watch } from 'vue';
+import Fuse from "fuse.js/basic";
+import { storeToRefs } from "pinia";
+import { chunk } from "es-toolkit/array";
+import { watchDebounced } from "@vueuse/core";
+import type { Db_CardId } from "@/lib/bindings";
+import { useSettings } from "@/stores/settings";
+import type { CardImpl } from "@/lib/model/card";
+import { onCtrlKeyDown, onKeyDown } from "@tb-dev/vue";
+import { useWishlist } from "@/composables/useWishlist";
+import type { MaybePromise, Option } from "@tb-dev/utils";
+import { useCardCycleList } from "@/composables/useCardCycleList";
+import YgoCardGridItem from "@/components/ygo-card/YgoCardGridItem.vue";
+import YgoCardGridSide from "@/components/ygo-card/YgoCardGridSide.vue";
+import YgoCardGridSearch from "@/components/ygo-card/YgoCardGridSearch.vue";
+import YgoCardGridPagination from "@/components/ygo-card/YgoCardGridPagination.vue";
+import { computed, nextTick, onMounted, ref, shallowRef, useTemplateRef, type VNode, watch } from "vue";
 
 interface Props {
   cards: readonly CardImpl[];
@@ -25,7 +25,7 @@ interface Props {
   onAddWish?: (cardId: Db_CardId) => void;
   onBuyCard?: (cardId: Db_CardId) => MaybePromise<unknown>;
   onRemoveWish?: (cardId: Db_CardId) => void;
-  onUpdateTrunkEntryAmount?: (cardId: Db_CardId, kind: 'increase' | 'decrease') => void;
+  onUpdateTrunkEntryAmount?: (cardId: Db_CardId, kind: "increase" | "decrease") => void;
 }
 
 interface SideActionSlotProps {
@@ -38,7 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
   itemsPerPage: 300,
 });
 
-const searchValue = defineModel<string>('search', { required: true });
+const searchValue = defineModel<string>("search", { required: true });
 
 defineSlots<{
   header?: () => VNode;
@@ -67,12 +67,12 @@ const cycleList = useCardCycleList(currentChunk, selected);
 
 const { isInWishlist } = useWishlist();
 
-const grid = useTemplateRef<HTMLElement>('gridEl');
-const searchInput = useTemplateRef('searchInputEl');
+const grid = useTemplateRef<HTMLElement>("gridEl");
+const searchInput = useTemplateRef("searchInputEl");
 
 const fuse = computed(() => {
   return new Fuse(props.cards, {
-    keys: ['name', 'archetype'],
+    keys: ["name", "archetype"],
     threshold: 0.2,
     ignoreLocation: true,
     isCaseSensitive: false,
@@ -87,65 +87,65 @@ watchDebounced(searchValue, updateShownCards, {
 });
 
 watch(currentPage, () => {
-  grid.value?.scrollTo({ top: 0, behavior: 'instant' });
+  grid.value?.scrollTo({ top: 0, behavior: "instant" });
   fallbackSelect();
 });
 
-onKeyDown('ArrowLeft', cycleList.previous);
-onKeyDown('ArrowRight', cycleList.next);
-onKeyDown('ArrowUp', cycleList.first);
-onKeyDown('ArrowDown', cycleList.last);
+onKeyDown("ArrowLeft", cycleList.previous);
+onKeyDown("ArrowRight", cycleList.next);
+onKeyDown("ArrowUp", cycleList.first);
+onKeyDown("ArrowDown", cycleList.last);
 
-onCtrlKeyDown('ArrowLeft', () => {
+onCtrlKeyDown("ArrowLeft", () => {
   if (currentPage.value > 1) {
     currentPage.value -= 1;
   }
 });
 
-onCtrlKeyDown('ArrowRight', () => {
+onCtrlKeyDown("ArrowRight", () => {
   if (currentPage.value < chunks.value.size) {
     currentPage.value += 1;
   }
 });
 
-onCtrlKeyDown('ArrowUp', () => {
+onCtrlKeyDown("ArrowUp", () => {
   currentPage.value = 1;
 });
 
-onCtrlKeyDown('ArrowDown', () => {
+onCtrlKeyDown("ArrowDown", () => {
   currentPage.value = chunks.value.size;
 });
 
-onKeyDown(['b', 'B'], async () => {
+onKeyDown(["b", "B"], async () => {
   if (selected.value) {
     await props.onBuyCard?.(selected.value.cardId);
   }
 });
 
-onCtrlKeyDown(['f', 'F'], () => {
+onCtrlKeyDown(["f", "F"], () => {
   // eslint-disable-next-line
   searchInput.value?.focus();
 });
 
-onKeyDown(['t', 'T'], () => {
+onKeyDown(["t", "T"], () => {
   if (selected.value) {
     const cardId = selected.value.cardId;
-    props.onUpdateTrunkEntryAmount?.(cardId, 'increase');
+    props.onUpdateTrunkEntryAmount?.(cardId, "increase");
   }
 }, {
   enabled: canEdit,
 });
 
-onCtrlKeyDown(['t', 'T'], () => {
+onCtrlKeyDown(["t", "T"], () => {
   if (selected.value) {
     const cardId = selected.value.cardId;
-    props.onUpdateTrunkEntryAmount?.(cardId, 'decrease');
+    props.onUpdateTrunkEntryAmount?.(cardId, "decrease");
   }
 }, {
   enabled: canEdit,
 });
 
-onKeyDown(['w', 'W'], () => {
+onKeyDown(["w", "W"], () => {
   if (selected.value) {
     if (isInWishlist(selected.value.cardId)) {
       props.onRemoveWish?.(selected.value.cardId);

@@ -1,8 +1,8 @@
-import { handleError } from '@/lib/error';
-import { CardImpl } from '@/lib/model/card';
-import { tryInjectOrElse, useMutex } from '@tb-dev/vue';
-import { commands, type Db_CardId } from '@/lib/bindings';
-import { computed, effectScope, type InjectionKey, markRaw, type Ref, shallowRef } from 'vue';
+import { handleError } from "@/lib/error";
+import { CardImpl } from "@/lib/model/card";
+import { tryInjectOrElse, useMutex } from "@tb-dev/vue";
+import { commands, type Db_CardId } from "@/lib/bindings";
+import { computed, effectScope, type InjectionKey, markRaw, type Ref, shallowRef } from "vue";
 
 const SYMBOL = Symbol() as InjectionKey<ReturnType<typeof create>>;
 
