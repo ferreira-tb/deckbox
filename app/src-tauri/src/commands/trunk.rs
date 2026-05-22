@@ -58,6 +58,7 @@ pub async fn export_trunk(app: AppHandle) -> CmdResult<()> {
       json!({
         "card_id": card.card_id,
         "name": card.name,
+        "name_pt": card.name_pt,
         "archetype": card.archetype,
         "amount": amount,
       })

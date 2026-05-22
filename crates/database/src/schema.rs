@@ -24,6 +24,8 @@ diesel::table! {
         updated_at -> Text,
         ocg_date -> Nullable<Text>,
         tcg_date -> Nullable<Text>,
+        name_pt -> Nullable<Text>,
+        description_pt -> Nullable<Text>,
     }
 }
 

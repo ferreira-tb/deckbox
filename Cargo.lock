@@ -776,7 +776,7 @@ dependencies = [
 
 [[package]]
 name = "deckbox"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "deckbox-database",
@@ -785,6 +785,7 @@ dependencies = [
  "jiff",
  "mimalloc",
  "nil-log",
+ "nil-util",
  "open",
  "reqwest 0.12.28",
  "serde",
@@ -815,7 +816,7 @@ dependencies = [
 
 [[package]]
 name = "deckbox-database"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "bon",
@@ -2578,6 +2579,12 @@ dependencies = [
  "tracing-appender",
  "tracing-subscriber",
 ]
+
+[[package]]
+name = "nil-util"
+version = "0.5.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c5499b7ca4a7283de4f4674453097d8d9e7674a3c7001965dca3f5da0b455fdd"
 
 [[package]]
 name = "nix"
@@ -6432,9 +6439,9 @@ dependencies = [
 
 [[package]]
 name = "ygo-core"
-version = "0.1.12"
+version = "0.1.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce783183953a11a4c7d85b7c8feb4cb8a057fd1cab485fcf73fa20da0b2838a0"
+checksum = "b7435b3580a4d1ca7dd6a0e6e0177091d5a0a8aa4b87ee6bc9e6a6963dea87c4"
 dependencies = [
  "derive_more",
  "http",

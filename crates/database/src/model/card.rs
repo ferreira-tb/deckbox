@@ -36,6 +36,8 @@ pub struct Db_Card {
   pub image_url_cropped: Db_Url,
   pub image_url_small: Db_Url,
   pub price: Option<String>,
+  pub name_pt: Option<String>,
+  pub description_pt: Option<String>,
 }
 
 #[derive(Insertable, Clone, Debug)]
@@ -62,6 +64,8 @@ pub struct Db_NewCard {
   pub(crate) updated_at: Db_Zoned,
   pub(crate) ocg_date: Option<Db_Date>,
   pub(crate) tcg_date: Option<Db_Date>,
+  pub name_pt: Option<String>,
+  pub description_pt: Option<String>,
 }
 
 impl Db_NewCard {
@@ -120,6 +124,8 @@ impl Db_NewCard {
       updated_at: now,
       ocg_date,
       tcg_date,
+      name_pt: None,
+      description_pt: None,
     })
   }
 
