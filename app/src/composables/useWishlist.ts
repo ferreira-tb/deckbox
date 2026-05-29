@@ -17,7 +17,7 @@ import {
   triggerRef,
 } from "vue";
 
-const SYMBOL = Symbol() as InjectionKey<ReturnType<typeof create>>;
+const SYMBOL = Symbol("wishlist") as InjectionKey<ReturnType<typeof create>>;
 
 export function useWishlist() {
   return tryInjectOrElse(SYMBOL, () => {

@@ -21,6 +21,10 @@
     "updater:allow-check",
     "updater:allow-download",
     "updater:allow-download-and-install",
-    "updater:allow-install"
+    "updater:allow-install",
+    {
+      "identifier": "http:default",
+      "allow": [{ "url": "https://economia.awesomeapi.com.br" }]
+    }
   ]
 }

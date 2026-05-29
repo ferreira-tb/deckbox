@@ -18,7 +18,7 @@ import {
   triggerRef,
 } from "vue";
 
-const SYMBOL = Symbol() as InjectionKey<ReturnType<typeof create>>;
+const SYMBOL = Symbol("trunk") as InjectionKey<ReturnType<typeof create>>;
 
 export function useTrunk() {
   return tryInjectOrElse(SYMBOL, () => {
