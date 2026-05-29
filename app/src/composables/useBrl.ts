@@ -4,7 +4,7 @@ import type { Option } from "@tb-dev/utils";
 import { fetch } from "@tauri-apps/plugin-http";
 import { computed, type MaybeRefOrGetter, toRef } from "vue";
 
-const STORAGE_KEY = "exchange-rate";
+const STORAGE_KEY = "exchange-rate:brl";
 
 export function useBrl(price: MaybeRefOrGetter<Option<string>>) {
   const priceRef = toRef(price);

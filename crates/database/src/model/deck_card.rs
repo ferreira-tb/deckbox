@@ -19,11 +19,11 @@ pub struct Db_DeckCard {
   pub card_id: Db_CardLocalId,
 
   #[builder(default)]
-  pub amount_main: Db_DeckCardAmount,
+  pub main: Db_DeckCardAmount,
 
   #[builder(default)]
-  pub amount_extra: Db_DeckCardAmount,
+  pub extra: Db_DeckCardAmount,
 
   #[builder(default)]
-  pub amount_side: Db_DeckCardAmount,
+  pub side: Db_DeckCardAmount,
 }
