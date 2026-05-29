@@ -67,7 +67,13 @@ pub async fn export_database_file(app: AppHandle) -> CmdResult<()> {
 #[tauri::command]
 #[specta::specta]
 pub async fn open_store_website(app: AppHandle, card_id: Db_CardId) -> CmdResult<()> {
-  let card = card::get_card_by_card_id(app, card_id).await?;
+  let mut card = card::get_card_by_card_id(app, card_id).await?;
+  card.name = card
+    .name
+    .chars()
+    .filter(|it| !matches!(it, '<' | '>'))
+    .collect();
+
   let mut url = Url::parse("https://www.ligayugioh.com.br")?;
   url
     .query_pairs_mut()

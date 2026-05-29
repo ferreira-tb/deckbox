@@ -4,7 +4,7 @@ import { tryInjectOrElse, useMutex } from "@tb-dev/vue";
 import { commands, type Db_CardId } from "@/lib/bindings";
 import { computed, effectScope, type InjectionKey, markRaw, type Ref, shallowRef } from "vue";
 
-const SYMBOL = Symbol() as InjectionKey<ReturnType<typeof create>>;
+const SYMBOL = Symbol("database") as InjectionKey<ReturnType<typeof create>>;
 
 export function useDatabase() {
   return tryInjectOrElse(SYMBOL, () => {

@@ -34,6 +34,7 @@ fn main() {
     .plugin(tauri_plugin_os::init())
     .plugin(tauri_plugin_persisted_scope::init())
     .plugin(tauri_plugin_process::init())
+    .plugin(tauri_plugin_http::init())
     .plugin(tauri_plugin_updater::Builder::new().build())
     .plugin(plugin::prevent_default())
     .plugin(plugin::single_instance())
