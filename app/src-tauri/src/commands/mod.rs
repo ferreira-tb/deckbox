@@ -4,12 +4,15 @@ pub mod trunk;
 pub mod wishlist;
 
 use crate::error::CmdResult;
+use crate::settings::SETTINGS_BACKUP_DIR;
 use crate::state::database_file;
 use deckbox_database::sql_types::card_id::Db_CardId;
 use jiff::Zoned;
+use std::path::PathBuf;
 use tauri::{AppHandle, WebviewWindow};
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_fs::FilePath;
+use tauri_plugin_pinia::ManagerExt as _;
 use tokio::fs;
 use tokio::sync::oneshot;
 use url::Url;
@@ -17,20 +20,35 @@ use url::Url;
 #[tauri::command]
 #[specta::specta]
 pub async fn export_database_file(app: AppHandle) -> CmdResult<()> {
-  let (tx, rx) = oneshot::channel();
-  app
-    .dialog()
-    .file()
-    .set_title("Export Deckbox Database")
-    .pick_folder(move |response| {
-      let _ = tx.send(response);
-    });
+  let mut dir = app
+    .pinia()
+    .get::<PathBuf>("settings", SETTINGS_BACKUP_DIR)
+    .ok();
 
-  if let Some(dir) = rx
-    .await?
-    .map(FilePath::into_path)
-    .transpose()?
-  {
+  if dir.is_none() {
+    let (tx, rx) = oneshot::channel();
+    app
+      .dialog()
+      .file()
+      .set_title("Export Deckbox Database")
+      .pick_folder(move |response| {
+        let _ = tx.send(response);
+      });
+
+    if let Some(path) = rx
+      .await?
+      .map(FilePath::into_path)
+      .transpose()?
+      .and_then(|it| it.to_str().map(ToOwned::to_owned))
+    {
+      dir = Some(PathBuf::from(path.as_str()));
+      app
+        .pinia()
+        .set("settings", SETTINGS_BACKUP_DIR, path)?;
+    }
+  }
+
+  if let Some(dir) = dir {
     const VERSION: &str = env!("CARGO_PKG_VERSION");
     let now = Zoned::now().strftime("%Y%m%d%H%M%S");
     let name = format!("deckbox-{VERSION}.{now}.db");

@@ -6,5 +6,9 @@ export default defineConfig({
   features: {
     vue: true,
   },
-  overrides: {},
+  overrides: {
+    typescript: {
+      "naming-convention": "off",
+    },
+  },
 });

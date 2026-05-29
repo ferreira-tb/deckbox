@@ -7,6 +7,7 @@ mod error;
 mod http;
 mod manager;
 mod plugin;
+mod settings;
 mod state;
 mod window;
 

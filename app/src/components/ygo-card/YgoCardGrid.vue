@@ -46,7 +46,7 @@ defineSlots<{
 }>();
 
 const settings = useSettings();
-const { canEdit } = storeToRefs(settings);
+const { can_edit } = storeToRefs(settings);
 
 const shownCards = shallowRef<readonly CardImpl[]>([]);
 const selected = shallowRef<Option<CardImpl>>();
@@ -133,7 +133,7 @@ onKeyDown(["t", "T"], () => {
     props.onUpdateTrunkEntryAmount?.(cardId, "increase");
   }
 }, {
-  enabled: canEdit,
+  enabled: can_edit,
 });
 
 onCtrlKeyDown(["t", "T"], () => {
@@ -142,7 +142,7 @@ onCtrlKeyDown(["t", "T"], () => {
     props.onUpdateTrunkEntryAmount?.(cardId, "decrease");
   }
 }, {
-  enabled: canEdit,
+  enabled: can_edit,
 });
 
 onKeyDown(["w", "W"], () => {
@@ -155,7 +155,7 @@ onKeyDown(["w", "W"], () => {
     }
   }
 }, {
-  enabled: canEdit,
+  enabled: can_edit,
 });
 
 onMounted(() => {

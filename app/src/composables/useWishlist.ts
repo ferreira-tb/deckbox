@@ -52,7 +52,7 @@ function create() {
   });
 
   const settings = useSettings();
-  const { canEdit } = storeToRefs(settings);
+  const { can_edit } = storeToRefs(settings);
 
   const { withCard } = useDatabase();
 
@@ -81,7 +81,7 @@ function create() {
   }
 
   async function addWish(cardId: Db_CardId) {
-    if (canEdit.value && !isInWishlist(cardId)) {
+    if (can_edit.value && !isInWishlist(cardId)) {
       try {
         await mutex.acquire();
         const wishId = await commands.createWish(cardId);
@@ -105,7 +105,7 @@ function create() {
   }
 
   async function removeWish(cardId: Db_CardId) {
-    if (canEdit.value && isInWishlist(cardId)) {
+    if (can_edit.value && isInWishlist(cardId)) {
       try {
         await mutex.acquire();
         const rows = await commands.removeWish(cardId);
@@ -126,7 +126,7 @@ function create() {
   }
 
   function dangerouslyRemoveLocalWish(cardId: Db_CardId) {
-    if (canEdit.value) {
+    if (can_edit.value) {
       wishlist.value = wishlist.value.filter((wish) => {
         return wish.cardId !== cardId;
       });

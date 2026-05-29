@@ -76,7 +76,9 @@ async removeWish(cardId: Db_CardId) : Promise<number> {
 
 /** user-defined constants **/
 
-
+export const SETTINGS_CAN_EDIT = "can_edit" as const;
+export const SETTINGS_TRUNK_DIR = "trunk_dir" as const;
+export const SETTINGS_BACKUP_DIR = "backup_dir" as const;
 
 /** user-defined types **/
 
