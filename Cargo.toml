@@ -60,6 +60,10 @@ version = "2.3"
 default-features = false
 features = ["32-column-tables", "returning_clauses_for_sqlite_3_35", "sqlite"]
 
+[workspace.dependencies.diesel-async]
+version = "0.9"
+features = ["migrations", "sqlite"]
+
 [workspace.dependencies.diesel_migrations]
 version = "2.3"
 features = ["sqlite"]

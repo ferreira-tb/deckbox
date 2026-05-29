@@ -56,7 +56,7 @@ pub async fn fetch_cards(app: AppHandle) -> CmdResult<()> {
       card.description_pt = card_pt.desc;
     }
 
-    database.create_card(card.clone()).await?;
+    database.create_card(&card).await?;
 
     set.spawn({
       let semaphore = Arc::clone(&semaphore);
@@ -148,7 +148,7 @@ pub async fn get_archetypes(app: AppHandle) -> CmdResult<Vec<String>> {
 pub async fn get_card_by_card_id(app: AppHandle, card_id: Db_CardId) -> CmdResult<Db_Card> {
   app
     .database()
-    .get_card_by_card_id(card_id)
+    .get_card_by_card_id(&card_id)
     .await
     .map_err(Into::into)
 }

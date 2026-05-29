@@ -17,7 +17,7 @@ pub async fn create_deck(
 
   app
     .database()
-    .create_deck(new)
+    .create_deck(&new)
     .await
     .map_err(Into::into)
 }

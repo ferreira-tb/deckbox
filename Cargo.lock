@@ -858,6 +858,7 @@ dependencies = [
  "bon",
  "derive_more",
  "diesel",
+ "diesel-async",
  "diesel_migrations",
  "jiff",
  "libsqlite3-sys",
@@ -926,6 +927,20 @@ dependencies = [
  "libsqlite3-sys",
  "sqlite-wasm-rs",
  "time",
+]
+
+[[package]]
+name = "diesel-async"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9c20ddcc6737cecdaef3dfecb2796bdfe3002456521189d30be8e4c5a1bc821d"
+dependencies = [
+ "diesel",
+ "diesel_migrations",
+ "futures-core",
+ "futures-util",
+ "pin-project-lite",
+ "tokio",
 ]
 
 [[package]]

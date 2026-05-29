@@ -15,6 +15,7 @@ anyhow.workspace = true
 bon.workspace = true
 derive_more.workspace = true
 diesel.workspace = true
+diesel-async.workspace = true
 diesel_migrations.workspace = true
 jiff.workspace = true
 libsqlite3-sys.workspace = true
