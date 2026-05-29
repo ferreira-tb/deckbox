@@ -10,7 +10,7 @@ import { useWishedCards } from "@/composables/useWishedCards";
 import YgoCardGrid from "@/components/ygo-card/YgoCardGrid.vue";
 
 const settings = useSettings();
-const { can_edit } = storeToRefs(settings);
+const { canEdit } = storeToRefs(settings);
 
 const { updateTrunkEntryAmount, loading: isTrunkLoading } = useTrunk();
 
@@ -45,7 +45,7 @@ async function onUpdateTrunkEntry(cardId: Db_CardId) {
         <div class="grid grid-cols-2 justify-center items-center gap-2">
           <Button
             variant="outline"
-            :disabled="!can_edit || isTrunkLoading"
+            :disabled="!canEdit || isTrunkLoading"
             @click="() => onUpdateTrunkEntry(cardId)"
           >
             <span>Trunk</span>

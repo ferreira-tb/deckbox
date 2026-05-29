@@ -52,7 +52,7 @@ function create() {
   });
 
   const settings = useSettings();
-  const { can_edit } = storeToRefs(settings);
+  const { canEdit } = storeToRefs(settings);
 
   const { withCard } = useDatabase();
 
@@ -85,7 +85,7 @@ function create() {
   }
 
   async function updateTrunkEntryAmount(cardId: Db_CardId, kind: "increase" | "decrease") {
-    if (!can_edit.value) {
+    if (!canEdit.value) {
       return;
     }
 
