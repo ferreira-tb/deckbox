@@ -1,15 +1,18 @@
 use crate::error::CmdResult;
-use crate::manager::ManagerExt;
+use crate::manager::ManagerExt as _;
+use crate::settings::SETTINGS_TRUNK_DIR;
 use deckbox_database::model::card::Db_Card;
 use deckbox_database::model::trunk::{Db_NewTrunkEntry, Db_TrunkEntry};
 use deckbox_database::sql_types::card_id::Db_CardId;
 use deckbox_database::sql_types::num::{Db_TrunkEntryAmount, Db_TrunkEntryId};
 use itertools::Itertools;
 use serde_json::json;
+use std::path::PathBuf;
 use tap::Pipe;
 use tauri::AppHandle;
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_fs::FilePath;
+use tauri_plugin_pinia::ManagerExt as _;
 use tokio::fs;
 use tokio::sync::oneshot;
 
@@ -40,20 +43,35 @@ pub async fn decrease_trunk_entry_amount(
 #[tauri::command]
 #[specta::specta]
 pub async fn export_trunk(app: AppHandle) -> CmdResult<()> {
-  let (tx, rx) = oneshot::channel();
-  app
-    .dialog()
-    .file()
-    .set_title("Export Trunk")
-    .pick_folder(move |response| {
-      let _ = tx.send(response);
-    });
+  let mut dir = app
+    .pinia()
+    .get::<PathBuf>("settings", SETTINGS_TRUNK_DIR)
+    .ok();
 
-  if let Some(dir) = rx
-    .await?
-    .map(FilePath::into_path)
-    .transpose()?
-  {
+  if dir.is_none() {
+    let (tx, rx) = oneshot::channel();
+    app
+      .dialog()
+      .file()
+      .set_title("Export Trunk")
+      .pick_folder(move |response| {
+        let _ = tx.send(response);
+      });
+
+    if let Some(path) = rx
+      .await?
+      .map(FilePath::into_path)
+      .transpose()?
+      .and_then(|it| it.to_str().map(ToOwned::to_owned))
+    {
+      dir = Some(PathBuf::from(path.as_str()));
+      app
+        .pinia()
+        .set("settings", SETTINGS_TRUNK_DIR, path)?;
+    }
+  }
+
+  if let Some(dir) = dir {
     let to_json = |(card, amount): (Db_Card, Db_TrunkEntryAmount)| {
       json!({
         "card_id": card.card_id,

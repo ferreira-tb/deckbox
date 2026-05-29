@@ -40,7 +40,7 @@ onKeyDown("F5", throttle(loadData, 1000));
 onKeyDown("F6", throttle(refresh, 5000));
 onKeyDown("Escape", () => exit(0).err());
 
-onCtrlKeyDown(["e", "E"], settings.toggleEdit);
+onCtrlKeyDown(["e", "E"], () => void settings.toggleEdit());
 
 onMounted(() => {
   loadData()

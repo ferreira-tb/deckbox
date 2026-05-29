@@ -1,10 +1,13 @@
-use crate::commands;
+use crate::{commands, settings};
 use tauri::Wry;
 use tauri_specta::{Builder, ErrorHandlingMode, collect_commands};
 
 pub fn collect() -> Builder {
   let builder = Builder::<Wry>::new()
     .error_handling(ErrorHandlingMode::Throw)
+    .constant("SETTINGS_BACKUP_DIR", settings::SETTINGS_BACKUP_DIR)
+    .constant("SETTINGS_CAN_EDIT", settings::SETTINGS_CAN_EDIT)
+    .constant("SETTINGS_TRUNK_DIR", settings::SETTINGS_TRUNK_DIR)
     .commands(collect_commands![
       commands::export_database_file,
       commands::open_store_website,
