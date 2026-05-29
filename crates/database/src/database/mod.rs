@@ -20,7 +20,7 @@ pub struct Database(Arc<Mutex<Conn>>);
 
 impl Database {
   pub async fn new(url: &str) -> Result<Self> {
-    let conn = SyncConnectionWrapper::<SqliteConnection>::establish(url).await?;
+    let conn = Conn::establish(url).await?;
     let conn = run_pending_migrations(conn)?;
     Ok(Self(Arc::new(Mutex::new(conn))))
   }
