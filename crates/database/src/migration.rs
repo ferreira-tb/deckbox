@@ -1,6 +1,3 @@
-// Copyright (C) Call of Nil contributors
-// SPDX-License-Identifier: AGPL-3.0-only
-
 use crate::database::Conn;
 use crate::error::{Error, Result};
 use diesel_async::AsyncMigrationHarness;

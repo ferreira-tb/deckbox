@@ -42,7 +42,7 @@ const description = computed(() => {
     <div class="h-full flex flex-col justify-between gap-1 overflow-hidden">
       <div class="flex flex-col gap-1 overflow-x-hidden overflow-y-auto pr-2">
         <div class="flex justify-between gap-2">
-          <h1 class="font-bold">{{ card.name }}</h1>
+          <h1 class="font-bold select-text">{{ card.name }}</h1>
           <div class="flex justify-end items-center gap-1">
             <Badge
               v-if="card.banlistStatus === 'Forbidden'"
@@ -72,7 +72,7 @@ const description = computed(() => {
           </div>
         </div>
 
-        <p v-for="(line, idx) of description" :key="idx">{{ line }}</p>
+        <p v-for="(line, idx) of description" :key="idx" class="select-text">{{ line }}</p>
       </div>
 
       <slot
