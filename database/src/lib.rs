@@ -7,7 +7,7 @@ pub mod sql_types;
 
 use crate::error::Result;
 use crate::migration::run_pending_migrations;
-use diesel::prelude::*;
+use diesel::SqliteConnection;
 use diesel_async::AsyncConnection;
 use diesel_async::sync_connection_wrapper::SyncConnectionWrapper;
 use std::fmt;
