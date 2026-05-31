@@ -1,6 +1,6 @@
 [print_schema]
-file = "crates/database/src/schema.rs"
+file = "database/src/schema.rs"
 with_docs = false
 
 [migrations_directory]
-dir = "crates/database/migrations"
+dir = "database/migrations"

@@ -1,4 +1,4 @@
-use super::Database;
+use crate::Database;
 use crate::error::{Error, Result};
 use crate::model::card::Db_Card;
 use crate::model::trunk::{Db_NewTrunkEntry, Db_TrunkEntry};

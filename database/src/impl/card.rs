@@ -1,4 +1,4 @@
-use super::Database;
+use crate::Database;
 use crate::error::{Error, Result};
 use crate::model::card::{Db_Card, Db_NewCard};
 use crate::sql_types::card_id::Db_CardId;

@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["app/src-tauri", "crates/database"]
+members = ["app/src-tauri", "database"]
 
 [workspace.package]
 version = "1.3.0"
@@ -49,7 +49,7 @@ thiserror = "2.0"
 
 [workspace.dependencies.deckbox-database]
 version = "*"
-path = "./crates/database"
+path = "./database"
 
 [workspace.dependencies.derive_more]
 version = "2.1"

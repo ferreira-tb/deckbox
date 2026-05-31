@@ -1,4 +1,4 @@
-use super::Database;
+use crate::Database;
 use crate::error::{Error, Result};
 use crate::model::wishlist::{Db_NewWish, Db_Wish};
 use crate::sql_types::card_id::Db_CardId;

@@ -1,7 +1,9 @@
-mod card;
-mod deck;
-mod trunk;
-mod wishlist;
+pub mod error;
+mod r#impl;
+mod migration;
+pub mod model;
+mod schema;
+pub mod sql_types;
 
 use crate::error::Result;
 use crate::migration::run_pending_migrations;
@@ -12,7 +14,7 @@ use std::fmt;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-pub(crate) type Conn = SyncConnectionWrapper<SqliteConnection>;
+type Conn = SyncConnectionWrapper<SqliteConnection>;
 
 #[must_use]
 #[derive(Clone)]

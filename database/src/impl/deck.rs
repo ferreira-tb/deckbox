@@ -1,4 +1,4 @@
-use super::Database;
+use crate::Database;
 use crate::error::{Error, Result};
 use crate::model::deck::{Db_Deck, Db_NewDeck};
 use crate::sql_types::num::Db_DeckId;
