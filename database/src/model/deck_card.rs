@@ -4,8 +4,22 @@ use crate::sql_types::deck_card_amount::Db_DeckCardAmount;
 use crate::sql_types::num::{Db_CardLocalId, Db_DeckId};
 use bon::Builder;
 use diesel::prelude::*;
+use serde::{Deserialize, Serialize};
+use specta::Type;
 
-#[derive(Builder, Associations, Identifiable, Insertable, Selectable, Queryable, Clone, Debug)]
+#[derive(
+  Builder,
+  Associations,
+  Identifiable,
+  Insertable,
+  Selectable,
+  Queryable,
+  Clone,
+  Debug,
+  Serialize,
+  Deserialize,
+  Type,
+)]
 #[diesel(table_name = crate::schema::deck_card)]
 #[diesel(belongs_to(Db_Deck, foreign_key = deck_id))]
 #[diesel(belongs_to(Db_Card, foreign_key = card_id))]
@@ -18,12 +32,12 @@ pub struct Db_DeckCard {
   #[builder(start_fn)]
   pub card_id: Db_CardLocalId,
 
-  #[builder(default)]
+  #[builder(default, into)]
   pub main: Db_DeckCardAmount,
 
-  #[builder(default)]
+  #[builder(default, into)]
   pub extra: Db_DeckCardAmount,
 
-  #[builder(default)]
+  #[builder(default, into)]
   pub side: Db_DeckCardAmount,
 }
