@@ -41,3 +41,19 @@ pub struct Db_DeckCard {
   #[builder(default, into)]
   pub side: Db_DeckCardAmount,
 }
+
+impl Db_DeckCard {
+  #[inline]
+  pub fn id(&self) -> Db_DeckCardId {
+    Db_DeckCardId {
+      deck_id: self.deck_id,
+      card_id: self.card_id,
+    }
+  }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize, Type)]
+pub struct Db_DeckCardId {
+  pub deck_id: Db_DeckId,
+  pub card_id: Db_CardLocalId,
+}

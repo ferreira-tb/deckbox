@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Fuse from "fuse.js/basic";
 import { storeToRefs } from "pinia";
 import { chunk } from "es-toolkit/array";
+import { FuseWorker } from "fuse.js/worker";
 import { watchDebounced } from "@vueuse/core";
 import type { Db_CardId } from "@/lib/bindings";
 import { useSettings } from "@/stores/settings";
@@ -14,7 +14,7 @@ import YgoCardGridItem from "@/components/ygo-card/YgoCardGridItem.vue";
 import YgoCardGridSide from "@/components/ygo-card/YgoCardGridSide.vue";
 import YgoCardGridSearch from "@/components/ygo-card/YgoCardGridSearch.vue";
 import YgoCardGridPagination from "@/components/ygo-card/YgoCardGridPagination.vue";
-import { computed, nextTick, onMounted, ref, shallowRef, useTemplateRef, type VNode, watch } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, useTemplateRef, type VNode, watch } from "vue";
 
 interface Props {
   cards: readonly CardImpl[];
@@ -70,16 +70,17 @@ const { isInWishlist } = useWishlist();
 const grid = useTemplateRef<HTMLElement>("gridEl");
 const searchInput = useTemplateRef("searchInputEl");
 
-const fuse = computed(() => {
-  return new Fuse(props.cards, {
-    keys: ["name", "archetype"],
-    threshold: 0.2,
-    ignoreLocation: true,
-    isCaseSensitive: false,
-  });
+const fuse = new FuseWorker(props.cards, {
+  keys: ["name", "archetype"],
+  threshold: 0.2,
+  ignoreLocation: true,
+  isCaseSensitive: false,
 });
 
-watch(() => props.cards, updateShownCards);
+watch(() => props.cards, async (values) => {
+  await fuse.setCollection(values);
+  await updateShownCards();
+});
 
 watchDebounced(searchValue, updateShownCards, {
   debounce: 300,
@@ -158,14 +159,19 @@ onKeyDown(["w", "W"], () => {
   enabled: canEdit,
 });
 
-onMounted(() => {
-  void nextTick(updateShownCards);
+onMounted(async () => {
+  await fuse.setCollection(props.cards);
+  await nextTick(updateShownCards);
 });
 
-function updateShownCards() {
+onUnmounted(() => {
+  fuse.terminate();
+});
+
+async function updateShownCards() {
   const search = searchValue.value.trim();
   if (search) {
-    const results = fuse.value.search(search);
+    const results = await fuse.search(search);
     shownCards.value = results.map((result) => {
       return result.item;
     });

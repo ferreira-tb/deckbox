@@ -32,6 +32,12 @@ async createDeck(name: string, description: string | null) : Promise<Db_DeckId> 
 async getDecks() : Promise<Db_Deck[]> {
     return await TAURI_INVOKE("get_decks");
 },
+async getDeckCards(deckId: Db_DeckId) : Promise<Db_DeckCard[]> {
+    return await TAURI_INVOKE("get_deck_cards", { deckId });
+},
+async setDeckCards(deckId: Db_DeckId, cards: Db_DeckCard[]) : Promise<null> {
+    return await TAURI_INVOKE("set_deck_cards", { deckId, cards });
+},
 async createTrunkEntry(cardId: Db_CardId) : Promise<Db_TrunkEntryId> {
     return await TAURI_INVOKE("create_trunk_entry", { cardId });
 },
@@ -94,6 +100,8 @@ export type Db_CardLocalId = number
 export type Db_CardRace = CardRace
 export type Db_CardType = CardType
 export type Db_Deck = { id: Db_DeckId; name: string; description: string | null }
+export type Db_DeckCard = { deck_id: Db_DeckId; card_id: Db_CardLocalId; main: Db_DeckCardAmount; extra: Db_DeckCardAmount; side: Db_DeckCardAmount }
+export type Db_DeckCardAmount = number
 export type Db_DeckId = number
 export type Db_TrunkEntry = { id: Db_TrunkEntryId; cardId: Db_CardId; amount: Db_TrunkEntryAmount }
 export type Db_TrunkEntryAmount = number

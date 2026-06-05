@@ -32,7 +32,7 @@
     "license": "GPL-3.0-only",
     "licenseFile": "./LICENSE",
     "homepage": "https://github.com/ferreira-tb/deckbox",
-    "targets": ["nsis", "deb", "rpm"],
+    "targets": ["nsis", "deb"],
     "createUpdaterArtifacts": true,
     "icon": [
       "icons/32x32.png",

@@ -18,6 +18,8 @@ pub fn collect() -> Builder {
       commands::card::get_cards,
       commands::deck::create_deck,
       commands::deck::get_decks,
+      commands::deck_card::get_deck_cards,
+      commands::deck_card::set_deck_cards,
       commands::trunk::create_trunk_entry,
       commands::trunk::decrease_trunk_entry_amount,
       commands::trunk::export_trunk,
