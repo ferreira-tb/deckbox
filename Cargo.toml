@@ -28,7 +28,7 @@ debug-assertions = true
 anyhow = "1.0"
 bon = "3.9"
 futures = "0.3"
-itertools = "0.14"
+itertools = "0.15"
 mimalloc = "0.1"
 nil-log = "=0.5.10"
 num-traits = "=0.2.19"
