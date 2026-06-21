@@ -1,5 +1,5 @@
 #![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
-#![feature(try_blocks)]
+#![feature(const_trait_impl, try_blocks)]
 
 mod bindings;
 mod commands;

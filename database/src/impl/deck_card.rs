@@ -23,7 +23,7 @@ impl Database {
     use crate::schema::deck_card;
 
     let cards = cards
-      .into_iter()
+      .iter()
       .filter(|card| card.deck_id == deck_id)
       .unique_by(|card| card.card_id)
       .collect_vec();
