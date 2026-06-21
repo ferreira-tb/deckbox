@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, type VNode } from "vue";
 import type { Option } from "@tb-dev/utils";
-import { useBrl } from "@/composables/useBrl";
 import { Badge } from "@tb-dev/vue-components";
 import type { Db_CardId } from "@/lib/bindings";
 import type { CardImpl } from "@/lib/model/card";
@@ -26,7 +25,16 @@ defineSlots<{
 const cardId = computed(() => props.card.cardId);
 const inTrunk = useAmountInTrunk(cardId);
 
-const price = useBrl(() => props.card.price);
+const price = computed(() => {
+  if (props.card.price) {
+    const value = Number.parseFloat(props.card.price);
+    if (Number.isFinite(value) && value > 0) {
+      return value;
+    }
+  }
+
+  return null;
+});
 
 const description = computed(() => {
   return props.card.description
@@ -67,7 +75,7 @@ const description = computed(() => {
             </Badge>
 
             <Badge v-if="price" variant="outline" class="max-h-max">
-              <span>{{ `R$${price.toFixed(2)}` }}</span>
+              <span>{{ `$${price.toFixed(2)}` }}</span>
             </Badge>
           </div>
         </div>
