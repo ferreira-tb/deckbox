@@ -4831,9 +4831,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-pinia"
-version = "4.2.0"
+version = "4.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b68808a24bf4cb8ed2fbfc71d3b6a05d4b8362209089744652bc49e52379e5c"
+checksum = "357596c18b506a606ad81d7145c426bf1ba76604567dd7f9539dbe31dcf6ee03"
 dependencies = [
  "serde",
  "tauri",

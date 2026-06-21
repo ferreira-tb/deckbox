@@ -2,9 +2,14 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import { useToggle } from "@vueuse/core";
 import type { Option } from "@tb-dev/utils";
-import { SETTINGS_BACKUP_DIR, SETTINGS_CAN_EDIT, SETTINGS_TRUNK_DIR } from "@/lib/bindings";
+import {
+  SETTINGS_BACKUP_DIR,
+  SETTINGS_CAN_EDIT,
+  SETTINGS_STORE_ID,
+  SETTINGS_TRUNK_DIR,
+} from "@/lib/bindings";
 
-export const useSettings = defineStore("settings", () => {
+export const useSettings = defineStore(SETTINGS_STORE_ID, () => {
   const backupDir = ref<Option<string>>();
   const trunkDir = ref<Option<string>>();
 

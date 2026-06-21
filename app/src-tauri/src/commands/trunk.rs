@@ -1,6 +1,6 @@
 use crate::error::CmdResult;
 use crate::manager::ManagerExt as _;
-use crate::settings::SETTINGS_TRUNK_DIR;
+use crate::settings;
 use deckbox_database::model::card::Db_Card;
 use deckbox_database::model::trunk::{Db_NewTrunkEntry, Db_TrunkEntry};
 use deckbox_database::sql_types::card_id::Db_CardId;
@@ -45,7 +45,7 @@ pub async fn decrease_trunk_entry_amount(
 pub async fn export_trunk(app: AppHandle) -> CmdResult<()> {
   let mut dir = app
     .pinia()
-    .get::<PathBuf>("settings", SETTINGS_TRUNK_DIR)
+    .get::<PathBuf>(settings::STORE_ID, settings::TRUNK_DIR)
     .ok();
 
   if dir.is_none() {
@@ -67,7 +67,7 @@ pub async fn export_trunk(app: AppHandle) -> CmdResult<()> {
       dir = Some(PathBuf::from(path.as_str()));
       app
         .pinia()
-        .set("settings", SETTINGS_TRUNK_DIR, path)?;
+        .set(settings::STORE_ID, settings::TRUNK_DIR, path)?;
     }
   }
 

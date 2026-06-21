@@ -12,9 +12,9 @@ import { exit } from "@tauri-apps/plugin-process";
 import { useDatabase } from "@/composables/useDatabase";
 import { useWishlist } from "@/composables/useWishlist";
 import NavigationMenuItem from "@/components/NavigationMenuItem.vue";
-import { DatabaseBackupIcon, FileInputIcon, RefreshCwIcon } from "@lucide/vue";
 import { onCtrlKeyDown, onKeyDown, useBreakpoints, useMutex } from "@tb-dev/vue";
 import { Button, NavigationMenu, NavigationMenuList, Sonner } from "@tb-dev/vue-components";
+import { DatabaseBackupIcon, FileInputIcon, RefreshCwIcon, SettingsIcon } from "@lucide/vue";
 
 const settings = useSettings();
 
@@ -40,6 +40,7 @@ onKeyDown("F5", throttle(loadData, 1000));
 onKeyDown("F6", throttle(refresh, 5000));
 onKeyDown("Escape", () => exit(0).err());
 
+onCtrlKeyDown(",", () => commands.openSettingsFile().err());
 onCtrlKeyDown(["e", "E"], () => void settings.toggleEdit());
 
 onMounted(() => {
@@ -94,6 +95,9 @@ async function loadData() {
           </Button>
           <Button variant="outline" :disabled="locked" @click="commands.exportTrunk">
             <FileInputIcon class="size-6" />
+          </Button>
+          <Button variant="outline" @click="commands.openSettingsFile">
+            <SettingsIcon class="size-6" />
           </Button>
         </div>
       </div>

@@ -5,7 +5,7 @@ pub mod trunk;
 pub mod wishlist;
 
 use crate::error::CmdResult;
-use crate::settings::SETTINGS_BACKUP_DIR;
+use crate::settings;
 use crate::state::database_file;
 use deckbox_database::sql_types::card_id::Db_CardId;
 use jiff::Zoned;
@@ -23,7 +23,7 @@ use url::Url;
 pub async fn export_database_file(app: AppHandle) -> CmdResult<()> {
   let mut dir = app
     .pinia()
-    .get::<PathBuf>("settings", SETTINGS_BACKUP_DIR)
+    .get::<PathBuf>(settings::STORE_ID, settings::BACKUP_DIR)
     .ok();
 
   if dir.is_none() {
@@ -45,7 +45,7 @@ pub async fn export_database_file(app: AppHandle) -> CmdResult<()> {
       dir = Some(PathBuf::from(path.as_str()));
       app
         .pinia()
-        .set("settings", SETTINGS_BACKUP_DIR, path)?;
+        .set(settings::STORE_ID, settings::BACKUP_DIR, path)?;
     }
   }
 
@@ -60,6 +60,20 @@ pub async fn export_database_file(app: AppHandle) -> CmdResult<()> {
 
     #[cfg(debug_assertions)]
     tracing::info!("Exported database to {}", path.display());
+  }
+
+  Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn open_settings_file(app: AppHandle) -> CmdResult<()> {
+  let path = app
+    .pinia()
+    .with_store(settings::STORE_ID, |store| store.path())?;
+
+  if fs::try_exists(&path).await? {
+    open::that_detached(path)?;
   }
 
   Ok(())

@@ -8,6 +8,9 @@ export const commands = {
 async exportDatabaseFile() : Promise<null> {
     return await TAURI_INVOKE("export_database_file");
 },
+async openSettingsFile() : Promise<null> {
+    return await TAURI_INVOKE("open_settings_file");
+},
 async openStoreWebsite(cardId: Db_CardId) : Promise<null> {
     return await TAURI_INVOKE("open_store_website", { cardId });
 },
@@ -82,9 +85,10 @@ async removeWish(cardId: Db_CardId) : Promise<number> {
 
 /** user-defined constants **/
 
-export const SETTINGS_TRUNK_DIR = "trunkDir" as const;
 export const SETTINGS_CAN_EDIT = "canEdit" as const;
 export const SETTINGS_BACKUP_DIR = "backupDir" as const;
+export const SETTINGS_TRUNK_DIR = "trunkDir" as const;
+export const SETTINGS_STORE_ID = "settings" as const;
 
 /** user-defined types **/
 
