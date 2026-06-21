@@ -26,6 +26,9 @@ const { loadCards } = useDatabase();
 const { loadTrunk } = useTrunk();
 const { loadWishlist } = useWishlist();
 
+const isDev = globalThis.__DEBUG_ASSERTIONS__;
+const version = globalThis.__VERSION__;
+
 useColorMode({
   initialValue: "dark",
   onError: handleError,
@@ -73,6 +76,10 @@ async function loadData() {
 <template>
   <main class="fixed inset-0 select-none pb-safe">
     <Sonner :position="md ? 'bottom-right' : 'top-center'" />
+    <div v-if="isDev" class="fixed bottom-1 right-1 z-50">
+      <span class="text-red-500 font-extrabold">{{ `DEV v${version}` }}</span>
+    </div>
+
     <div class="size-full flex flex-col overflow-hidden">
       <div class="flex justify-between items-center p-2">
         <div class="w-full">
