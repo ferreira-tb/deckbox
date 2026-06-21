@@ -1,4 +1,5 @@
 use crate::{commands, settings};
+use deckbox_database::model::deck::Db_NewDeck;
 use tauri::Wry;
 use tauri_specta::{Builder, ErrorHandlingMode, collect_commands};
 
@@ -19,6 +20,7 @@ pub fn collect() -> Builder {
       commands::card::get_card_by_card_id,
       commands::card::get_cards,
       commands::deck::create_deck,
+      commands::deck::get_deck,
       commands::deck::get_decks,
       commands::deck_card::get_deck_cards,
       commands::deck_card::set_deck_cards,
@@ -34,7 +36,8 @@ pub fn collect() -> Builder {
       commands::wishlist::get_wish_by_card_id,
       commands::wishlist::get_wishlist,
       commands::wishlist::remove_wish
-    ]);
+    ])
+    .typ::<Db_NewDeck>();
 
   #[cfg(debug_assertions)]
   export(&builder);

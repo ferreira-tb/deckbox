@@ -6,18 +6,20 @@ use tauri::AppHandle;
 
 #[tauri::command]
 #[specta::specta]
-pub async fn create_deck(
-  app: AppHandle,
-  name: String,
-  description: Option<String>,
-) -> CmdResult<Db_DeckId> {
-  let new = Db_NewDeck::builder(name)
-    .maybe_description(description)
-    .build();
-
+pub async fn create_deck(app: AppHandle, deck: Db_NewDeck) -> CmdResult<Db_DeckId> {
   app
     .database()
-    .create_deck(&new)
+    .create_deck(&deck)
+    .await
+    .map_err(Into::into)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_deck(app: AppHandle, id: Db_DeckId) -> CmdResult<Db_Deck> {
+  app
+    .database()
+    .get_deck(id)
     .await
     .map_err(Into::into)
 }

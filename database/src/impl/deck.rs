@@ -25,6 +25,18 @@ impl Database {
       .map_err(Error::from)
   }
 
+  pub async fn get_deck(&self, id: Db_DeckId) -> Result<Db_Deck> {
+    use crate::schema::deck;
+
+    let mut conn = self.0.lock().await;
+    deck::table
+      .find(id)
+      .select(Db_Deck::as_select())
+      .first(&mut *conn)
+      .await
+      .map_err(Error::from)
+  }
+
   pub async fn get_decks(&self) -> Result<Vec<Db_Deck>> {
     use crate::schema::deck;
 

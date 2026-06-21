@@ -29,8 +29,11 @@ async getCardByCardId(cardId: Db_CardId) : Promise<Db_Card> {
 async getCards() : Promise<Db_Card[]> {
     return await TAURI_INVOKE("get_cards");
 },
-async createDeck(name: string, description: string | null) : Promise<Db_DeckId> {
-    return await TAURI_INVOKE("create_deck", { name, description });
+async createDeck(deck: Db_NewDeck) : Promise<Db_DeckId> {
+    return await TAURI_INVOKE("create_deck", { deck });
+},
+async getDeck(id: Db_DeckId) : Promise<Db_Deck> {
+    return await TAURI_INVOKE("get_deck", { id });
 },
 async getDecks() : Promise<Db_Deck[]> {
     return await TAURI_INVOKE("get_decks");
@@ -85,9 +88,9 @@ async removeWish(cardId: Db_CardId) : Promise<number> {
 
 /** user-defined constants **/
 
-export const SETTINGS_BACKUP_DIR = "backupDir" as const;
 export const SETTINGS_TRUNK_DIR = "trunkDir" as const;
 export const SETTINGS_CAN_EDIT = "canEdit" as const;
+export const SETTINGS_BACKUP_DIR = "backupDir" as const;
 export const SETTINGS_STORE_ID = "settings" as const;
 
 /** user-defined types **/
@@ -107,6 +110,7 @@ export type Db_Deck = { id: Db_DeckId; name: string; description: string | null 
 export type Db_DeckCard = { deck_id: Db_DeckId; card_id: Db_CardLocalId; main: Db_DeckCardAmount; extra: Db_DeckCardAmount; side: Db_DeckCardAmount }
 export type Db_DeckCardAmount = number
 export type Db_DeckId = number
+export type Db_NewDeck = { name: string; description?: string | null }
 export type Db_TrunkEntry = { id: Db_TrunkEntryId; cardId: Db_CardId; amount: Db_TrunkEntryAmount }
 export type Db_TrunkEntryAmount = number
 export type Db_TrunkEntryId = number

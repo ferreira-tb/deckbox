@@ -2,6 +2,7 @@ use crate::Database;
 use crate::error::{Error, Result};
 use crate::model::deck_card::Db_DeckCard;
 use crate::sql_types::num::Db_DeckId;
+use crate::sql_types::zoned::Db_Zoned;
 use diesel::prelude::*;
 use diesel_async::RunQueryDsl;
 use itertools::Itertools;
@@ -20,7 +21,7 @@ impl Database {
   }
 
   pub async fn set_deck_cards(&self, deck_id: Db_DeckId, cards: &[Db_DeckCard]) -> Result<()> {
-    use crate::schema::deck_card;
+    use crate::schema::{deck, deck_card};
 
     let cards = cards
       .iter()
@@ -29,14 +30,22 @@ impl Database {
       .collect_vec();
 
     let mut conn = self.0.lock().await;
-    diesel::delete(deck_card::table)
+    let mut rows = diesel::delete(deck_card::table)
       .filter(deck_card::deck_id.eq(deck_id))
       .execute(&mut *conn)
       .await?;
 
     for card in cards {
-      diesel::insert_into(deck_card::table)
+      rows += diesel::insert_into(deck_card::table)
         .values(card)
+        .execute(&mut *conn)
+        .await?;
+    }
+
+    if rows > 0 {
+      diesel::update(deck::table)
+        .filter(deck::id.eq(deck_id))
+        .set(deck::updated_at.eq(Db_Zoned::now()))
         .execute(&mut *conn)
         .await?;
     }

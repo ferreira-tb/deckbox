@@ -77,7 +77,7 @@ async function loadData() {
   <main class="fixed inset-0 select-none pb-safe">
     <Sonner :position="md ? 'bottom-right' : 'top-center'" />
     <div v-if="isDev" class="fixed bottom-1 right-1 z-50">
-      <span class="text-red-500 font-extrabold">{{ `DEV v${version}` }}</span>
+      <span class="text-red-500 font-extrabold">{{ `v${version} DEV` }}</span>
     </div>
 
     <div class="size-full flex flex-col overflow-hidden">
