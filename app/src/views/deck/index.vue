@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { onKeyDown } from "@vueuse/core";
 import type { Option } from "@tb-dev/utils";
 import { onCtrlKeyDown } from "@tb-dev/vue";
 import { useSettings } from "@/stores/settings";
@@ -77,6 +78,11 @@ onMounted(async () => {
 onCtrlKeyDown(["s", "S"], save);
 onCtrlKeyDown(["x", "X"], clear);
 
+// This must be imported from '@vueuse/core'.
+onKeyDown("1", (e) => void update(e.ctrlKey, "main"));
+onKeyDown("2", (e) => void update(e.ctrlKey, "extra"));
+onKeyDown("3", (e) => void update(e.ctrlKey, "side"));
+
 async function clear() {
   if (currentDeckId.value) {
     await clearDeck(currentDeckId.value);
@@ -110,10 +116,10 @@ async function save() {
   }
 }
 
-async function update(e: MouseEvent, placement: CardPlacement) {
+async function update(shouldDecrease: boolean, placement: CardPlacement) {
   if (selectedCardId.value && currentDeckId.value) {
     const diff: CardDiff = { card_id: selectedCardId.value };
-    if (e.ctrlKey) {
+    if (shouldDecrease) {
       diff.main = placement === "main" ? -1 : 0;
       diff.extra = placement === "extra" ? -1 : 0;
       diff.side = placement === "side" ? -1 : 0;
@@ -254,7 +260,7 @@ function setCardFallback() {
           variant="default"
           size="sm"
           :disabled="disabled || !currentDeckId || !selectedCardId || isExtraDeckCard"
-          @click="(e: MouseEvent) => update(e, 'main')"
+          @click="(e: MouseEvent) => update(e.ctrlKey, 'main')"
         >
           <span>Main</span>
         </Button>
@@ -262,7 +268,7 @@ function setCardFallback() {
           variant="default"
           size="sm"
           :disabled="disabled || !currentDeckId || !selectedCardId || !isExtraDeckCard"
-          @click="(e: MouseEvent) => update(e, 'extra')"
+          @click="(e: MouseEvent) => update(e.ctrlKey, 'extra')"
         >
           <span>Extra</span>
         </Button>
@@ -270,7 +276,7 @@ function setCardFallback() {
           variant="default"
           size="sm"
           :disabled="disabled || !currentDeckId || !selectedCardId"
-          @click="(e: MouseEvent) => update(e, 'side')"
+          @click="(e: MouseEvent) => update(e.ctrlKey, 'side')"
         >
           <span>Side</span>
         </Button>
