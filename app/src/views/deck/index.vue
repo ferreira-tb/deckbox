@@ -4,10 +4,10 @@ import type { Option } from "@tb-dev/utils";
 import { useSettings } from "@/stores/settings";
 import { useDecks } from "@/composables/useDecks";
 import { useTrunk } from "@/composables/useTrunk";
-import CardTable from "@/views/deck/CardTable.vue";
 import type { Db_CardLocalId } from "@/lib/bindings";
 import SelectDeck from "@/views/deck/SelectDeck.vue";
 import { useCardsInTrunk } from "@/composables/useCardsInTrunk";
+import YgoCardTable from "@/components/ygo-card/YgoCardTable.vue";
 import { computed, nextTick, onMounted, ref, shallowRef } from "vue";
 import YgoCardGridSide from "@/components/ygo-card/YgoCardGridSide.vue";
 import { Button, Input, Table, TableBody, TableCell, TableRow } from "@tb-dev/vue-components";
@@ -55,7 +55,7 @@ const selectDeckKey = computed(() => {
 
 onMounted(async () => {
   await nextTick();
-  selectedCardId.value ??= cards.value.at(0)?.id;
+  setCardFallback();
 });
 
 async function create() {
@@ -80,6 +80,10 @@ async function rename() {
 }
 
 async function save() {}
+
+function setCardFallback() {
+  selectedCardId.value ??= mainDeckCards.value.at(0)?.card_id ?? cards.value.at(0)?.id;
+}
 </script>
 
 <template>
@@ -138,7 +142,7 @@ async function save() {}
 
       <div class="size-full flex gap-2">
         <div>
-          <CardTable
+          <YgoCardTable
             v-model="selectedCardId"
             :cards="mainDeckCards"
             :get-amount="(card) => card.main"
@@ -146,7 +150,7 @@ async function save() {}
         </div>
 
         <div>
-          <CardTable
+          <YgoCardTable
             v-model="selectedCardId"
             :cards="extraDeckCards"
             :get-amount="(card) => card.extra"

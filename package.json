@@ -25,7 +25,7 @@
     "@tb-dev/vue-sonner": "=1.0.6",
     "@vueuse/core": "=14.3.0",
     "date-fns": "=4.4.0",
-    "es-toolkit": "=1.47.1",
+    "es-toolkit": "=1.48.1",
     "fuse.js": "=7.4.2",
     "pinia": "=3.0.4",
     "reka-ui": "=2.10.0",
