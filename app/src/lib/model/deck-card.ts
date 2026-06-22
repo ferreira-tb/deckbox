@@ -16,7 +16,11 @@ export class DeckCardImpl implements Db_DeckCard {
   }
 
   public isEmpty() {
-    return this.main < 1 && this.extra < 1 && this.side < 1;
+    return this.sum() < 1;
+  }
+
+  public sum() {
+    return this.main + this.extra + this.side;
   }
 
   public toJSON(): Db_DeckCard {

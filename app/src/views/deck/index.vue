@@ -155,24 +155,51 @@ async function save() {}
       </div>
     </div>
 
-    <div class="min-w-max h-full pb-4 overflow-hidden">
-      <Table class="size-full max-w-72 lg:max-w-80 overflow-x-hidden overflow-y-auto">
-        <TableBody>
-          <template v-for="card of cards" :key="card.cardId">
-            <TableRow
-              class="cursor-pointer"
-              @click="() => (selectedCardId = card.id)"
-            >
-              <TableCell class="max-w-max p-0">
-                <span class="px-2">{{ getTrunkEntryAmount(card.cardId) }}</span>
-              </TableCell>
-              <TableCell>
-                <span>{{ card.name }}</span>
-              </TableCell>
-            </TableRow>
-          </template>
-        </TableBody>
-      </Table>
+    <div class="min-w-max flex flex-col gap-2">
+      <div class="size-full pb-4 overflow-hidden">
+        <Table class="size-full max-w-72 lg:max-w-80 overflow-x-hidden overflow-y-auto">
+          <TableBody>
+            <template v-for="card of cards" :key="card.cardId">
+              <TableRow
+                :data-state="selectedCardId === card.id ? 'selected' : ''"
+                class="hover:bg-background cursor-pointer select-none"
+                @click="() => (selectedCardId = card.id)"
+              >
+                <TableCell class="max-w-max p-0">
+                  <span class="px-2">{{ getTrunkEntryAmount(card.cardId) }}</span>
+                </TableCell>
+                <TableCell>
+                  <span>{{ card.name }}</span>
+                </TableCell>
+              </TableRow>
+            </template>
+          </TableBody>
+        </Table>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 p-2">
+        <Button
+          variant="default"
+          size="sm"
+          :disabled="disabled || !currentDeckId || !selectedCardId"
+        >
+          <span>Main</span>
+        </Button>
+        <Button
+          variant="default"
+          size="sm"
+          :disabled="disabled || !currentDeckId || !selectedCardId"
+        >
+          <span>Extra</span>
+        </Button>
+        <Button
+          variant="default"
+          size="sm"
+          :disabled="disabled || !currentDeckId || !selectedCardId"
+        >
+          <span>Side</span>
+        </Button>
+      </div>
     </div>
   </div>
 </template>
