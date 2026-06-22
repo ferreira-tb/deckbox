@@ -2,12 +2,11 @@ use crate::Database;
 use crate::error::{Error, Result};
 use crate::model::card::{Db_Card, Db_NewCard};
 use crate::sql_types::card_id::Db_CardId;
-use crate::sql_types::card_race::Db_CardRace;
 use crate::sql_types::card_type::Db_CardType;
 use crate::sql_types::zoned::Db_Zoned;
 use diesel::prelude::*;
 use diesel_async::RunQueryDsl;
-use ygo::{CardRace, CardType};
+use ygo::CardType;
 
 impl Database {
   pub async fn create_card(&self, new_card: &Db_NewCard) -> Result<usize> {
@@ -30,6 +29,7 @@ impl Database {
         card::price.eq(&new_card.price),
         card::tcg_date.eq(&new_card.tcg_date),
         card::updated_at.eq(Db_Zoned::now()),
+        card::ygoprodeck_url.eq(&new_card.ygoprodeck_url),
       ))
       .execute(&mut *conn)
       .await
@@ -70,7 +70,6 @@ impl Database {
     let mut conn = self.0.lock().await;
     card::table
       .filter(card::tcg_date.is_not_null())
-      .filter(card::card_race.ne(Db_CardRace::from(CardRace::None)))
       .filter(card::card_type.ne_all([
         Db_CardType::from(CardType::SkillCard),
         Db_CardType::from(CardType::Token),

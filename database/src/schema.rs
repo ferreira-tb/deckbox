@@ -26,6 +26,7 @@ diesel::table! {
         tcg_date -> Nullable<Text>,
         name_pt -> Nullable<Text>,
         description_pt -> Nullable<Text>,
+        ygoprodeck_url -> Nullable<Text>,
     }
 }
 
