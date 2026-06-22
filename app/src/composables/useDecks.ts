@@ -4,6 +4,7 @@ import { clamp } from "es-toolkit/math";
 import { handleError } from "@/lib/error";
 import type { Option } from "@tb-dev/utils";
 import { mapAsync } from "es-toolkit/array";
+import { useTrunk } from "@/composables/useTrunk";
 import { DeckCardImpl } from "@/lib/model/deck-card";
 import { useDatabase } from "@/composables/useDatabase";
 import { tryInjectOrElse, useMutex } from "@tb-dev/vue";
@@ -65,6 +66,7 @@ function create() {
   });
 
   const { getCardByLocalId } = useDatabase();
+  const { getTrunkEntryAmount } = useTrunk();
 
   const { locked, ...mutex } = useMutex();
 
@@ -206,15 +208,17 @@ function create() {
       const dbCard = getCardByLocalId(diff.card_id);
 
       if (deck && dbCard) {
-        const isExtra = dbCard.isExtraDeckCard();
         const deckCard = deck.getCard(diff.card_id);
+        const isExtra = dbCard.isExtraDeckCard();
+        const inTrunk = getTrunkEntryAmount(dbCard.cardId);
 
         if (deckCard) {
           const main = isExtra ? 0 : clamp(deckCard.main + diff.main, 0, 3);
           const extra = isExtra ? clamp(deckCard.extra + diff.extra, 0, 3) : 0;
           const side = clamp(deckCard.side + diff.side, 0, 3);
+          const total = main + extra + side;
 
-          if ((main + extra + side) <= 3) {
+          if (total <= 3 && total <= inTrunk) {
             deckCard.main = main;
             deckCard.extra = extra;
             deckCard.side = side;
@@ -229,7 +233,8 @@ function create() {
             side: clamp(diff.side, 0, 3),
           });
 
-          if (!newDeckCard.isEmpty() && newDeckCard.sum() <= 3) {
+          const total = newDeckCard.sum();
+          if (!newDeckCard.isEmpty() && total <= 3 && total <= inTrunk) {
             deck.cards.push(newDeckCard);
           }
         }

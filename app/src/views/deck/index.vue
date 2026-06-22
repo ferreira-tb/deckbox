@@ -4,15 +4,15 @@ import type { Option } from "@tb-dev/utils";
 import { onCtrlKeyDown } from "@tb-dev/vue";
 import { useSettings } from "@/stores/settings";
 import { useDecks } from "@/composables/useDecks";
-import { useTrunk } from "@/composables/useTrunk";
 import type { Db_CardLocalId } from "@/lib/bindings";
 import SelectDeck from "@/views/deck/SelectDeck.vue";
+import TrunkTable from "@/views/deck/TrunkTable.vue";
+import { Button, Input } from "@tb-dev/vue-components";
 import { useCardsInTrunk } from "@/composables/useCardsInTrunk";
 import type { CardDiff, CardPlacement } from "@/lib/model/deck";
 import YgoCardTable from "@/components/ygo-card/YgoCardTable.vue";
 import { computed, nextTick, onMounted, ref, shallowRef } from "vue";
 import YgoCardGridSide from "@/components/ygo-card/YgoCardGridSide.vue";
-import { Button, Input, Table, TableBody, TableCell, TableRow } from "@tb-dev/vue-components";
 
 const settings = useSettings();
 const { canEdit } = storeToRefs(settings);
@@ -33,8 +33,6 @@ const {
   saveDeck,
   updateDeck,
 } = useDecks();
-
-const { getTrunkEntryAmount } = useTrunk();
 
 const cards = useCardsInTrunk();
 const selectedCardId = shallowRef<Option<Db_CardLocalId>>();
@@ -245,24 +243,7 @@ function setCardFallback() {
 
     <div class="min-w-max flex flex-col gap-2">
       <div class="size-full pb-4 overflow-hidden">
-        <Table class="size-full max-w-72 lg:max-w-80 overflow-x-hidden overflow-y-auto">
-          <TableBody>
-            <template v-for="card of cards" :key="card.cardId">
-              <TableRow
-                :data-state="selectedCardId === card.id ? 'selected' : ''"
-                class="hover:bg-background cursor-pointer select-none"
-                @click="() => (selectedCardId = card.id)"
-              >
-                <TableCell class="max-w-max p-0">
-                  <span class="px-2">{{ getTrunkEntryAmount(card.cardId) }}</span>
-                </TableCell>
-                <TableCell>
-                  <span>{{ card.name }}</span>
-                </TableCell>
-              </TableRow>
-            </template>
-          </TableBody>
-        </Table>
+        <TrunkTable v-model="selectedCardId" :cards />
       </div>
 
       <div class="grid grid-cols-3 gap-2 p-2">
