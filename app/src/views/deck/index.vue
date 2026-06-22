@@ -7,6 +7,7 @@ import { useTrunk } from "@/composables/useTrunk";
 import type { Db_CardLocalId } from "@/lib/bindings";
 import SelectDeck from "@/views/deck/SelectDeck.vue";
 import { useCardsInTrunk } from "@/composables/useCardsInTrunk";
+import type { CardDiff, CardPlacement } from "@/lib/model/deck";
 import YgoCardTable from "@/components/ygo-card/YgoCardTable.vue";
 import { computed, nextTick, onMounted, ref, shallowRef } from "vue";
 import YgoCardGridSide from "@/components/ygo-card/YgoCardGridSide.vue";
@@ -27,6 +28,8 @@ const {
   hasDeckName,
   removeDeck,
   renameDeck,
+  saveDeck,
+  updateDeck,
 } = useDecks();
 
 const cards = useCardsInTrunk();
@@ -80,7 +83,29 @@ async function rename() {
   }
 }
 
-async function save() {}
+async function save() {
+  if (currentDeckId.value) {
+    await saveDeck(currentDeckId.value);
+  }
+}
+
+async function update(e: MouseEvent, placement: CardPlacement) {
+  if (selectedCardId.value && currentDeckId.value) {
+    const diff: CardDiff = { card_id: selectedCardId.value };
+    if (e.ctrlKey) {
+      diff.main = placement === "main" ? -1 : 0;
+      diff.extra = placement === "extra" ? -1 : 0;
+      diff.side = placement === "side" ? -1 : 0;
+    }
+    else {
+      diff.main = placement === "main" ? 1 : 0;
+      diff.extra = placement === "extra" ? 1 : 0;
+      diff.side = placement === "side" ? 1 : 0;
+    }
+
+    await updateDeck(currentDeckId.value, diff);
+  }
+}
 
 function setCardFallback() {
   selectedCardId.value ??= mainDeckCards.value.at(0)?.card_id ??
@@ -190,6 +215,7 @@ function setCardFallback() {
           variant="default"
           size="sm"
           :disabled="disabled || !currentDeckId || !selectedCardId"
+          @click="(e: MouseEvent) => update(e, 'main')"
         >
           <span>Main</span>
         </Button>
@@ -197,6 +223,7 @@ function setCardFallback() {
           variant="default"
           size="sm"
           :disabled="disabled || !currentDeckId || !selectedCardId"
+          @click="(e: MouseEvent) => update(e, 'extra')"
         >
           <span>Extra</span>
         </Button>
@@ -204,6 +231,7 @@ function setCardFallback() {
           variant="default"
           size="sm"
           :disabled="disabled || !currentDeckId || !selectedCardId"
+          @click="(e: MouseEvent) => update(e, 'side')"
         >
           <span>Side</span>
         </Button>

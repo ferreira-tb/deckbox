@@ -1,16 +1,18 @@
 import { compare } from "@/lib/intl";
 import { handleError } from "@/lib/error";
-import { DeckImpl } from "@/lib/model/deck";
 import type { Option } from "@tb-dev/utils";
 import { mapAsync } from "es-toolkit/array";
+import { computedWithControl } from "@vueuse/core";
 import { tryInjectOrElse, useMutex } from "@tb-dev/vue";
 import type { DeckCardImpl } from "@/lib/model/deck-card";
+import { type CardDiff, DeckImpl } from "@/lib/model/deck";
 import { commands, type Db_DeckId, type Db_NewDeck } from "@/lib/bindings";
 import {
   computed,
   effectScope,
   type InjectionKey,
   markRaw,
+  nextTick,
   ref,
   type Ref,
   shallowRef,
@@ -39,6 +41,8 @@ export function useDecks() {
       loadDecks: value.loadDecks,
       removeDeck: value.removeDeck,
       renameDeck: value.renameDeck,
+      saveDeck: value.saveDeck,
+      updateDeck: value.updateDeck,
     };
   });
 }
@@ -46,7 +50,7 @@ export function useDecks() {
 function create() {
   const decks = shallowRef<DeckImpl[]>([]);
   const currentDeckId = ref<Option<Db_DeckId>>();
-  const currentDeck = computed(() => {
+  const currentDeck = computedWithControl(currentDeckId, () => {
     return currentDeckId.value ? getDeck(currentDeckId.value) : null;
   });
 
@@ -54,15 +58,15 @@ function create() {
     return currentDeck.value?.cards ?? [];
   });
 
-  const mainDeckCards = computed<readonly DeckCardImpl[]>(() => {
+  const mainDeckCards = computedWithControl<readonly DeckCardImpl[]>(currentCards, () => {
     return currentCards.value.filter((card) => card.main > 0);
   });
 
-  const extraDeckCards = computed<readonly DeckCardImpl[]>(() => {
+  const extraDeckCards = computedWithControl<readonly DeckCardImpl[]>(currentCards, () => {
     return currentCards.value.filter((card) => card.extra > 0);
   });
 
-  const sideDeckCards = computed<readonly DeckCardImpl[]>(() => {
+  const sideDeckCards = computedWithControl<readonly DeckCardImpl[]>(currentCards, () => {
     return currentCards.value.filter((card) => card.side > 0);
   });
 
@@ -153,6 +157,56 @@ function create() {
     }
   }
 
+  async function saveDeck(deckId: Db_DeckId) {
+    try {
+      await mutex.acquire();
+      const cards = getDeck(deckId)?.cards
+        .map((card) => card.toJSON());
+
+      if (cards) {
+        await commands.setDeckCards(deckId, cards);
+        triggerRef(decks);
+      }
+    }
+    catch (err) {
+      handleError(err);
+    }
+    finally {
+      mutex.release();
+    }
+  }
+
+  async function updateDeck(deckId: Db_DeckId, diff: CardDiff) {
+    try {
+      await mutex.acquire();
+      const deck = getDeck(deckId);
+
+      if (deck) {
+        deck.update(diff);
+        currentDeck.trigger();
+        await nextTick();
+
+        if (diff.main !== 0) {
+          mainDeckCards.trigger();
+        }
+
+        if (diff.extra !== 0) {
+          extraDeckCards.trigger();
+        }
+
+        if (diff.side !== 0) {
+          sideDeckCards.trigger();
+        }
+      }
+    }
+    catch (err) {
+      handleError(err);
+    }
+    finally {
+      mutex.release();
+    }
+  }
+
   function getDeck(deckId: Db_DeckId) {
     return decks.value.find((deck) => deck.id === deckId) ?? null;
   }
@@ -186,5 +240,7 @@ function create() {
     loadDecks,
     removeDeck,
     renameDeck,
+    saveDeck,
+    updateDeck,
   };
 }

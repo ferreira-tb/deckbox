@@ -29,7 +29,7 @@ export class DeckImpl implements Db_Deck {
     this.cards = this.cards.filter((card) => !card.isEmpty());
   }
 
-  public updateCard(diff: CardDiff) {
+  public update(diff: CardDiff) {
     const card = this.getCard(diff.card_id);
     diff.main ??= 0;
     diff.extra ??= 0;
@@ -37,8 +37,8 @@ export class DeckImpl implements Db_Deck {
 
     if (card) {
       card.main = clamp(card.main + diff.main, 0, 3);
-      card.extra += clamp(card.extra + diff.extra, 0, 3);
-      card.side += clamp(card.side + diff.side, 0, 3);
+      card.extra = clamp(card.extra + diff.extra, 0, 3);
+      card.side = clamp(card.side + diff.side, 0, 3);
     }
     else {
       const newCard = new DeckCardImpl({
@@ -67,3 +67,5 @@ export interface CardDiff {
   extra?: Option<Db_DeckCardAmount>;
   side?: Option<Db_DeckCardAmount>;
 }
+
+export type CardPlacement = Exclude<keyof CardDiff, "card_id">;
