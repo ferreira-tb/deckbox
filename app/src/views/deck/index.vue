@@ -210,6 +210,7 @@ function setCardFallback() {
           <YgoCardTable
             v-model="selectedCardId"
             :cards="mainDeckCards"
+            check-trunk
             :get-amount="(card) => card.main"
             class="overflow-x-hidden overflow-y-auto"
           />
@@ -222,6 +223,7 @@ function setCardFallback() {
           <YgoCardTable
             v-model="selectedCardId"
             :cards="extraDeckCards"
+            check-trunk
             :get-amount="(card) => card.extra"
             class="overflow-x-hidden overflow-y-auto"
           />
@@ -234,6 +236,7 @@ function setCardFallback() {
           <YgoCardTable
             v-model="selectedCardId"
             :cards="sideDeckCards"
+            check-trunk
             :get-amount="(card) => card.side"
             class="overflow-x-hidden overflow-y-auto"
           />
