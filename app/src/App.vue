@@ -7,6 +7,7 @@ import { useColorMode } from "@vueuse/core";
 import Loading from "@/components/Loading.vue";
 import { throttle } from "es-toolkit/function";
 import { useSettings } from "@/stores/settings";
+import { useDecks } from "@/composables/useDecks";
 import { useTrunk } from "@/composables/useTrunk";
 import { exit } from "@tauri-apps/plugin-process";
 import { useDatabase } from "@/composables/useDatabase";
@@ -23,6 +24,7 @@ const { md } = useBreakpoints();
 const { locked, lock } = useMutex();
 
 const { loadCards } = useDatabase();
+const { loadDecks } = useDecks();
 const { loadTrunk } = useTrunk();
 const { loadWishlist } = useWishlist();
 
@@ -67,6 +69,7 @@ async function refresh() {
 async function loadData() {
   await Promise.all([
     loadCards(),
+    loadDecks(),
     loadTrunk(),
     loadWishlist(),
   ]);

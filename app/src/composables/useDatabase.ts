@@ -1,7 +1,7 @@
 import { handleError } from "@/lib/error";
 import { CardImpl } from "@/lib/model/card";
 import { tryInjectOrElse, useMutex } from "@tb-dev/vue";
-import { commands, type Db_CardId } from "@/lib/bindings";
+import { commands, type Db_CardId, type Db_CardLocalId } from "@/lib/bindings";
 import { computed, effectScope, type InjectionKey, markRaw, type Ref, shallowRef } from "vue";
 
 const SYMBOL = Symbol("database") as InjectionKey<ReturnType<typeof create>>;
@@ -16,6 +16,7 @@ export function useDatabase() {
       loading: value.loading,
       totalInDatabase: value.totalInDatabase,
       getCard: value.getCard,
+      getCardByLocalId: value.getCardByLocalId,
       loadCards: value.loadCards,
       withCard: value.withCard,
     };
@@ -50,6 +51,10 @@ function create() {
     return cards.value.find((card) => card.cardId === cardId) ?? null;
   }
 
+  function getCardByLocalId(localId: Db_CardLocalId) {
+    return cards.value.find((card) => card.id === localId) ?? null;
+  }
+
   function withCard<T>(cardId: Db_CardId, fn: (card: CardImpl) => T): T | null {
     const card = getCard(cardId);
     return card ? fn(card) : null;
@@ -60,6 +65,7 @@ function create() {
     loading: locked,
     totalInDatabase,
     getCard,
+    getCardByLocalId,
     loadCards,
     withCard,
   };

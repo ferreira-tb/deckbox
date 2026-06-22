@@ -14,4 +14,18 @@ export class DeckCardImpl implements Db_DeckCard {
     this.extra = card.extra;
     this.side = card.side;
   }
+
+  public isEmpty() {
+    return this.main < 1 && this.extra < 1 && this.side < 1;
+  }
+
+  public toJSON(): Db_DeckCard {
+    return {
+      deck_id: this.deck_id,
+      card_id: this.card_id,
+      main: this.main,
+      extra: this.extra,
+      side: this.side,
+    };
+  }
 }

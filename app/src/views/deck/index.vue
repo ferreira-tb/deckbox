@@ -2,9 +2,10 @@
 import { storeToRefs } from "pinia";
 import type { Option } from "@tb-dev/utils";
 import { useSettings } from "@/stores/settings";
-import type { CardImpl } from "@/lib/model/card";
 import { useDecks } from "@/composables/useDecks";
 import { useTrunk } from "@/composables/useTrunk";
+import CardTable from "@/views/deck/CardTable.vue";
+import type { Db_CardLocalId } from "@/lib/bindings";
 import SelectDeck from "@/views/deck/SelectDeck.vue";
 import { useCardsInTrunk } from "@/composables/useCardsInTrunk";
 import { computed, nextTick, onMounted, ref, shallowRef } from "vue";
@@ -18,7 +19,9 @@ const {
   decks,
   currentDeck,
   currentDeckId,
+  extraDeckCards,
   loading,
+  mainDeckCards,
   createDeck,
   hasDeckName,
   removeDeck,
@@ -26,7 +29,12 @@ const {
 } = useDecks();
 
 const cards = useCardsInTrunk();
-const selectedCard = shallowRef<Option<CardImpl>>();
+const selectedCardId = shallowRef<Option<Db_CardLocalId>>();
+const selectedCard = computed(() => {
+  return selectedCardId.value ?
+    cards.value.find((card) => card.id === selectedCardId.value) :
+    null;
+});
 
 const { getTrunkEntryAmount } = useTrunk();
 
@@ -47,7 +55,7 @@ const selectDeckKey = computed(() => {
 
 onMounted(async () => {
   await nextTick();
-  selectedCard.value ??= cards.value.at(0);
+  selectedCardId.value ??= cards.value.at(0)?.id;
 });
 
 async function create() {
@@ -128,7 +136,23 @@ async function save() {}
         </Button>
       </div>
 
-      <div class="w-full"></div>
+      <div class="size-full flex gap-2">
+        <div>
+          <CardTable
+            v-model="selectedCardId"
+            :cards="mainDeckCards"
+            :get-amount="(card) => card.main"
+          />
+        </div>
+
+        <div>
+          <CardTable
+            v-model="selectedCardId"
+            :cards="extraDeckCards"
+            :get-amount="(card) => card.extra"
+          />
+        </div>
+      </div>
     </div>
 
     <div class="min-w-max h-full pb-4 overflow-hidden">
@@ -137,7 +161,7 @@ async function save() {}
           <template v-for="card of cards" :key="card.cardId">
             <TableRow
               class="cursor-pointer"
-              @click="() => (selectedCard = card)"
+              @click="() => (selectedCardId = card.id)"
             >
               <TableCell class="max-w-max p-0">
                 <span class="px-2">{{ getTrunkEntryAmount(card.cardId) }}</span>

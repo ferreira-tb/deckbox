@@ -4,6 +4,7 @@ import { DeckImpl } from "@/lib/model/deck";
 import type { Option } from "@tb-dev/utils";
 import { mapAsync } from "es-toolkit/array";
 import { tryInjectOrElse, useMutex } from "@tb-dev/vue";
+import type { DeckCardImpl } from "@/lib/model/deck-card";
 import { commands, type Db_DeckId, type Db_NewDeck } from "@/lib/bindings";
 import {
   computed,
@@ -25,9 +26,13 @@ export function useDecks() {
     const value = scope.run(create)!;
     return {
       decks: value.decks,
+      currentCards: value.currentCards,
       currentDeck: value.currentDeck,
       currentDeckId: value.currentDeckId,
+      extraDeckCards: value.extraDeckCards,
       loading: value.loading,
+      mainDeckCards: value.mainDeckCards,
+      sideDeckCards: value.sideDeckCards,
       createDeck: value.createDeck,
       getDeck: value.getDeck,
       hasDeckName: value.hasDeckName,
@@ -43,6 +48,22 @@ function create() {
   const currentDeckId = ref<Option<Db_DeckId>>();
   const currentDeck = computed(() => {
     return currentDeckId.value ? getDeck(currentDeckId.value) : null;
+  });
+
+  const currentCards = computed<readonly DeckCardImpl[]>(() => {
+    return currentDeck.value?.cards ?? [];
+  });
+
+  const mainDeckCards = computed<readonly DeckCardImpl[]>(() => {
+    return currentCards.value.filter((card) => card.main > 0);
+  });
+
+  const extraDeckCards = computed<readonly DeckCardImpl[]>(() => {
+    return currentCards.value.filter((card) => card.extra > 0);
+  });
+
+  const sideDeckCards = computed<readonly DeckCardImpl[]>(() => {
+    return currentCards.value.filter((card) => card.side > 0);
   });
 
   const { locked, ...mutex } = useMutex();
@@ -152,9 +173,13 @@ function create() {
 
   return {
     decks: decks as Readonly<Ref<readonly DeckImpl[]>>,
+    currentCards,
     currentDeck,
     currentDeckId,
+    extraDeckCards,
     loading: locked,
+    mainDeckCards,
+    sideDeckCards,
     createDeck,
     getDeck,
     hasDeckName,
