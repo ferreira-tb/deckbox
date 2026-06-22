@@ -162,7 +162,23 @@ function setCardFallback() {
       v-if="selectedCard"
       :card="selectedCard"
       class="max-w-72 lg:max-w-80"
-    />
+    >
+      <template #action>
+        <div class="grid grid-cols-2 justify-center items-center gap-2">
+          <Button variant="outline" disabled>
+            <span>Test hand</span>
+          </Button>
+
+          <Button
+            variant="outline"
+            :disabled="disabled || !currentDeckId"
+            @click="clear"
+          >
+            <span>Clear deck</span>
+          </Button>
+        </div>
+      </template>
+    </YgoCardGridSide>
 
     <div class="size-full flex flex-col">
       <div class="menu-grid w-full gap-2">

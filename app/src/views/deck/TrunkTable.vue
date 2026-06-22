@@ -58,24 +58,6 @@ async function updateShownCards() {
   else {
     shownCards.value = props.cards;
   }
-
-  setFallback();
-}
-
-function setFallback() {
-  if (selectedCardId.value) {
-    if (!isCardBeingShown(selectedCardId.value)) {
-      const card = shownCards.value.at(0);
-      if (card) selectedCardId.value = card.id;
-    }
-  }
-  else {
-    selectedCardId.value = shownCards.value.at(0)?.id;
-  }
-}
-
-function isCardBeingShown(id: Db_CardLocalId) {
-  return shownCards.value.some((it) => it.id === id);
 }
 </script>
 
