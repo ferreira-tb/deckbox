@@ -70,6 +70,8 @@ const selectDeckKey = computed(() => {
   return `${decks.value.length}+${currentDeck.value?.name ?? ""}`;
 });
 
+const searchValue = ref<Option<string>>();
+
 onMounted(async () => {
   await nextTick();
   setCardFallback();
@@ -193,11 +195,12 @@ function setCardFallback() {
           <span>Rename</span>
         </Button>
         <Input
-          v-model.trim.stop="deckName"
+          v-model.trim="deckName"
           type="text"
           :disabled
           :minlength="1"
           :maxlength="30"
+          @keydown.stop
         />
         <Button
           variant="default"
@@ -216,7 +219,6 @@ function setCardFallback() {
           <YgoCardTable
             v-model="selectedCardId"
             :cards="mainDeckCards"
-            check-trunk
             :get-amount="(card) => card.main"
             class="overflow-x-hidden overflow-y-auto"
           />
@@ -229,7 +231,6 @@ function setCardFallback() {
           <YgoCardTable
             v-model="selectedCardId"
             :cards="extraDeckCards"
-            check-trunk
             :get-amount="(card) => card.extra"
             class="overflow-x-hidden overflow-y-auto"
           />
@@ -242,7 +243,6 @@ function setCardFallback() {
           <YgoCardTable
             v-model="selectedCardId"
             :cards="sideDeckCards"
-            check-trunk
             :get-amount="(card) => card.side"
             class="overflow-x-hidden overflow-y-auto"
           />
@@ -251,8 +251,12 @@ function setCardFallback() {
     </div>
 
     <div class="min-w-max flex flex-col gap-2">
+      <div class="flex justify-center items-center p-2">
+        <Input v-model="searchValue" type="text" @keydown.stop />
+      </div>
+
       <div class="size-full pb-4 overflow-hidden">
-        <TrunkTable v-model="selectedCardId" :cards />
+        <TrunkTable v-model="selectedCardId" :cards :search-value />
       </div>
 
       <div class="grid grid-cols-3 gap-2 p-2">

@@ -7,7 +7,6 @@ import YgoCardTableRow from "@/components/ygo-card/YgoCardTableRow.vue";
 
 interface Props {
   cards: readonly DeckCardImpl[];
-  checkTrunk?: boolean;
   getAmount: (card: DeckCardImpl) => number;
 }
 
@@ -24,7 +23,6 @@ const cardLocalId = defineModel<Option<Db_CardLocalId>>({ required: true });
           v-if="card.sum() > 0"
           v-model="cardLocalId"
           :card
-          :check-trunk
           :get-amount
         />
       </template>

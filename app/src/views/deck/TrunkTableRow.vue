@@ -40,10 +40,10 @@ const rowClass = computed(() => {
     :class="rowClass"
     @click="() => (selectedCardId = card.id)"
   >
-    <TableCell class="max-w-max p-0">
+    <TableCell class="max-w-min p-0">
       <span class="px-2">{{ amount }}</span>
     </TableCell>
-    <TableCell>
+    <TableCell class="w-full">
       <span>{{ card.name }}</span>
     </TableCell>
   </TableRow>

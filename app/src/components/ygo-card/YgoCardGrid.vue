@@ -71,7 +71,7 @@ const grid = useTemplateRef<HTMLElement>("gridEl");
 const searchInput = useTemplateRef("searchInputEl");
 
 const fuse = new FuseWorker(props.cards, {
-  keys: ["name", "archetype"],
+  keys: ["name", "namePt", "archetype"],
   threshold: 0.2,
   ignoreLocation: true,
   isCaseSensitive: false,
@@ -89,7 +89,7 @@ watchDebounced(searchValue, updateShownCards, {
 
 watch(currentPage, () => {
   grid.value?.scrollTo({ top: 0, behavior: "instant" });
-  fallbackSelect();
+  setFallback();
 });
 
 onKeyDown("ArrowLeft", cycleList.previous);
@@ -181,10 +181,10 @@ async function updateShownCards() {
   }
 
   currentPage.value = 1;
-  fallbackSelect();
+  setFallback();
 }
 
-function fallbackSelect() {
+function setFallback() {
   if (selected.value) {
     if (!isCardBeingShown(selected.value)) {
       const card = shownCards.value.at(0);
