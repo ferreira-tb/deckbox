@@ -21,38 +21,40 @@ export class DeckImpl implements Db_Deck {
     this.description = deck.description;
   }
 
+  public clear() {
+    this.cards = [];
+  }
+
   public getCard(id: Db_CardLocalId) {
     return this.cards.find((card) => card.card_id === id) ?? null;
+  }
+
+  public getRawCards() {
+    return this.cards.map((card) => card.toJSON());
+  }
+
+  public normalizeCards() {
+    for (const card of this.cards) {
+      card.main = clamp(card.main, 0, 3);
+      card.extra = clamp(card.extra, 0, 3);
+      card.side = clamp(card.side, 0, 3);
+    }
   }
 
   public removeEmptyCards() {
     this.cards = this.cards.filter((card) => !card.isEmpty());
   }
 
-  public update(diff: CardDiff) {
-    const card = this.getCard(diff.card_id);
-    diff.main ??= 0;
-    diff.extra ??= 0;
-    diff.side ??= 0;
+  public sumMainDeckCards() {
+    return this.cards.reduce((acc, curr) => acc + curr.main, 0);
+  }
 
-    if (card) {
-      card.main = clamp(card.main + diff.main, 0, 3);
-      card.extra = clamp(card.extra + diff.extra, 0, 3);
-      card.side = clamp(card.side + diff.side, 0, 3);
-    }
-    else {
-      const newCard = new DeckCardImpl({
-        deck_id: this.id,
-        card_id: diff.card_id,
-        main: clamp(diff.main, 0, 3),
-        extra: clamp(diff.extra, 0, 3),
-        side: clamp(diff.side, 0, 3),
-      });
+  public sumExtraDeckCards() {
+    return this.cards.reduce((acc, curr) => acc + curr.extra, 0);
+  }
 
-      if (!newCard.isEmpty()) {
-        this.cards.push(newCard);
-      }
-    }
+  public sumSideDeckCards() {
+    return this.cards.reduce((acc, curr) => acc + curr.side, 0);
   }
 
   public async load() {

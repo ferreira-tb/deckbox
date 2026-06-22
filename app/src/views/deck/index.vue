@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import type { Option } from "@tb-dev/utils";
+import { onCtrlKeyDown } from "@tb-dev/vue";
 import { useSettings } from "@/stores/settings";
 import { useDecks } from "@/composables/useDecks";
 import { useTrunk } from "@/composables/useTrunk";
@@ -24,6 +25,7 @@ const {
   loading,
   mainDeckCards,
   sideDeckCards,
+  clearDeck,
   createDeck,
   hasDeckName,
   removeDeck,
@@ -31,6 +33,8 @@ const {
   saveDeck,
   updateDeck,
 } = useDecks();
+
+const { getTrunkEntryAmount } = useTrunk();
 
 const cards = useCardsInTrunk();
 const selectedCardId = shallowRef<Option<Db_CardLocalId>>();
@@ -40,7 +44,17 @@ const selectedCard = computed(() => {
     null;
 });
 
-const { getTrunkEntryAmount } = useTrunk();
+const isExtraDeckCard = computed(() => {
+  return selectedCard.value?.isExtraDeckCard();
+});
+
+const deckNumbers = computed(() => {
+  return {
+    main: currentDeck.value?.sumMainDeckCards() ?? 0,
+    extra: currentDeck.value?.sumExtraDeckCards() ?? 0,
+    side: currentDeck.value?.sumSideDeckCards() ?? 0,
+  };
+});
 
 const deckName = ref<Option<string>>();
 const isValidDeckName = computed(() => {
@@ -61,6 +75,15 @@ onMounted(async () => {
   await nextTick();
   setCardFallback();
 });
+
+onCtrlKeyDown(["s", "S"], save);
+onCtrlKeyDown(["x", "X"], clear);
+
+async function clear() {
+  if (currentDeckId.value) {
+    await clearDeck(currentDeckId.value);
+  }
+}
 
 async function create() {
   const name = deckName.value?.trim();
@@ -101,6 +124,18 @@ async function update(e: MouseEvent, placement: CardPlacement) {
       diff.main = placement === "main" ? 1 : 0;
       diff.extra = placement === "extra" ? 1 : 0;
       diff.side = placement === "side" ? 1 : 0;
+
+      if (deckNumbers.value.main >= 60) {
+        diff.main = 0;
+      }
+
+      if (deckNumbers.value.extra >= 15) {
+        diff.extra = 0;
+      }
+
+      if (deckNumbers.value.side >= 15) {
+        diff.side = 0;
+      }
     }
 
     await updateDeck(currentDeckId.value, diff);
@@ -154,7 +189,7 @@ function setCardFallback() {
           <span>Rename</span>
         </Button>
         <Input
-          v-model.trim="deckName"
+          v-model.trim.stop="deckName"
           type="text"
           :disabled
           :minlength="1"
@@ -169,20 +204,40 @@ function setCardFallback() {
         </Button>
       </div>
 
-      <div class="size-full flex gap-2">
-        <div>
+      <div class="size-full grid grid-cols-2 xl:grid-cols-3 gap-2 py-2 lg:py-4 overflow-hidden">
+        <div class="flex flex-col gap-2 overflow-hidden">
+          <div v-if="currentDeck && deckNumbers.main > 0" class="flex justify-center items-center">
+            <span class="text-muted-foreground text-sm">{{ `Main Deck (${deckNumbers.main})` }}</span>
+          </div>
           <YgoCardTable
             v-model="selectedCardId"
             :cards="mainDeckCards"
             :get-amount="(card) => card.main"
+            class="overflow-x-hidden overflow-y-auto"
           />
         </div>
 
-        <div>
+        <div class="flex flex-col gap-2 overflow-hidden">
+          <div v-if="currentDeck && deckNumbers.extra > 0" class="flex justify-center items-center">
+            <span class="text-muted-foreground text-sm">{{ `Extra Deck (${deckNumbers.extra})` }}</span>
+          </div>
           <YgoCardTable
             v-model="selectedCardId"
             :cards="extraDeckCards"
             :get-amount="(card) => card.extra"
+            class="overflow-x-hidden overflow-y-auto"
+          />
+        </div>
+
+        <div class="max-xl:hidden flex flex-col gap-2 overflow-hidden">
+          <div v-if="currentDeck && deckNumbers.side > 0" class="flex justify-center items-center">
+            <span class="text-muted-foreground text-sm">{{ `Side Deck (${deckNumbers.side})` }}</span>
+          </div>
+          <YgoCardTable
+            v-model="selectedCardId"
+            :cards="sideDeckCards"
+            :get-amount="(card) => card.side"
+            class="overflow-x-hidden overflow-y-auto"
           />
         </div>
       </div>
@@ -214,7 +269,7 @@ function setCardFallback() {
         <Button
           variant="default"
           size="sm"
-          :disabled="disabled || !currentDeckId || !selectedCardId"
+          :disabled="disabled || !currentDeckId || !selectedCardId || isExtraDeckCard"
           @click="(e: MouseEvent) => update(e, 'main')"
         >
           <span>Main</span>
@@ -222,7 +277,7 @@ function setCardFallback() {
         <Button
           variant="default"
           size="sm"
-          :disabled="disabled || !currentDeckId || !selectedCardId"
+          :disabled="disabled || !currentDeckId || !selectedCardId || !isExtraDeckCard"
           @click="(e: MouseEvent) => update(e, 'extra')"
         >
           <span>Extra</span>

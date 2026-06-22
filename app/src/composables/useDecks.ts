@@ -1,14 +1,16 @@
+import { toast } from "@/lib/toast";
 import { compare } from "@/lib/intl";
+import { clamp } from "es-toolkit/math";
 import { handleError } from "@/lib/error";
 import type { Option } from "@tb-dev/utils";
 import { mapAsync } from "es-toolkit/array";
 import { computedWithControl } from "@vueuse/core";
+import { DeckCardImpl } from "@/lib/model/deck-card";
+import { useDatabase } from "@/composables/useDatabase";
 import { tryInjectOrElse, useMutex } from "@tb-dev/vue";
-import type { DeckCardImpl } from "@/lib/model/deck-card";
 import { type CardDiff, DeckImpl } from "@/lib/model/deck";
 import { commands, type Db_DeckId, type Db_NewDeck } from "@/lib/bindings";
 import {
-  computed,
   effectScope,
   type InjectionKey,
   markRaw,
@@ -35,6 +37,7 @@ export function useDecks() {
       loading: value.loading,
       mainDeckCards: value.mainDeckCards,
       sideDeckCards: value.sideDeckCards,
+      clearDeck: value.clearDeck,
       createDeck: value.createDeck,
       getDeck: value.getDeck,
       hasDeckName: value.hasDeckName,
@@ -54,8 +57,9 @@ function create() {
     return currentDeckId.value ? getDeck(currentDeckId.value) : null;
   });
 
-  const currentCards = computed<readonly DeckCardImpl[]>(() => {
-    return currentDeck.value?.cards ?? [];
+  const currentCards = computedWithControl<readonly DeckCardImpl[]>(currentDeck, () => {
+    const cards = currentDeck.value?.cards ?? [];
+    return cards.filter((card) => card.sum() > 0);
   });
 
   const mainDeckCards = computedWithControl<readonly DeckCardImpl[]>(currentCards, () => {
@@ -69,6 +73,8 @@ function create() {
   const sideDeckCards = computedWithControl<readonly DeckCardImpl[]>(currentCards, () => {
     return currentCards.value.filter((card) => card.side > 0);
   });
+
+  const { getCardByLocalId } = useDatabase();
 
   const { locked, ...mutex } = useMutex();
 
@@ -115,19 +121,48 @@ function create() {
     }
   }
 
+  async function clearDeck(deckId: Db_DeckId) {
+    try {
+      await mutex.acquire();
+      const deck = getDeck(deckId);
+
+      if (deck) {
+        deck.clear();
+        triggerRef(decks);
+
+        if (deck.id === currentDeckId.value) {
+          await nextTick();
+          currentDeck.trigger();
+        }
+      }
+    }
+    catch (err) {
+      handleError(err);
+    }
+    finally {
+      mutex.release();
+    }
+  }
+
   async function removeDeck(deckId: Db_DeckId) {
     try {
       await mutex.acquire();
-      await commands.removeDeck(deckId);
-      decks.value = decks.value.filter((deck) => {
-        return deck.id !== deckId;
-      });
+      const deck = getDeck(deckId);
 
-      if (currentDeckId.value === deckId) {
-        currentDeckId.value = null;
+      if (deck) {
+        await commands.removeDeck(deckId);
+        decks.value = decks.value.filter(({ id }) => {
+          return id !== deckId;
+        });
+
+        if (currentDeckId.value === deckId) {
+          currentDeckId.value = null;
+        }
+
+        setFallback();
+
+        toast.success(`Deck "${deck.name}" removed`);
       }
-
-      setFallback();
     }
     catch (err) {
       handleError(err);
@@ -160,12 +195,24 @@ function create() {
   async function saveDeck(deckId: Db_DeckId) {
     try {
       await mutex.acquire();
-      const cards = getDeck(deckId)?.cards
-        .map((card) => card.toJSON());
+      const deck = getDeck(deckId);
 
-      if (cards) {
-        await commands.setDeckCards(deckId, cards);
-        triggerRef(decks);
+      if (deck) {
+        deck.normalizeCards();
+        deck.removeEmptyCards();
+
+        if (
+          deck.cards.every((card) => card.sum() <= 3) &&
+          deck.sumMainDeckCards() <= 60 &&
+          deck.sumExtraDeckCards() <= 15 &&
+          deck.sumSideDeckCards() <= 15
+        ) {
+          const cards = deck.getRawCards();
+          await commands.setDeckCards(deckId, cards);
+          triggerRef(decks);
+
+          toast.success(`Deck "${deck.name}" saved`);
+        }
       }
     }
     catch (err) {
@@ -178,24 +225,54 @@ function create() {
 
   async function updateDeck(deckId: Db_DeckId, diff: CardDiff) {
     try {
+      diff.main ??= 0;
+      diff.extra ??= 0;
+      diff.side ??= 0;
+
       await mutex.acquire();
       const deck = getDeck(deckId);
+      const dbCard = getCardByLocalId(diff.card_id);
 
-      if (deck) {
-        deck.update(diff);
-        currentDeck.trigger();
-        await nextTick();
+      if (deck && dbCard) {
+        const isExtra = dbCard.isExtraDeckCard();
+        const deckCard = deck.getCard(diff.card_id);
 
-        if (diff.main !== 0) {
-          mainDeckCards.trigger();
+        if (deckCard) {
+          deckCard.main = isExtra ? 0 : clamp(deckCard.main + diff.main, 0, 3);
+          deckCard.extra = isExtra ? clamp(deckCard.extra + diff.extra, 0, 3) : 0;
+          deckCard.side = clamp(deckCard.side + diff.side, 0, 3);
+        }
+        else {
+          const newDeckCard = new DeckCardImpl({
+            deck_id: deck.id,
+            card_id: diff.card_id,
+            main: isExtra ? 0 : clamp(diff.main, 0, 3),
+            extra: isExtra ? clamp(diff.extra, 0, 3) : 0,
+            side: clamp(diff.side, 0, 3),
+          });
+
+          if (!newDeckCard.isEmpty() && newDeckCard.sum() <= 3) {
+            deck.cards.push(newDeckCard);
+          }
         }
 
-        if (diff.extra !== 0) {
-          extraDeckCards.trigger();
-        }
+        deck.normalizeCards();
 
-        if (diff.side !== 0) {
-          sideDeckCards.trigger();
+        if (currentDeck.value?.id === deck.id) {
+          currentDeck.trigger();
+          await nextTick();
+
+          if (diff.main !== 0) {
+            mainDeckCards.trigger();
+          }
+
+          if (diff.extra !== 0) {
+            extraDeckCards.trigger();
+          }
+
+          if (diff.side !== 0) {
+            sideDeckCards.trigger();
+          }
         }
       }
     }
@@ -234,6 +311,7 @@ function create() {
     loading: locked,
     mainDeckCards,
     sideDeckCards,
+    clearDeck,
     createDeck,
     getDeck,
     hasDeckName,

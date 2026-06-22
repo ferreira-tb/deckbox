@@ -1,5 +1,6 @@
 import { convertFileSrc } from "@tauri-apps/api/core";
 import type {
+  CardType,
   Db_BanlistStatus,
   Db_Card,
   Db_CardAttribute,
@@ -63,6 +64,27 @@ export class CardImpl implements Db_Card {
     this.imagePathCropped = path(__DECKBOX_IMG_DIR_CROPPED__, this.cardId);
     this.imagePathSmall = path(__DECKBOX_IMG_DIR_SMALL__, this.cardId);
   }
+
+  public isMainDeckCard() {
+    return !this.isExtraDeckCard();
+  }
+
+  public isExtraDeckCard() {
+    return CardImpl.EXTRA_DECK_TYPES.has(this.cardType);
+  }
+
+  public static readonly EXTRA_DECK_TYPES: ReadonlySet<CardType> = new Set(
+    [
+      "Fusion Monster",
+      "Link Monster",
+      "Pendulum Effect Fusion Monster",
+      "Synchro Monster",
+      "Synchro Pendulum Effect Monster",
+      "Synchro Tuner Monster",
+      "XYZ Monster",
+      "XYZ Pendulum Effect Monster",
+    ] satisfies readonly CardType[],
+  );
 }
 
 function path(dir: string, cardId: string) {
