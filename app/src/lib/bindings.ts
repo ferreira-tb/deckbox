@@ -38,6 +38,12 @@ async getDeck(id: Db_DeckId) : Promise<Db_Deck> {
 async getDecks() : Promise<Db_Deck[]> {
     return await TAURI_INVOKE("get_decks");
 },
+async removeDeck(id: Db_DeckId) : Promise<null> {
+    return await TAURI_INVOKE("remove_deck", { id });
+},
+async renameDeck(id: Db_DeckId, name: string) : Promise<null> {
+    return await TAURI_INVOKE("rename_deck", { id, name });
+},
 async getDeckCards(deckId: Db_DeckId) : Promise<Db_DeckCard[]> {
     return await TAURI_INVOKE("get_deck_cards", { deckId });
 },
@@ -88,10 +94,10 @@ async removeWish(cardId: Db_CardId) : Promise<number> {
 
 /** user-defined constants **/
 
-export const SETTINGS_TRUNK_DIR = "trunkDir" as const;
-export const SETTINGS_CAN_EDIT = "canEdit" as const;
 export const SETTINGS_BACKUP_DIR = "backupDir" as const;
+export const SETTINGS_TRUNK_DIR = "trunkDir" as const;
 export const SETTINGS_STORE_ID = "settings" as const;
+export const SETTINGS_CAN_EDIT = "canEdit" as const;
 
 /** user-defined types **/
 

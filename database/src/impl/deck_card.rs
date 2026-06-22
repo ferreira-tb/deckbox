@@ -43,8 +43,7 @@ impl Database {
     }
 
     if rows > 0 {
-      diesel::update(deck::table)
-        .filter(deck::id.eq(deck_id))
+      diesel::update(deck::table.find(deck_id))
         .set(deck::updated_at.eq(Db_Zoned::now()))
         .execute(&mut *conn)
         .await?;

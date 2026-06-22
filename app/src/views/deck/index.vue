@@ -16,10 +16,13 @@ const { canEdit } = storeToRefs(settings);
 
 const {
   decks,
+  currentDeck,
   currentDeckId,
   loading,
   createDeck,
   hasDeckName,
+  removeDeck,
+  renameDeck,
 } = useDecks();
 
 const cards = useCardsInTrunk();
@@ -28,15 +31,18 @@ const selectedCard = shallowRef<Option<CardImpl>>();
 const { getTrunkEntryAmount } = useTrunk();
 
 const deckName = ref<Option<string>>();
-
-const disabled = computed(() => !canEdit.value || loading.value);
-
 const isValidDeckName = computed(() => {
   return (
     typeof deckName.value === "string" &&
     deckName.value.length > 0 &&
     !hasDeckName(deckName.value)
   );
+});
+
+const disabled = computed(() => !canEdit.value || loading.value);
+
+const selectDeckKey = computed(() => {
+  return `${decks.value.length}+${currentDeck.value?.name ?? ""}`;
 });
 
 onMounted(async () => {
@@ -51,6 +57,21 @@ async function create() {
     deckName.value = null;
   }
 }
+
+async function remove() {
+  if (currentDeckId.value) {
+    await removeDeck(currentDeckId.value);
+  }
+}
+
+async function rename() {
+  const name = deckName.value?.trim();
+  if (currentDeckId.value && name && !hasDeckName(name)) {
+    await renameDeck(currentDeckId.value, name);
+  }
+}
+
+async function save() {}
 </script>
 
 <template>
@@ -65,19 +86,21 @@ async function create() {
       <div class="menu-grid w-full gap-2">
         <Button
           variant="destructive"
-          :disabled
+          :disabled="disabled || !currentDeckId"
+          @click="remove"
         >
           <span>Remove</span>
         </Button>
         <SelectDeck
-          :key="decks.length"
+          :key="selectDeckKey"
           v-model="currentDeckId"
           :decks
           :disabled
         />
         <Button
           variant="default"
-          :disabled
+          :disabled="disabled || !currentDeckId"
+          @click="save"
         >
           <span>Save</span>
         </Button>
@@ -85,6 +108,7 @@ async function create() {
         <Button
           variant="default"
           :disabled="disabled || !isValidDeckName"
+          @click="rename"
         >
           <span>Rename</span>
         </Button>

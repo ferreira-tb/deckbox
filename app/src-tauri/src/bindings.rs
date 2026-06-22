@@ -22,6 +22,8 @@ pub fn collect() -> Builder {
       commands::deck::create_deck,
       commands::deck::get_deck,
       commands::deck::get_decks,
+      commands::deck::remove_deck,
+      commands::deck::rename_deck,
       commands::deck_card::get_deck_cards,
       commands::deck_card::set_deck_cards,
       commands::trunk::create_trunk_entry,

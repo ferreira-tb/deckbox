@@ -6,6 +6,7 @@ import { mapAsync } from "es-toolkit/array";
 import { tryInjectOrElse, useMutex } from "@tb-dev/vue";
 import { commands, type Db_DeckId, type Db_NewDeck } from "@/lib/bindings";
 import {
+  computed,
   effectScope,
   type InjectionKey,
   markRaw,
@@ -24,20 +25,25 @@ export function useDecks() {
     const value = scope.run(create)!;
     return {
       decks: value.decks,
+      currentDeck: value.currentDeck,
       currentDeckId: value.currentDeckId,
       loading: value.loading,
       createDeck: value.createDeck,
-      getCurrent: value.getCurrent,
       getDeck: value.getDeck,
       hasDeckName: value.hasDeckName,
       loadDecks: value.loadDecks,
+      removeDeck: value.removeDeck,
+      renameDeck: value.renameDeck,
     };
   });
 }
 
 function create() {
   const decks = shallowRef<DeckImpl[]>([]);
-  const currentId = ref<Option<Db_DeckId>>();
+  const currentDeckId = ref<Option<Db_DeckId>>();
+  const currentDeck = computed(() => {
+    return currentDeckId.value ? getDeck(currentDeckId.value) : null;
+  });
 
   const { locked, ...mutex } = useMutex();
 
@@ -52,7 +58,7 @@ function create() {
       });
 
       sortDecks();
-      fallbackDeck();
+      setFallback();
     }
     catch (err) {
       handleError(err);
@@ -71,7 +77,7 @@ function create() {
       await deckImpl.load();
 
       decks.value.push(markRaw(deckImpl));
-      currentId.value = deckImpl.id;
+      currentDeckId.value = deckImpl.id;
 
       sortDecks();
       triggerRef(decks);
@@ -84,22 +90,60 @@ function create() {
     }
   }
 
-  function getCurrent() {
-    return currentId.value ? getDeck(currentId.value) : null;
+  async function removeDeck(deckId: Db_DeckId) {
+    try {
+      await mutex.acquire();
+      await commands.removeDeck(deckId);
+      decks.value = decks.value.filter((deck) => {
+        return deck.id !== deckId;
+      });
+
+      if (currentDeckId.value === deckId) {
+        currentDeckId.value = null;
+      }
+
+      setFallback();
+    }
+    catch (err) {
+      handleError(err);
+    }
+    finally {
+      mutex.release();
+    }
+  }
+
+  async function renameDeck(deckId: Db_DeckId, name: string) {
+    try {
+      await mutex.acquire();
+      await commands.renameDeck(deckId, name);
+
+      const deck = getDeck(deckId);
+      if (deck) {
+        deck.name = name;
+        sortDecks();
+        triggerRef(decks);
+      }
+    }
+    catch (err) {
+      handleError(err);
+    }
+    finally {
+      mutex.release();
+    }
   }
 
   function getDeck(deckId: Db_DeckId) {
     return decks.value.find((deck) => deck.id === deckId) ?? null;
   }
 
-  function fallbackDeck() {
-    if (!currentId.value || decks.value.every((deck) => deck.id !== currentId.value)) {
-      currentId.value ??= decks.value.at(0)?.id;
-    }
-  }
-
   function hasDeckName(name: string) {
     return decks.value.some((deck) => deck.name === name);
+  }
+
+  function setFallback() {
+    if (!currentDeckId.value || decks.value.every((deck) => deck.id !== currentDeckId.value)) {
+      currentDeckId.value ??= decks.value.at(0)?.id;
+    }
   }
 
   function sortDecks() {
@@ -108,12 +152,14 @@ function create() {
 
   return {
     decks: decks as Readonly<Ref<readonly DeckImpl[]>>,
-    currentDeckId: currentId,
+    currentDeck,
+    currentDeckId,
     loading: locked,
     createDeck,
-    getCurrent,
     getDeck,
     hasDeckName,
     loadDecks,
+    removeDeck,
+    renameDeck,
   };
 }

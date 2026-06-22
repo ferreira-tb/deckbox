@@ -33,3 +33,23 @@ pub async fn get_decks(app: AppHandle) -> CmdResult<Vec<Db_Deck>> {
     .await
     .map_err(Into::into)
 }
+
+#[tauri::command]
+#[specta::specta]
+pub async fn remove_deck(app: AppHandle, id: Db_DeckId) -> CmdResult<()> {
+  app
+    .database()
+    .remove_deck(id)
+    .await
+    .map_err(Into::into)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn rename_deck(app: AppHandle, id: Db_DeckId, name: String) -> CmdResult<()> {
+  app
+    .database()
+    .rename_deck(id, &name)
+    .await
+    .map_err(Into::into)
+}

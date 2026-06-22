@@ -48,4 +48,27 @@ impl Database {
       .await
       .map_err(Error::from)
   }
+
+  pub async fn remove_deck(&self, id: Db_DeckId) -> Result<()> {
+    use crate::schema::deck;
+
+    let mut conn = self.0.lock().await;
+    diesel::delete(deck::table.find(id))
+      .execute(&mut *conn)
+      .await?;
+
+    Ok(())
+  }
+
+  pub async fn rename_deck(&self, id: Db_DeckId, name: &str) -> Result<()> {
+    use crate::schema::deck;
+
+    let mut conn = self.0.lock().await;
+    diesel::update(deck::table.find(id))
+      .set((deck::name.eq(name), deck::updated_at.eq(Db_Zoned::now())))
+      .execute(&mut *conn)
+      .await?;
+
+    Ok(())
+  }
 }

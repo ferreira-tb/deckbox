@@ -3,9 +3,8 @@ import { commands, type Db_Deck, type Db_DeckId } from "@/lib/bindings";
 
 export class DeckImpl implements Db_Deck {
   public readonly id: Db_DeckId;
-  public readonly name: string;
-  public readonly description: string | null;
-
+  public name: string;
+  public description: string | null;
   public cards: DeckCardImpl[] = [];
 
   constructor(deck: Db_Deck) {
