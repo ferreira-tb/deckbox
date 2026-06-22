@@ -33,6 +33,15 @@ export class DeckImpl implements Db_Deck {
     return this.cards.map((card) => card.toJSON());
   }
 
+  public isLegal() {
+    return (
+      this.cards.every((card) => card.sum() <= 3) &&
+      this.sumMainDeckCards() <= 60 &&
+      this.sumExtraDeckCards() <= 15 &&
+      this.sumSideDeckCards() <= 15
+    );
+  }
+
   public normalizeCards() {
     for (const card of this.cards) {
       card.main = clamp(card.main, 0, 3);
