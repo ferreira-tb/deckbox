@@ -22,6 +22,7 @@ const {
   extraDeckCards,
   loading,
   mainDeckCards,
+  sideDeckCards,
   createDeck,
   hasDeckName,
   removeDeck,
@@ -82,7 +83,10 @@ async function rename() {
 async function save() {}
 
 function setCardFallback() {
-  selectedCardId.value ??= mainDeckCards.value.at(0)?.card_id ?? cards.value.at(0)?.id;
+  selectedCardId.value ??= mainDeckCards.value.at(0)?.card_id ??
+    extraDeckCards.value.at(0)?.card_id ??
+    sideDeckCards.value.at(0)?.card_id ??
+    cards.value.at(0)?.id;
 }
 </script>
 
