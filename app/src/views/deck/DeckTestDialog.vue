@@ -102,7 +102,7 @@ function selectAt(idx: number) {
           :card="selectedCard"
           hide-image
           hide-price
-          class="max-w-72 lg:max-w-80 h-[50vh]!"
+          class="w-80 h-[50vh]!"
         />
 
         <div class="size-full grid items-center gap-2 select-none" :style="gridStyle">
