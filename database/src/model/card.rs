@@ -38,6 +38,7 @@ pub struct Db_Card {
   pub price: Option<String>,
   pub name_pt: Option<String>,
   pub description_pt: Option<String>,
+  pub ygoprodeck_url: Option<Db_Url>,
 }
 
 #[derive(Insertable, Clone, Debug)]
@@ -66,6 +67,7 @@ pub struct Db_NewCard {
   pub(crate) tcg_date: Option<Db_Date>,
   pub name_pt: Option<String>,
   pub description_pt: Option<String>,
+  pub(crate) ygoprodeck_url: Option<Db_Url>,
 }
 
 impl Db_NewCard {
@@ -126,6 +128,7 @@ impl Db_NewCard {
       tcg_date,
       name_pt: None,
       description_pt: None,
+      ygoprodeck_url: card.ygoprodeck_url.map(Db_Url::from),
     })
   }
 

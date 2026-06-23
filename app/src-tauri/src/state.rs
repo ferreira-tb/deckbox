@@ -1,24 +1,23 @@
 use crate::manager::ManagerExt;
 use anyhow::Result;
-use deckbox_database::{BlockingDatabase, Database};
+use deckbox_database::Database;
 use std::fs;
 use std::path::PathBuf;
 use tauri::AppHandle;
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Deckbox {
   database: Database,
 }
 
 impl Deckbox {
-  pub fn new(app: &AppHandle) -> Result<Self> {
+  pub async fn new(app: &AppHandle) -> Result<Self> {
     let url = database_file(app)?
       .to_str()
       .expect("failed to convert database path to string")
       .to_owned();
 
-    let database = BlockingDatabase::new(&url)?;
-    Ok(Self { database: Database::from(database) })
+    Ok(Self { database: Database::new(&url).await? })
   }
 
   pub fn database(&self) -> Database {

@@ -1,5 +1,6 @@
 import { convertFileSrc } from "@tauri-apps/api/core";
 import type {
+  CardType,
   Db_BanlistStatus,
   Db_Card,
   Db_CardAttribute,
@@ -28,9 +29,9 @@ export class CardImpl implements Db_Card {
   public readonly imageUrlCropped: string;
   public readonly imageUrlSmall: string;
   public readonly price: string | null;
-
   public readonly namePt: string | null;
   public readonly descriptionPt: string | null;
+  public readonly ygoprodeckUrl: string | null;
 
   public readonly imagePath: string;
   public readonly imagePathCropped: string;
@@ -55,14 +56,35 @@ export class CardImpl implements Db_Card {
     this.imageUrlCropped = card.imageUrlCropped;
     this.imageUrlSmall = card.imageUrlSmall;
     this.price = card.price;
-
     this.namePt = card.namePt;
     this.descriptionPt = card.descriptionPt;
+    this.ygoprodeckUrl = card.ygoprodeckUrl;
 
     this.imagePath = path(__DECKBOX_IMG_DIR__, this.cardId);
     this.imagePathCropped = path(__DECKBOX_IMG_DIR_CROPPED__, this.cardId);
     this.imagePathSmall = path(__DECKBOX_IMG_DIR_SMALL__, this.cardId);
   }
+
+  public isMainDeckCard() {
+    return !this.isExtraDeckCard();
+  }
+
+  public isExtraDeckCard() {
+    return CardImpl.EXTRA_DECK_TYPES.has(this.cardType);
+  }
+
+  public static readonly EXTRA_DECK_TYPES: ReadonlySet<CardType> = new Set(
+    [
+      "Fusion Monster",
+      "Link Monster",
+      "Pendulum Effect Fusion Monster",
+      "Synchro Monster",
+      "Synchro Pendulum Effect Monster",
+      "Synchro Tuner Monster",
+      "XYZ Monster",
+      "XYZ Pendulum Effect Monster",
+    ] satisfies readonly CardType[],
+  );
 }
 
 function path(dir: string, cardId: string) {

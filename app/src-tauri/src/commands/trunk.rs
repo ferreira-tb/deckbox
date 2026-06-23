@@ -1,6 +1,6 @@
 use crate::error::CmdResult;
 use crate::manager::ManagerExt as _;
-use crate::settings::SETTINGS_TRUNK_DIR;
+use crate::settings;
 use deckbox_database::model::card::Db_Card;
 use deckbox_database::model::trunk::{Db_NewTrunkEntry, Db_TrunkEntry};
 use deckbox_database::sql_types::card_id::Db_CardId;
@@ -22,7 +22,7 @@ pub async fn create_trunk_entry(app: AppHandle, card_id: Db_CardId) -> CmdResult
   let new = Db_NewTrunkEntry::builder(card_id).build();
   app
     .database()
-    .create_trunk_entry(new)
+    .create_trunk_entry(&new)
     .await
     .map_err(Into::into)
 }
@@ -35,7 +35,7 @@ pub async fn decrease_trunk_entry_amount(
 ) -> CmdResult<Db_TrunkEntryAmount> {
   app
     .database()
-    .decrease_trunk_entry_amount(card_id)
+    .decrease_trunk_entry_amount(&card_id)
     .await
     .map_err(Into::into)
 }
@@ -45,7 +45,7 @@ pub async fn decrease_trunk_entry_amount(
 pub async fn export_trunk(app: AppHandle) -> CmdResult<()> {
   let mut dir = app
     .pinia()
-    .get::<PathBuf>("settings", SETTINGS_TRUNK_DIR)
+    .get::<PathBuf>(settings::STORE_ID, settings::TRUNK_DIR)
     .ok();
 
   if dir.is_none() {
@@ -67,7 +67,7 @@ pub async fn export_trunk(app: AppHandle) -> CmdResult<()> {
       dir = Some(PathBuf::from(path.as_str()));
       app
         .pinia()
-        .set("settings", SETTINGS_TRUNK_DIR, path)?;
+        .set(settings::STORE_ID, settings::TRUNK_DIR, path)?;
     }
   }
 
@@ -78,6 +78,7 @@ pub async fn export_trunk(app: AppHandle) -> CmdResult<()> {
         "name": card.name,
         "name_pt": card.name_pt,
         "archetype": card.archetype,
+        "ygoprodeck_url": card.ygoprodeck_url,
         "amount": amount,
       })
     };
@@ -91,7 +92,8 @@ pub async fn export_trunk(app: AppHandle) -> CmdResult<()> {
       .collect_vec()
       .pipe_ref(serde_json::to_vec)?;
 
-    fs::write(dir.join("trunk.json"), cards).await?;
+    let path = dir.join("trunk.json");
+    fs::write(path, cards).await?;
   }
 
   Ok(())
@@ -125,7 +127,7 @@ pub async fn get_trunk_entry_by_card_id(
 ) -> CmdResult<Db_TrunkEntry> {
   app
     .database()
-    .get_trunk_entry_by_card_id(card_id)
+    .get_trunk_entry_by_card_id(&card_id)
     .await
     .map_err(Into::into)
 }
@@ -135,7 +137,7 @@ pub async fn get_trunk_entry_by_card_id(
 pub async fn has_trunk_entry(app: AppHandle, card_id: Db_CardId) -> CmdResult<bool> {
   app
     .database()
-    .has_trunk_entry(card_id)
+    .has_trunk_entry(&card_id)
     .await
     .map_err(Into::into)
 }
@@ -148,7 +150,7 @@ pub async fn increase_trunk_entry_amount(
 ) -> CmdResult<Db_TrunkEntryAmount> {
   app
     .database()
-    .increase_trunk_entry_amount(card_id)
+    .increase_trunk_entry_amount(&card_id)
     .await
     .map_err(Into::into)
 }

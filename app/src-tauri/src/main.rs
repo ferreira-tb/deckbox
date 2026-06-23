@@ -1,5 +1,5 @@
 #![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
-#![feature(try_blocks)]
+#![feature(const_trait_impl, try_blocks)]
 
 mod bindings;
 mod commands;
@@ -17,6 +17,7 @@ mod log;
 use crate::state::Deckbox;
 use error::BoxResult;
 use mimalloc::MiMalloc;
+use tauri::async_runtime::block_on;
 use tauri::{AppHandle, Manager};
 
 #[global_allocator]
@@ -46,7 +47,9 @@ fn main() {
 
 fn setup(app: &AppHandle) -> BoxResult<()> {
   app.plugin(plugin::pinia(app)?)?;
-  app.manage(Deckbox::new(app)?);
+
+  let deckbox = block_on(Deckbox::new(app))?;
+  app.manage(deckbox);
 
   window::open(app)?;
 

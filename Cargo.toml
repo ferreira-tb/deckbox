@@ -1,11 +1,11 @@
 [workspace]
 resolver = "3"
-members = ["app/src-tauri", "crates/database"]
+members = ["app/src-tauri", "database"]
 
 [workspace.package]
-version = "1.2.0"
+version = "1.3.0"
 edition = "2024"
-rust-version = "1.97"
+rust-version = "1.98"
 license = "GPL-3.0-only"
 
 [profile.release]
@@ -28,7 +28,7 @@ debug-assertions = true
 anyhow = "1.0"
 bon = "3.9"
 futures = "0.3"
-itertools = "0.14"
+itertools = "0.15"
 mimalloc = "0.1"
 nil-log = "=0.5.10"
 num-traits = "=0.2.19"
@@ -49,7 +49,7 @@ thiserror = "2.0"
 
 [workspace.dependencies.deckbox-database]
 version = "*"
-path = "./crates/database"
+path = "./database"
 
 [workspace.dependencies.derive_more]
 version = "2.1"
@@ -59,6 +59,10 @@ features = ["deref", "deref_mut", "display", "from", "into"]
 version = "2.3"
 default-features = false
 features = ["32-column-tables", "returning_clauses_for_sqlite_3_35", "sqlite"]
+
+[workspace.dependencies.diesel-async]
+version = "0.9"
+features = ["migrations", "sqlite"]
 
 [workspace.dependencies.diesel_migrations]
 version = "2.3"
@@ -159,6 +163,7 @@ rc_buffer = "deny"
 rc_mutex = "deny"
 rest_pat_in_fully_bound_structs = "deny"
 similar_names = "allow"
+single_match_else = "allow"
 struct_field_names = "allow"
 unnecessary_safety_comment = "deny"
 unsafe_derive_deserialize = "allow"

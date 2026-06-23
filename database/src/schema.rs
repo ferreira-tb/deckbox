@@ -26,6 +26,7 @@ diesel::table! {
         tcg_date -> Nullable<Text>,
         name_pt -> Nullable<Text>,
         description_pt -> Nullable<Text>,
+        ygoprodeck_url -> Nullable<Text>,
     }
 }
 
@@ -43,9 +44,9 @@ diesel::table! {
     deck_card (deck_id, card_id) {
         deck_id -> Integer,
         card_id -> Integer,
-        amount_main -> Integer,
-        amount_extra -> Integer,
-        amount_side -> Integer,
+        main -> Integer,
+        extra -> Integer,
+        side -> Integer,
     }
 }
 
