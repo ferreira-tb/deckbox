@@ -8,7 +8,7 @@ import type { Db_CardLocalId } from "@/lib/bindings";
 import { useDatabase } from "@/composables/useDatabase";
 import YgoCardGridSide from "@/components/ygo-card/YgoCardGridSide.vue";
 import { computed, type CSSProperties, nextTick, shallowRef, type VNode, watch } from "vue";
-import { Button, Dialog, DialogClose, DialogContent, DialogFooter, DialogTrigger } from "@tb-dev/vue-components";
+import { Button, Dialog, DialogClose, DialogContent, DialogTrigger } from "@tb-dev/vue-components";
 
 interface Props {
   deck: Option<DeckImpl>;
@@ -96,14 +96,27 @@ function selectAt(idx: number) {
     </DialogTrigger>
 
     <DialogContent class="min-w-[80vw]! max-w-[80vw]!">
-      <div class="flex gap-2 p-4">
+      <div class="flex gap-2 px-4 pt-4">
         <YgoCardGridSide
           v-if="selectedCard"
           :card="selectedCard"
           hide-image
           hide-price
-          class="w-80 h-[50vh]!"
-        />
+          class="w-80 min-w-80 h-[50vh]!"
+        >
+          <template #action>
+            <div class="grid grid-cols-2 justify-center items-center gap-2">
+              <Button variant="default" @click="test">
+                <span>Test</span>
+              </Button>
+              <DialogClose as-child>
+                <Button variant="outline">
+                  <span>Cancel</span>
+                </Button>
+              </DialogClose>
+            </div>
+          </template>
+        </YgoCardGridSide>
 
         <div class="size-full grid items-center gap-2 select-none" :style="gridStyle">
           <img
@@ -117,17 +130,6 @@ function selectAt(idx: number) {
           />
         </div>
       </div>
-
-      <DialogFooter class="select-none">
-        <DialogClose as-child>
-          <Button variant="outline">
-            <span>Cancel</span>
-          </Button>
-        </DialogClose>
-        <Button variant="default" @click="test">
-          <span>Test hand</span>
-        </Button>
-      </DialogFooter>
     </DialogContent>
   </Dialog>
 </template>

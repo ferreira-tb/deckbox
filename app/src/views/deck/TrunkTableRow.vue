@@ -9,11 +9,10 @@ import { cn, TableCell, TableRow } from "@tb-dev/vue-components";
 
 interface Props {
   card: CardImpl;
+  selectedCardId: Option<Db_CardLocalId>;
 }
 
 const props = defineProps<Props>();
-
-const selectedCardId = defineModel<Option<Db_CardLocalId>>({ required: true });
 
 const { currentDeck } = useDecks();
 const { getTrunkEntryAmount } = useTrunk();
@@ -38,7 +37,6 @@ const rowClass = computed(() => {
   <TableRow
     :data-state="selectedCardId === card.id ? 'selected' : ''"
     :class="rowClass"
-    @click="() => void (selectedCardId = card.id)"
   >
     <TableCell class="max-w-min p-0">
       <span class="px-2">{{ amount }}</span>
