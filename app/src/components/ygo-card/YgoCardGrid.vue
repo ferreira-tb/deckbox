@@ -213,7 +213,7 @@ function isCardBeingShown(card: CardImpl) {
     </div>
 
     <div class="size-full flex overflow-hidden">
-      <YgoCardGridSide v-if="selected" class="max-w-72 lg:max-w-80" :card="selected">
+      <YgoCardGridSide v-if="selected" class="w-80 xl:w-100" :card="selected">
         <template #action="{ cardId, inTrunk, price }">
           <slot
             v-if="$slots.sideAction"
