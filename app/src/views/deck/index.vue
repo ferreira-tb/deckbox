@@ -210,7 +210,7 @@ function setCardFallback() {
           :key="selectDeckKey"
           v-model="currentDeckId"
           :decks
-          :disabled
+          :disabled="loading"
         />
         <Button
           variant="default"
