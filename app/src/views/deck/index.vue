@@ -84,13 +84,16 @@ onCtrlKeyDown(["s", "S"], save, { enabled: areKeyEventsEnabled });
 onCtrlKeyDown(["t", "T"], test, { enabled: areKeyEventsEnabled });
 onCtrlKeyDown(["x", "X"], clear, { enabled: areKeyEventsEnabled });
 
-onKeyDown("1", () => update(false, "main"), { enabled: areKeyEventsEnabled });
-onKeyDown("2", () => update(false, "extra"), { enabled: areKeyEventsEnabled });
-onKeyDown("3", () => update(false, "side"), { enabled: areKeyEventsEnabled });
+onKeyDown("1", () => update("main", false), { enabled: areKeyEventsEnabled });
+onKeyDown("2", () => update("extra", false), { enabled: areKeyEventsEnabled });
+onKeyDown("3", () => update("side", false), { enabled: areKeyEventsEnabled });
 
-onCtrlKeyDown("1", () => update(true, "main"), { enabled: areKeyEventsEnabled });
-onCtrlKeyDown("2", () => update(true, "extra"), { enabled: areKeyEventsEnabled });
-onCtrlKeyDown("3", () => update(true, "side"), { enabled: areKeyEventsEnabled });
+onCtrlKeyDown("1", () => update("main", true), { enabled: areKeyEventsEnabled });
+onCtrlKeyDown("2", () => update("extra", true), { enabled: areKeyEventsEnabled });
+onCtrlKeyDown("3", () => update("side", true), { enabled: areKeyEventsEnabled });
+
+onKeyDown("+", () => updateWithCard(selectedCard.value, false), { enabled: areKeyEventsEnabled });
+onKeyDown("-", () => updateWithCard(selectedCard.value, true), { enabled: areKeyEventsEnabled });
 
 async function clear() {
   if (currentDeckId.value && !disabled.value) {
@@ -129,7 +132,7 @@ function test() {
   toggleTestDialog();
 }
 
-async function update(shouldDecrease: boolean, placement: CardPlacement) {
+async function update(placement: CardPlacement, shouldDecrease: boolean) {
   if (selectedCardId.value && currentDeckId.value) {
     const diff: CardDiff = { card_id: selectedCardId.value };
     if (shouldDecrease) {
@@ -159,20 +162,22 @@ async function update(shouldDecrease: boolean, placement: CardPlacement) {
   }
 }
 
+async function updateWithCard(card: Option<CardImpl>, shouldDecrease: boolean) {
+  if (card) {
+    if (card.isExtraDeckCard()) {
+      await update("extra", shouldDecrease);
+    }
+    else {
+      await update("main", shouldDecrease);
+    }
+  }
+}
+
 function setCardFallback() {
   selectedCardId.value ??= mainDeckCards.value.at(0)?.card_id ??
     extraDeckCards.value.at(0)?.card_id ??
     sideDeckCards.value.at(0)?.card_id ??
     cards.value.at(0)?.id;
-}
-
-async function onRowDblclick(card: CardImpl) {
-  if (card.isExtraDeckCard()) {
-    await update(false, "extra");
-  }
-  else {
-    await update(false, "main");
-  }
 }
 </script>
 
@@ -305,7 +310,7 @@ async function onRowDblclick(card: CardImpl) {
           v-model="selectedCardId"
           :cards
           :search-value
-          @row-dblclick="onRowDblclick"
+          @update="(card, shouldDecrease) => updateWithCard(card, shouldDecrease)"
         />
       </div>
 
@@ -314,7 +319,7 @@ async function onRowDblclick(card: CardImpl) {
           variant="default"
           size="sm"
           :disabled="disabled || !currentDeckId || !selectedCardId || isExtraDeckCard"
-          @click="(e: MouseEvent) => update(e.ctrlKey, 'main')"
+          @click="(e: MouseEvent) => update('main', e.ctrlKey)"
         >
           <span>Main</span>
         </Button>
@@ -322,7 +327,7 @@ async function onRowDblclick(card: CardImpl) {
           variant="default"
           size="sm"
           :disabled="disabled || !currentDeckId || !selectedCardId || !isExtraDeckCard"
-          @click="(e: MouseEvent) => update(e.ctrlKey, 'extra')"
+          @click="(e: MouseEvent) => update('extra', e.ctrlKey)"
         >
           <span>Extra</span>
         </Button>
@@ -330,7 +335,7 @@ async function onRowDblclick(card: CardImpl) {
           variant="default"
           size="sm"
           :disabled="disabled || !currentDeckId || !selectedCardId"
-          @click="(e: MouseEvent) => update(e.ctrlKey, 'side')"
+          @click="(e: MouseEvent) => update('side', e.ctrlKey)"
         >
           <span>Side</span>
         </Button>

@@ -11,7 +11,7 @@ import { nextTick, onMounted, onUnmounted, shallowRef, watch } from "vue";
 interface Props {
   cards: readonly CardImpl[];
   searchValue: Option<string>;
-  onRowDblclick: (card: CardImpl) => MaybePromise<void>;
+  onUpdate: (card: CardImpl, shouldDecrease: boolean) => MaybePromise<void>;
 }
 
 const props = defineProps<Props>();
@@ -71,7 +71,7 @@ async function updateShownCards() {
           :card
           :selected-card-id
           @click="() => void (selectedCardId = card.id)"
-          @dblclick="() => void onRowDblclick(card)"
+          @dblclick="(e: MouseEvent) => void onUpdate(card, e.ctrlKey)"
         />
       </template>
     </TableBody>
