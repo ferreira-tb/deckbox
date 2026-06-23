@@ -57,10 +57,12 @@ watch(isOpen, async (value) => {
   }
 });
 
-onKeyDown(["t", "T"], test, {
-  enabled: isOpen,
-  stopPropagation: true,
-});
+onKeyDown(["t", "T"], test, { enabled: isOpen });
+onKeyDown("1", () => selectAt(0), { enabled: isOpen });
+onKeyDown("2", () => selectAt(1), { enabled: isOpen });
+onKeyDown("3", () => selectAt(2), { enabled: isOpen });
+onKeyDown("4", () => selectAt(3), { enabled: isOpen });
+onKeyDown("5", () => selectAt(4), { enabled: isOpen });
 
 function test() {
   const newHand: CardImpl[] = [];
@@ -77,6 +79,13 @@ function test() {
 
   hand.value = newHand;
   selectedCardId.value = newHand.at(0)?.id;
+}
+
+function selectAt(idx: number) {
+  const impl = hand.value.at(idx);
+  if (impl) {
+    selectedCardId.value = impl.id;
+  }
 }
 </script>
 
