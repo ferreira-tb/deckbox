@@ -220,7 +220,7 @@ function create() {
           const side = clamp(deckCard.side + diff.side, 0, 3);
           const total = main + extra + side;
 
-          if (total <= 3 && total <= inTrunk) {
+          if (total <= 3 && (total <= inTrunk || total < deckCard.sum())) {
             deckCard.main = main;
             deckCard.extra = extra;
             deckCard.side = side;
