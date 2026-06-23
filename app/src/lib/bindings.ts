@@ -14,6 +14,12 @@ async openSettingsFile() : Promise<null> {
 async openStoreWebsite(cardId: Db_CardId) : Promise<null> {
     return await TAURI_INVOKE("open_store_website", { cardId });
 },
+async openYugipedia(cardId: Db_CardId) : Promise<null> {
+    return await TAURI_INVOKE("open_yugipedia", { cardId });
+},
+async openYgoprodeck(cardId: Db_CardId) : Promise<null> {
+    return await TAURI_INVOKE("open_ygoprodeck", { cardId });
+},
 async showWindow() : Promise<null> {
     return await TAURI_INVOKE("show_window");
 },
@@ -100,13 +106,13 @@ async removeWish(cardId: Db_CardId) : Promise<number> {
 
 /** user-defined constants **/
 
-export const SETTINGS_BACKUP_DIR = "backupDir" as const;
-export const SETTINGS_CHECK_TRUNK = "checkTrunk" as const;
-export const SETTINGS_DECK_DIR = "deckDir" as const;
-export const SETTINGS_CAN_EDIT = "canEdit" as const;
 export const SETTINGS_STORE_ID = "settings" as const;
 export const SETTINGS_TRUNK_DIR = "trunkDir" as const;
+export const SETTINGS_CAN_EDIT = "canEdit" as const;
+export const SETTINGS_CHECK_TRUNK = "checkTrunk" as const;
 export const SETTINGS_BANLIST_DIR = "banlistDir" as const;
+export const SETTINGS_DECK_DIR = "deckDir" as const;
+export const SETTINGS_BACKUP_DIR = "backupDir" as const;
 
 /** user-defined types **/
 

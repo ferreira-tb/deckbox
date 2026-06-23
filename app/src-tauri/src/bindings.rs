@@ -17,6 +17,8 @@ pub fn collect() -> Builder {
       commands::export_database_file,
       commands::open_settings_file,
       commands::open_store_website,
+      commands::open_yugipedia,
+      commands::open_ygoprodeck,
       commands::show_window,
       commands::card::fetch_cards,
       commands::card::get_archetypes,
