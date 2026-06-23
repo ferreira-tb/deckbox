@@ -2,7 +2,7 @@
   "name": "deckbox",
   "version": "1.3.0",
   "type": "module",
-  "packageManager": "pnpm@11.8.0",
+  "packageManager": "pnpm@11.9.0",
   "license": "GPL-3.0-only",
   "private": true,
   "scripts": {

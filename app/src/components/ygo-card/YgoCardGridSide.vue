@@ -8,6 +8,8 @@ import { useAmountInTrunk } from "@/composables/useAmountInTrunk";
 
 interface Props {
   card: CardImpl;
+  hideImage?: boolean;
+  hidePrice?: boolean;
 }
 
 interface ActionSlotProps {
@@ -46,7 +48,14 @@ const description = computed(() => {
 
 <template>
   <div class="h-full flex flex-col gap-2 p-2">
-    <img :src="card.imagePath" :alt="card.name" loading="eager" class="max-h-2/4 object-scale-down" />
+    <img
+      v-if="!hideImage"
+      :src="card.imagePath"
+      :alt="card.name"
+      loading="eager"
+      class="max-h-2/4 object-scale-down"
+    />
+
     <div class="h-full flex flex-col justify-between gap-1 overflow-hidden">
       <div class="flex flex-col gap-1 overflow-x-hidden overflow-y-auto pr-2">
         <div class="flex justify-between gap-2">
@@ -74,7 +83,7 @@ const description = computed(() => {
               <span>S</span>
             </Badge>
 
-            <Badge v-if="price" variant="outline" class="max-h-max">
+            <Badge v-if="price && !hidePrice" variant="outline" class="max-h-max">
               <span>{{ `$${price.toFixed(2)}` }}</span>
             </Badge>
           </div>

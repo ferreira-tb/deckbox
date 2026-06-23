@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { onKeyDown } from "@vueuse/core";
+import { useToggle } from "@vueuse/core";
 import type { Option } from "@tb-dev/utils";
-import { onCtrlKeyDown } from "@tb-dev/vue";
 import { useSettings } from "@/stores/settings";
 import { useDecks } from "@/composables/useDecks";
 import type { Db_CardLocalId } from "@/lib/bindings";
 import SelectDeck from "@/views/deck/SelectDeck.vue";
 import TrunkTable from "@/views/deck/TrunkTable.vue";
+import { onCtrlKeyDown, onKeyDown } from "@tb-dev/vue";
 import { Button, Input } from "@tb-dev/vue-components";
+import { useDatabase } from "@/composables/useDatabase";
+import DeckTestDialog from "@/views/deck/DeckTestDialog.vue";
 import { useCardsInTrunk } from "@/composables/useCardsInTrunk";
 import type { CardDiff, CardPlacement } from "@/lib/model/deck";
 import YgoCardTable from "@/components/ygo-card/YgoCardTable.vue";
@@ -35,13 +37,11 @@ const {
   updateDeck,
 } = useDecks();
 
+const { getCardByLocalId } = useDatabase();
 const cards = useCardsInTrunk();
+
 const selectedCardId = shallowRef<Option<Db_CardLocalId>>();
-const selectedCard = computed(() => {
-  return selectedCardId.value ?
-    cards.value.find((card) => card.id === selectedCardId.value) :
-    null;
-});
+const selectedCard = computed(() => getCardByLocalId(selectedCardId.value));
 
 const isExtraDeckCard = computed(() => {
   return selectedCard.value?.isExtraDeckCard();
@@ -64,26 +64,32 @@ const isValidDeckName = computed(() => {
   );
 });
 
+const searchValue = ref<Option<string>>();
+const [isTestDialogOpen, toggleTestDialog] = useToggle(false);
+const areKeyEventsEnabled = computed(() => !isTestDialogOpen.value);
+
 const disabled = computed(() => !canEdit.value || loading.value);
 
 const selectDeckKey = computed(() => {
   return `${decks.value.length}+${currentDeck.value?.name ?? ""}`;
 });
 
-const searchValue = ref<Option<string>>();
-
 onMounted(async () => {
   await nextTick();
   setCardFallback();
 });
 
-onCtrlKeyDown(["s", "S"], save);
-onCtrlKeyDown(["x", "X"], clear);
+onCtrlKeyDown(["s", "S"], save, { enabled: areKeyEventsEnabled });
+onCtrlKeyDown(["t", "T"], test, { enabled: areKeyEventsEnabled });
+onCtrlKeyDown(["x", "X"], clear, { enabled: areKeyEventsEnabled });
 
-// This must be imported from '@vueuse/core'.
-onKeyDown("1", (e) => void update(e.ctrlKey, "main"));
-onKeyDown("2", (e) => void update(e.ctrlKey, "extra"));
-onKeyDown("3", (e) => void update(e.ctrlKey, "side"));
+onKeyDown("1", () => update(false, "main"), { enabled: areKeyEventsEnabled });
+onKeyDown("2", () => update(false, "extra"), { enabled: areKeyEventsEnabled });
+onKeyDown("3", () => update(false, "side"), { enabled: areKeyEventsEnabled });
+
+onCtrlKeyDown("1", () => update(true, "main"), { enabled: areKeyEventsEnabled });
+onCtrlKeyDown("2", () => update(true, "extra"), { enabled: areKeyEventsEnabled });
+onCtrlKeyDown("3", () => update(true, "side"), { enabled: areKeyEventsEnabled });
 
 async function clear() {
   if (currentDeckId.value) {
@@ -116,6 +122,10 @@ async function save() {
   if (currentDeckId.value) {
     await saveDeck(currentDeckId.value);
   }
+}
+
+function test() {
+  toggleTestDialog();
 }
 
 async function update(shouldDecrease: boolean, placement: CardPlacement) {
@@ -165,9 +175,16 @@ function setCardFallback() {
     >
       <template #action>
         <div class="grid grid-cols-2 justify-center items-center gap-2">
-          <Button variant="outline" disabled>
-            <span>Test hand</span>
-          </Button>
+          <DeckTestDialog v-model:open="isTestDialogOpen" :deck="currentDeck">
+            <template #trigger>
+              <Button
+                variant="outline"
+                :disabled="disabled || !currentDeck || currentDeck.sumMainDeckCards() < 5"
+              >
+                <span>Test hand</span>
+              </Button>
+            </template>
+          </DeckTestDialog>
 
           <Button
             variant="outline"

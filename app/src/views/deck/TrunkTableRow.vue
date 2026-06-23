@@ -38,7 +38,7 @@ const rowClass = computed(() => {
   <TableRow
     :data-state="selectedCardId === card.id ? 'selected' : ''"
     :class="rowClass"
-    @click="() => (selectedCardId = card.id)"
+    @click="() => void (selectedCardId = card.id)"
   >
     <TableCell class="max-w-min p-0">
       <span class="px-2">{{ amount }}</span>

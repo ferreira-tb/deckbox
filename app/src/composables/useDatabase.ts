@@ -1,5 +1,6 @@
 import { handleError } from "@/lib/error";
 import { CardImpl } from "@/lib/model/card";
+import type { Option } from "@tb-dev/utils";
 import { tryInjectOrElse, useMutex } from "@tb-dev/vue";
 import { commands, type Db_CardId, type Db_CardLocalId } from "@/lib/bindings";
 import { computed, effectScope, type InjectionKey, markRaw, type Ref, shallowRef } from "vue";
@@ -47,12 +48,22 @@ function create() {
     }
   }
 
-  function getCard(cardId: Db_CardId) {
-    return cards.value.find((card) => card.cardId === cardId) ?? null;
+  function getCard(cardId: Option<Db_CardId>) {
+    if (cardId) {
+      return cards.value.find((card) => card.cardId === cardId) ?? null;
+    }
+    else {
+      return null;
+    }
   }
 
-  function getCardByLocalId(localId: Db_CardLocalId) {
-    return cards.value.find((card) => card.id === localId) ?? null;
+  function getCardByLocalId(localId: Option<Db_CardLocalId>) {
+    if (localId) {
+      return cards.value.find((card) => card.id === localId) ?? null;
+    }
+    else {
+      return null;
+    }
   }
 
   function withCard<T>(cardId: Db_CardId, fn: (card: CardImpl) => T): T | null {
