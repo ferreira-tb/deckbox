@@ -4,7 +4,9 @@ use std::sync::LazyLock;
 use tap::Pipe;
 
 static HTTP: LazyLock<Client> = LazyLock::new(|| {
-  let user_agent = format!("deckbox/{}", env!("CARGO_PKG_VERSION"));
+  let repository = "https://github.com/ferreira-tb/deckbox";
+  let user_agent = format!("deckbox/{} ({})", env!("CARGO_PKG_VERSION"), repository);
+
   Client::builder()
     .use_rustls_tls()
     .https_only(true)

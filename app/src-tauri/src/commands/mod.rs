@@ -5,6 +5,7 @@ pub mod trunk;
 pub mod wishlist;
 
 use crate::error::CmdResult;
+use crate::manager::ManagerExt as _;
 use crate::settings;
 use crate::state::database_file;
 use deckbox_database::sql_types::card_id::Db_CardId;
@@ -82,7 +83,11 @@ pub async fn open_settings_file(app: AppHandle) -> CmdResult<()> {
 #[tauri::command]
 #[specta::specta]
 pub async fn open_store_website(app: AppHandle, card_id: Db_CardId) -> CmdResult<()> {
-  let mut card = card::get_card_by_card_id(app, card_id).await?;
+  let mut card = app
+    .database()
+    .get_card_by_card_id(&card_id)
+    .await?;
+
   card.name = card
     .name
     .chars()
@@ -97,6 +102,39 @@ pub async fn open_store_website(app: AppHandle, card_id: Db_CardId) -> CmdResult
     .append_pair("orderBy", "3");
 
   open::that_detached(url.as_str())?;
+
+  Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn open_yugipedia(app: AppHandle, card_id: Db_CardId) -> CmdResult<()> {
+  let card = app
+    .database()
+    .get_card_by_card_id(&card_id)
+    .await?;
+
+  let mut url = Url::parse("https://yugipedia.com/index.php")?;
+  url
+    .query_pairs_mut()
+    .append_pair("search", &card.name);
+
+  open::that_detached(url.as_str())?;
+
+  Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn open_ygoprodeck(app: AppHandle, card_id: Db_CardId) -> CmdResult<()> {
+  if let Some(url) = app
+    .database()
+    .get_card_by_card_id(&card_id)
+    .await?
+    .ygoprodeck_url
+  {
+    open::that_detached(url.as_str())?;
+  }
 
   Ok(())
 }

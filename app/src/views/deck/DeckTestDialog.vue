@@ -104,6 +104,7 @@ function selectAt(idx: number) {
           hide-price
           class="max-w-72 lg:max-w-80 h-[50vh]!"
         />
+
         <div class="size-full grid items-center gap-2 select-none" :style="gridStyle">
           <img
             v-for="(card, idx) of hand"

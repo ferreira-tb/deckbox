@@ -42,13 +42,17 @@ async function onUpdateTrunkEntry(cardId: Db_CardId) {
       </template>
 
       <template #sideAction="{ cardId }">
-        <div class="grid grid-cols-2 justify-center items-center gap-2">
+        <div class="grid grid-cols-3 justify-center items-center gap-2">
           <Button
             variant="outline"
             :disabled="!canEdit || isTrunkLoading"
             @click="() => onUpdateTrunkEntry(cardId)"
           >
             <span>Trunk</span>
+          </Button>
+
+          <Button variant="outline" @click="() => commands.openYugipedia(cardId)">
+            <span>Wiki</span>
           </Button>
 
           <Button variant="outline" @click="() => commands.openStoreWebsite(cardId)">

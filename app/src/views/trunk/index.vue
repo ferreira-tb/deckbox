@@ -58,8 +58,8 @@ async function onUpdateTrunkEntry(e: MouseEvent, cardId: Db_CardId) {
             <span v-else>Trunk ({{ inTrunk }})</span>
           </Button>
 
-          <Button variant="outline" disabled>
-            <span>Deck</span>
+          <Button variant="outline" @click="() => commands.openYugipedia(cardId)">
+            <span>Wiki</span>
           </Button>
 
           <Button variant="outline" @click="() => commands.openStoreWebsite(cardId)">
