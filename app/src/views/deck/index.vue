@@ -181,6 +181,7 @@ async function onRowDblclick(card: CardImpl) {
     <YgoCardGridSide
       v-if="selectedCard"
       :card="selectedCard"
+      hide-price
       class="w-80 min-w-80"
     >
       <template #action>
