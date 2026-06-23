@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { useToggle } from "@vueuse/core";
 import type { Option } from "@tb-dev/utils";
 import { useSettings } from "@/stores/settings";
+import type { CardImpl } from "@/lib/model/card";
 import { useDecks } from "@/composables/useDecks";
 import type { Db_CardLocalId } from "@/lib/bindings";
 import SelectDeck from "@/views/deck/SelectDeck.vue";
@@ -92,34 +93,34 @@ onCtrlKeyDown("2", () => update(true, "extra"), { enabled: areKeyEventsEnabled }
 onCtrlKeyDown("3", () => update(true, "side"), { enabled: areKeyEventsEnabled });
 
 async function clear() {
-  if (currentDeckId.value) {
+  if (currentDeckId.value && !disabled.value) {
     await clearDeck(currentDeckId.value);
   }
 }
 
 async function create() {
   const name = deckName.value?.trim();
-  if (name && !hasDeckName(name)) {
+  if (name && !hasDeckName(name) && !disabled.value) {
     await createDeck({ name });
     deckName.value = null;
   }
 }
 
 async function remove() {
-  if (currentDeckId.value) {
+  if (currentDeckId.value && !disabled.value) {
     await removeDeck(currentDeckId.value);
   }
 }
 
 async function rename() {
   const name = deckName.value?.trim();
-  if (currentDeckId.value && name && !hasDeckName(name)) {
+  if (currentDeckId.value && name && !hasDeckName(name) && !disabled.value) {
     await renameDeck(currentDeckId.value, name);
   }
 }
 
 async function save() {
-  if (currentDeckId.value) {
+  if (currentDeckId.value && !disabled.value) {
     await saveDeck(currentDeckId.value);
   }
 }
@@ -164,6 +165,15 @@ function setCardFallback() {
     sideDeckCards.value.at(0)?.card_id ??
     cards.value.at(0)?.id;
 }
+
+async function onRowDblclick(card: CardImpl) {
+  if (card.isExtraDeckCard()) {
+    await update(false, "extra");
+  }
+  else {
+    await update(false, "main");
+  }
+}
 </script>
 
 <template>
@@ -171,7 +181,7 @@ function setCardFallback() {
     <YgoCardGridSide
       v-if="selectedCard"
       :card="selectedCard"
-      class="max-w-72 lg:max-w-80"
+      class="w-80 min-w-80"
     >
       <template #action>
         <div class="grid grid-cols-2 justify-center items-center gap-2">
@@ -179,7 +189,7 @@ function setCardFallback() {
             <template #trigger>
               <Button
                 variant="outline"
-                :disabled="disabled || !currentDeck || currentDeck.sumMainDeckCards() < 5"
+                :disabled="loading || !currentDeck || currentDeck.sumMainDeckCards() < 5"
               >
                 <span>Test hand</span>
               </Button>
@@ -234,6 +244,7 @@ function setCardFallback() {
           :minlength="1"
           :maxlength="30"
           @keydown.stop
+          @keydown.enter.stop.prevent="create"
         />
         <Button
           variant="default"
@@ -289,7 +300,12 @@ function setCardFallback() {
       </div>
 
       <div class="size-full pb-4 overflow-hidden">
-        <TrunkTable v-model="selectedCardId" :cards :search-value />
+        <TrunkTable
+          v-model="selectedCardId"
+          :cards
+          :search-value
+          @row-dblclick="onRowDblclick"
+        />
       </div>
 
       <div class="grid grid-cols-3 gap-2 p-2">

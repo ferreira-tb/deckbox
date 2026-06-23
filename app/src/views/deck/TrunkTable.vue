@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Option } from "@tb-dev/utils";
 import { FuseWorker } from "fuse.js/worker";
 import { watchDebounced } from "@vueuse/core";
 import type { CardImpl } from "@/lib/model/card";
 import type { Db_CardLocalId } from "@/lib/bindings";
+import type { MaybePromise, Option } from "@tb-dev/utils";
 import { Table, TableBody } from "@tb-dev/vue-components";
 import TrunkTableRow from "@/views/deck/TrunkTableRow.vue";
 import { nextTick, onMounted, onUnmounted, shallowRef, watch } from "vue";
@@ -11,6 +11,7 @@ import { nextTick, onMounted, onUnmounted, shallowRef, watch } from "vue";
 interface Props {
   cards: readonly CardImpl[];
   searchValue: Option<string>;
+  onRowDblclick: (card: CardImpl) => MaybePromise<void>;
 }
 
 const props = defineProps<Props>();
@@ -65,7 +66,13 @@ async function updateShownCards() {
   <Table class="size-full w-72 lg:w-80 overflow-x-hidden overflow-y-auto">
     <TableBody>
       <template v-for="card of shownCards" :key="card.cardId">
-        <TrunkTableRow v-model="selectedCardId" :card />
+        <TrunkTableRow
+          v-model="selectedCardId"
+          :card
+          :selected-card-id
+          @click="() => void (selectedCardId = card.id)"
+          @dblclick="() => void onRowDblclick(card)"
+        />
       </template>
     </TableBody>
   </Table>
