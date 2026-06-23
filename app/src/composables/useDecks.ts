@@ -3,7 +3,7 @@ import { compare } from "@/lib/intl";
 import { clamp } from "es-toolkit/math";
 import { handleError } from "@/lib/error";
 import type { Option } from "@tb-dev/utils";
-import { mapAsync } from "es-toolkit/array";
+import { watchImmediate } from "@vueuse/core";
 import { useTrunk } from "@/composables/useTrunk";
 import { DeckCardImpl } from "@/lib/model/deck-card";
 import { useDatabase } from "@/composables/useDatabase";
@@ -70,14 +70,16 @@ function create() {
 
   const { locked, ...mutex } = useMutex();
 
+  watchImmediate(currentDeck, async (deck) => {
+    await deck?.load();
+  });
+
   async function loadDecks() {
     try {
       await mutex.acquire();
       const result = await commands.getDecks();
-      decks.value = await mapAsync(result, async (deck) => {
-        const impl = new DeckImpl(deck);
-        await impl.load();
-        return impl;
+      decks.value = result.map((deck) => {
+        return new DeckImpl(deck);
       });
 
       sortDecks();
