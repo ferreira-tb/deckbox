@@ -3,6 +3,7 @@ use crate::error::{Error, Result};
 use crate::model::card::{Db_Card, Db_NewCard};
 use crate::sql_types::card_id::Db_CardId;
 use crate::sql_types::card_type::Db_CardType;
+use crate::sql_types::num::Db_CardLocalId;
 use crate::sql_types::zoned::Db_Zoned;
 use diesel::prelude::*;
 use diesel_async::RunQueryDsl;
@@ -50,6 +51,18 @@ impl Database {
       .await?;
 
     Ok(archetypes.into_iter().flatten().collect())
+  }
+
+  pub async fn get_card(&self, card_id: Db_CardLocalId) -> Result<Db_Card> {
+    use crate::schema::card;
+
+    let mut conn = self.0.lock().await;
+    card::table
+      .find(card_id)
+      .select(Db_Card::as_select())
+      .first(&mut *conn)
+      .await
+      .map_err(Error::from)
   }
 
   pub async fn get_card_by_card_id(&self, card_id: &Db_CardId) -> Result<Db_Card> {

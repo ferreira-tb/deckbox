@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { go } from "@/router";
-import { onMounted } from "vue";
+import { useRoute } from "vue-router";
 import { commands } from "@/lib/bindings";
 import { handleError } from "@/lib/error";
+import { go, type Route } from "@/router";
+import { computed, onMounted } from "vue";
 import { useColorMode } from "@vueuse/core";
 import Loading from "@/components/Loading.vue";
 import { throttle } from "es-toolkit/function";
@@ -30,6 +31,15 @@ const { loadWishlist } = useWishlist();
 
 const isDev = globalThis.__DEBUG_ASSERTIONS__;
 const version = globalThis.__VERSION__;
+
+const route = useRoute();
+const canExportJson = computed(() => {
+  const routeName = route.name as Route;
+  return (
+    routeName === "deck" ||
+    routeName === "trunk"
+  );
+});
 
 useColorMode({
   initialValue: "dark",
@@ -74,6 +84,20 @@ async function loadData() {
     loadWishlist(),
   ]);
 }
+
+async function exportJson() {
+  // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+  switch (route.name as Route) {
+    case "deck": {
+      await commands.exportDecks();
+      break;
+    }
+    case "trunk": {
+      await commands.exportTrunk();
+      break;
+    }
+  }
+}
 </script>
 
 <template>
@@ -103,7 +127,7 @@ async function loadData() {
           <Button variant="outline" :disabled="locked" @click="commands.exportDatabaseFile">
             <DatabaseBackupIcon class="size-6" />
           </Button>
-          <Button variant="outline" :disabled="locked" @click="commands.exportTrunk">
+          <Button variant="outline" :disabled="locked || !canExportJson" @click="exportJson">
             <FileInputIcon class="size-6" />
           </Button>
           <Button variant="outline" @click="commands.openSettingsFile">

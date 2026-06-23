@@ -78,6 +78,7 @@ pub async fn export_trunk(app: AppHandle) -> CmdResult<()> {
         "name": card.name,
         "name_pt": card.name_pt,
         "archetype": card.archetype,
+        "ygoprodeck_url": card.ygoprodeck_url,
         "amount": amount,
       })
     };
@@ -91,7 +92,8 @@ pub async fn export_trunk(app: AppHandle) -> CmdResult<()> {
       .collect_vec()
       .pipe_ref(serde_json::to_vec)?;
 
-    fs::write(dir.join("trunk.json"), cards).await?;
+    let path = dir.join("trunk.json");
+    fs::write(path, cards).await?;
   }
 
   Ok(())

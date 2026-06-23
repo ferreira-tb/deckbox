@@ -38,6 +38,7 @@ pub struct Db_Card {
   pub price: Option<String>,
   pub name_pt: Option<String>,
   pub description_pt: Option<String>,
+  pub ygoprodeck_url: Option<Db_Url>,
 }
 
 #[derive(Insertable, Clone, Debug)]

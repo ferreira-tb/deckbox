@@ -29,9 +29,9 @@ export class CardImpl implements Db_Card {
   public readonly imageUrlCropped: string;
   public readonly imageUrlSmall: string;
   public readonly price: string | null;
-
   public readonly namePt: string | null;
   public readonly descriptionPt: string | null;
+  public readonly ygoprodeckUrl: string | null;
 
   public readonly imagePath: string;
   public readonly imagePathCropped: string;
@@ -56,9 +56,9 @@ export class CardImpl implements Db_Card {
     this.imageUrlCropped = card.imageUrlCropped;
     this.imageUrlSmall = card.imageUrlSmall;
     this.price = card.price;
-
     this.namePt = card.namePt;
     this.descriptionPt = card.descriptionPt;
+    this.ygoprodeckUrl = card.ygoprodeckUrl;
 
     this.imagePath = path(__DECKBOX_IMG_DIR__, this.cardId);
     this.imagePathCropped = path(__DECKBOX_IMG_DIR_CROPPED__, this.cardId);

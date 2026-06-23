@@ -3,6 +3,7 @@ use crate::http::get_bytes;
 use crate::manager::ManagerExt;
 use deckbox_database::model::card::{Db_Card, Db_NewCard};
 use deckbox_database::sql_types::card_id::Db_CardId;
+use deckbox_database::sql_types::num::Db_CardLocalId;
 use deckbox_database::sql_types::url::Db_Url;
 use futures::try_join;
 use nil_util::iter::IterExt;
@@ -139,6 +140,16 @@ pub async fn get_archetypes(app: AppHandle) -> CmdResult<Vec<String>> {
   app
     .database()
     .get_archetypes()
+    .await
+    .map_err(Into::into)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_card(app: AppHandle, card_id: Db_CardLocalId) -> CmdResult<Db_Card> {
+  app
+    .database()
+    .get_card(card_id)
     .await
     .map_err(Into::into)
 }
