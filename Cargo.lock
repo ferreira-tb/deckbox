@@ -811,7 +811,7 @@ dependencies = [
 
 [[package]]
 name = "deckbox"
-version = "1.4.0"
+version = "1.4.1"
 dependencies = [
  "anyhow",
  "deckbox-database",
@@ -852,7 +852,7 @@ dependencies = [
 
 [[package]]
 name = "deckbox-database"
-version = "1.4.0"
+version = "1.4.1"
 dependencies = [
  "anyhow",
  "bon",
@@ -2663,9 +2663,9 @@ checksum = "650eef8c711430f1a879fdd01d4745a7deea475becfb90269c06775983bbf086"
 
 [[package]]
 name = "nil-env"
-version = "0.5.10"
+version = "0.5.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ed00ff9444b9d7185de23a7d70c19703db7a47593546982e65b86c9ca6343b3"
+checksum = "4c0663cc8935b4102e8a0d8e282788e250b6d05847bb7b37d4659dc8999397a4"
 dependencies = [
  "anyhow",
  "serde",
@@ -2675,9 +2675,9 @@ dependencies = [
 
 [[package]]
 name = "nil-log"
-version = "0.5.10"
+version = "0.5.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1ead6b704632fa0a68757e66a07f7943f2ba05177983b5b6f5080b108c6f19d7"
+checksum = "92b25ddd47b72009873cff42f7de19adf2dd2a6229af4759c216d0601d3e5ade"
 dependencies = [
  "anyhow",
  "bitflags 2.13.0",
@@ -2691,9 +2691,9 @@ dependencies = [
 
 [[package]]
 name = "nil-util"
-version = "0.5.10"
+version = "0.5.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c5499b7ca4a7283de4f4674453097d8d9e7674a3c7001965dca3f5da0b455fdd"
+checksum = "1c7fb5184fda68c2ff1af6a84f4ef555e4632e008b5ad202d5477a2201814bcc"
 
 [[package]]
 name = "nix"
@@ -4843,9 +4843,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-prevent-default"
-version = "5.0.1"
+version = "5.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1908b4ad1f7c33c42654f66b066b823fb4121cd130fa3bcd9ce5ff8fe74f1990"
+checksum = "674bac5c9831f4ca7ae42840768ac968b76353dcbe30bb0aad149c56f0be1389"
 dependencies = [
  "bitflags 2.13.0",
  "itertools 0.15.0",
