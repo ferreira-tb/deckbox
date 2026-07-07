@@ -28,7 +28,8 @@ const hand = shallowRef<readonly CardImpl[]>([]);
 
 const cards = computed(() => {
   const ids: Db_CardLocalId[] = [];
-  for (const card of (props.deck?.cards ?? [])) {
+  const deckCards = props.deck?.cards ?? [];
+  for (const card of deckCards) {
     if (card.main > 0) {
       for (let i = 0; i < card.main; i++) {
         ids.push(card.card_id);

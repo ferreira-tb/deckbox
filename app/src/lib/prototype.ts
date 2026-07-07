@@ -1,4 +1,5 @@
 /* eslint-disable no-extend-native */
+/* eslint-disable unicorn/no-unreadable-new-expression */
 import { handleError } from "@/lib/error";
 import type { Option } from "@tb-dev/utils";
 
