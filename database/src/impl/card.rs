@@ -25,6 +25,7 @@ impl Database {
         card::image_url.eq(&new_card.image_url),
         card::image_url_cropped.eq(&new_card.image_url_cropped),
         card::image_url_small.eq(&new_card.image_url_small),
+        card::name.eq(&new_card.name),
         card::name_pt.eq(&new_card.name_pt),
         card::ocg_date.eq(&new_card.ocg_date),
         card::price.eq(&new_card.price),
