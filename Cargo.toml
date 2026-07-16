@@ -3,9 +3,9 @@ resolver = "3"
 members = ["app/src-tauri", "database"]
 
 [workspace.package]
-version = "1.4.3"
+version = "1.4.4"
 edition = "2024"
-rust-version = "1.98"
+rust-version = "1.99"
 license = "GPL-3.0-only"
 
 [profile.release]
@@ -30,7 +30,7 @@ bon = "3.9"
 futures = "0.3"
 itertools = "0.15"
 mimalloc = "0.1"
-nil-log = "=0.6.2"
+nil-log = "=0.6.8"
 num-traits = "=0.2.19"
 serde_json = "1.0"
 specta-typescript = "=0.0.9"
@@ -77,12 +77,12 @@ version = "0.37"
 features = ["bundled"]
 
 [workspace.dependencies.nil-util]
-version = "=0.6.2"
+version = "=0.6.8"
 default-features = false
 features = ["iter"]
 
 [workspace.dependencies.open]
-version = "5.3"
+version = "5.4"
 features = ["shellexecute-on-windows"]
 
 [workspace.dependencies.reqwest]
