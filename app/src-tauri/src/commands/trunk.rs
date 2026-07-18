@@ -77,9 +77,11 @@ pub async fn export_trunk(app: AppHandle) -> CmdResult<()> {
         "card_id": card.card_id,
         "name": card.name,
         "name_pt": card.name_pt,
+        "description": card.description,
         "archetype": card.archetype,
         "ygoprodeck_url": card.ygoprodeck_url,
         "amount": amount,
+        "banlist_status": card.banlist_status
       })
     };
 

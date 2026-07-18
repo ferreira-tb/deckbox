@@ -3,7 +3,7 @@ resolver = "3"
 members = ["app/src-tauri", "database"]
 
 [workspace.package]
-version = "1.4.4"
+version = "1.5.0"
 edition = "2024"
 rust-version = "1.99"
 license = "GPL-3.0-only"
@@ -103,7 +103,7 @@ version = "0.28"
 features = ["derive"]
 
 [workspace.dependencies.tauri-plugin-pinia]
-version = "4.2"
+version = "5.0"
 features = ["marshaler-toml", "preserve-order"]
 
 [workspace.dependencies.tauri-plugin-prevent-default]
@@ -115,7 +115,7 @@ version = "=2.0.0-rc.21"
 features = ["derive", "typescript"]
 
 [workspace.dependencies.tokio]
-version = "1.52"
+version = "1.53"
 features = ["full"]
 
 [workspace.dependencies.tracing]
