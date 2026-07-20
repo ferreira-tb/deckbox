@@ -75,12 +75,13 @@ pub async fn export_trunk(app: AppHandle) -> CmdResult<()> {
     let to_json = |(card, amount): (Db_Card, Db_TrunkEntryAmount)| {
       json!({
         "card_id": card.card_id,
+        "amount": amount,
         "name": card.name,
         "name_pt": card.name_pt,
         "description": card.description,
+        "card_type": card.card_type,
         "archetype": card.archetype,
         "ygoprodeck_url": card.ygoprodeck_url,
-        "amount": amount,
         "banlist_status": card.banlist_status
       })
     };
