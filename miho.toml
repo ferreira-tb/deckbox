@@ -2,9 +2,4 @@
 exclude = []
 
 [update]
-exclude = [
-  "reqwest",
-  "specta",
-  "specta-typescript",
-  "tauri-specta",
-]
+exclude = ["reqwest", "specta", "specta-typescript", "tauri-specta", "typescript"]

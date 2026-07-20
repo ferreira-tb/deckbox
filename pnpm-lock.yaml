@@ -20,8 +20,8 @@ importers:
         specifier: '=2.11.1'
         version: 2.11.1
       '@tauri-apps/plugin-dialog':
-        specifier: '=2.7.1'
-        version: 2.7.1
+        specifier: '=2.7.2'
+        version: 2.7.2
       '@tauri-apps/plugin-fs':
         specifier: '=2.5.1'
         version: 2.5.1
@@ -44,8 +44,8 @@ importers:
         specifier: '=5.0.0'
         version: 5.0.0(@vue/devtools-api@8.1.5)(typescript@6.0.3)
       '@tb-dev/utils':
-        specifier: '=8.0.0'
-        version: 8.0.0
+        specifier: '=8.1.0'
+        version: 8.1.0
       '@tb-dev/vue':
         specifier: '=4.0.28'
         version: 4.0.28(typescript@6.0.3)
@@ -548,8 +548,8 @@ packages:
     engines: {node: '>= 10'}
     hasBin: true
 
-  '@tauri-apps/plugin-dialog@2.7.1':
-    resolution: {integrity: sha512-OK1UBXYt+ojcmxMktzzuyonYIFta8CmAASpX+CA+DTGK24KlHjhYI6x2iOJ/TjZF4N7/ACK1oFmEOjIY9IhzOQ==}
+  '@tauri-apps/plugin-dialog@2.7.2':
+    resolution: {integrity: sha512-pX0IGm1I3I6wc+zeKYcq1GSqogK6okCNX5fOdaNU5ab1AjGS6l1E5wFNjEb7meg7ZFSp0JUs+0jQGQNyOvLrsg==}
 
   '@tauri-apps/plugin-fs@2.5.1':
     resolution: {integrity: sha512-9Lz+Jopp6QyeEWhlpkMx4R/+P9HgR+AVAI4vOZhlT8Xaymtz8iVI/Ov984/XTqgJz/5gz5NretqPB/XEMS3NhQ==}
@@ -578,8 +578,8 @@ packages:
   '@tb-dev/eslint-config@10.2.1':
     resolution: {integrity: sha512-1cbIXr4Ei7esZwrpIicV7CDY14uJrhgsGiyGJB1AP+eKOIXbu/Furg5TIz9kzg71eMlKxo6QrUdnJ1PoqM3Wog==}
 
-  '@tb-dev/utils@8.0.0':
-    resolution: {integrity: sha512-4LbqQItjuoCv30yHTXJ/Zt+j4RdDqKz+jZi/0+9BMWt53AcTA9pV1lUWGjTbX4ekCvq/pfdH1R2TjLQ62n2Paw==}
+  '@tb-dev/utils@8.1.0':
+    resolution: {integrity: sha512-MMmyX8KL+062gpvrqzqXivHcC90BjPl4YzDjgV/6TaoXDEcP9AoTy7er37cnJBcDJjU0XipBiQTQpH2Vp21rug==}
 
   '@tb-dev/vue-components@7.1.28':
     resolution: {integrity: sha512-lFBglYUJAY2+fdj1s8kJ3httvKREM8E9HxWa03khCKBcAdC3yGWefoJr0eWoMVorkcauJR5nJsnxJPNdndbmXg==}
@@ -2033,7 +2033,7 @@ snapshots:
       '@tauri-apps/cli-win32-ia32-msvc': 2.11.4
       '@tauri-apps/cli-win32-x64-msvc': 2.11.4
 
-  '@tauri-apps/plugin-dialog@2.7.1':
+  '@tauri-apps/plugin-dialog@2.7.2':
     dependencies:
       '@tauri-apps/api': 2.11.1
 
@@ -2091,14 +2091,14 @@ snapshots:
       - supports-color
       - typescript
 
-  '@tb-dev/utils@8.0.0':
+  '@tb-dev/utils@8.1.0':
     dependencies:
       es-toolkit: 1.49.0
 
   '@tb-dev/vue-components@7.1.28(@vue/compiler-sfc@3.5.40)(pinia@4.0.2)(rolldown@1.1.5)(typescript@6.0.3)(vite@8.1.5)':
     dependencies:
       '@lucide/vue': 1.25.0(vue@3.5.40)
-      '@tb-dev/utils': 8.0.0
+      '@tb-dev/utils': 8.1.0
       '@tb-dev/vue': 4.0.28(typescript@6.0.3)
       '@tb-dev/vue-sonner': 1.0.8(typescript@6.0.3)
       '@vueuse/core': 14.3.0(vue@3.5.40)
@@ -2134,7 +2134,7 @@ snapshots:
 
   '@tb-dev/vue@4.0.28(typescript@6.0.3)':
     dependencies:
-      '@tb-dev/utils': 8.0.0
+      '@tb-dev/utils': 8.1.0
       '@vueuse/core': 14.3.0(vue@3.5.40)
       es-toolkit: 1.49.0
       vue: 3.5.40(typescript@6.0.3)
