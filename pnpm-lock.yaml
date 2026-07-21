@@ -41,8 +41,8 @@ importers:
         specifier: '=2.10.1'
         version: 2.10.1
       '@tauri-store/pinia':
-        specifier: '=5.0.0'
-        version: 5.0.0(@vue/devtools-api@8.1.5)(typescript@6.0.3)
+        specifier: '=5.0.1'
+        version: 5.0.1(@vue/devtools-api@8.1.5)(typescript@6.0.3)
       '@tb-dev/utils':
         specifier: '=8.1.0'
         version: 8.1.0
@@ -569,8 +569,8 @@ packages:
   '@tauri-apps/plugin-updater@2.10.1':
     resolution: {integrity: sha512-NFYMg+tWOZPJdzE/PpFj2qfqwAWwNS3kXrb1tm1gnBJ9mYzZ4WDRrwy8udzWoAnfGCHLuePNLY1WVCNHnh3eRA==}
 
-  '@tauri-store/pinia@5.0.0':
-    resolution: {integrity: sha512-kRN3LiwwIQLU0wVSRDv7gHGwCkJREXjj9pUMHt+B5ssXV/PA1mwma6MCjA2554cvnVI0ATKjviZZvVCrqRnBWw==}
+  '@tauri-store/pinia@5.0.1':
+    resolution: {integrity: sha512-QGhyrSyAmDBZNmZs9r8hFFEZ9eYXtbTzkFxVs9eOVoxygz2/mRm9Q+rPTr0O9ShFU1QATe0YfPgv2OmAQtFKAA==}
 
   '@tauri-store/shared@0.10.5':
     resolution: {integrity: sha512-ZWHJ8NEo8Ejx1Hz7szJfSGh+JGQgqA+I3nnPzGpqIQ2m4mCCWRO8CJ5AaY+7DjZKrQpJzlHsiuWTY3k3J1TZOA==}
@@ -2061,7 +2061,7 @@ snapshots:
     dependencies:
       '@tauri-apps/api': 2.11.1
 
-  '@tauri-store/pinia@5.0.0(@vue/devtools-api@8.1.5)(typescript@6.0.3)':
+  '@tauri-store/pinia@5.0.1(@vue/devtools-api@8.1.5)(typescript@6.0.3)':
     dependencies:
       '@tauri-apps/api': 2.11.1
       '@tauri-store/shared': 0.10.5
