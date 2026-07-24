@@ -831,7 +831,7 @@ dependencies = [
 
 [[package]]
 name = "deckbox"
-version = "1.6.1"
+version = "1.6.2"
 dependencies = [
  "anyhow",
  "deckbox-database",
@@ -872,7 +872,7 @@ dependencies = [
 
 [[package]]
 name = "deckbox-database"
-version = "1.6.1"
+version = "1.6.2"
 dependencies = [
  "anyhow",
  "bon",
