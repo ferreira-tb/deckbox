@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script vapor lang="ts">
 import { computed } from "vue";
 import type { Option } from "@tb-dev/utils";
 import type { CardImpl } from "@/lib/model/card";
