@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script vapor lang="ts">
 import { cn } from "@tb-dev/vue-components";
 import { LoaderCircleIcon } from "@lucide/vue";
 import type { Component, HTMLAttributes } from "vue";

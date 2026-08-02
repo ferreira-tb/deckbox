@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script vapor lang="ts">
 import { useRoute } from "vue-router";
 import { commands } from "@/lib/bindings";
 import { handleError } from "@/lib/error";

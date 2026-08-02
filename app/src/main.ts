@@ -3,13 +3,13 @@ import "@/assets/style/base.css";
 import "@/assets/style/main.css";
 import "@/lib/prototype";
 import App from "@/App.vue";
-import { createApp } from "vue";
 import { router } from "@/router";
 import { createPinia } from "pinia";
 import { commands } from "@/lib/bindings";
 import { handleError } from "@/lib/error";
 import { checkForUpdates } from "@/lib/updater";
 import { TauriPluginPinia } from "@tauri-store/pinia";
+import { createVaporApp, vaporInteropPlugin } from "vue";
 import { setCurrentApp, setErrorHandler } from "@tb-dev/vue";
 
 if (__DEBUG_ASSERTIONS__ && !Object.hasOwn(globalThis, "commands")) {
@@ -21,7 +21,7 @@ if (__DEBUG_ASSERTIONS__ && !Object.hasOwn(globalThis, "commands")) {
   });
 }
 
-const app = createApp(App);
+const app = createVaporApp(App);
 const pinia = createPinia();
 
 pinia.use(
@@ -34,6 +34,7 @@ pinia.use(
 setCurrentApp(app);
 setErrorHandler(handleError, app);
 
+app.use(vaporInteropPlugin);
 app.use(router);
 app.use(pinia);
 

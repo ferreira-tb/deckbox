@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script vapor lang="ts">
 import { storeToRefs } from "pinia";
 import { sessionRef } from "@tb-dev/vue";
 import { useSettings } from "@/stores/settings";
