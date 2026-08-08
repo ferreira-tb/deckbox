@@ -34,14 +34,14 @@ fn script(app: &AppHandle) -> Result<String> {
     ($name:literal, $value:expr) => {{
       let name = $name;
       let value = json!($value);
-      let snippet = format! {"
-        Object.defineProperty(window, '{name}', {{
+      let snippet = format!(
+        "Object.defineProperty(window, '{name}', {{
           configurable: false,
           enumerable: true,
           writable: false,
           value: {value},
-        }});
-      "};
+        }});"
+      );
 
       script.push_str(&snippet);
     }};
