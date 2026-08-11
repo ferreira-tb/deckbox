@@ -1,4 +1,4 @@
-<script vapor lang="ts">
+<script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useToggle } from "@vueuse/core";
 import type { Option } from "@tb-dev/utils";
