@@ -1,4 +1,4 @@
-<script vapor lang="ts">
+<script setup lang="ts">
 import { FuseWorker } from "fuse.js/worker";
 import { watchDebounced } from "@vueuse/core";
 import type { CardImpl } from "@/lib/model/card";
