@@ -1,4 +1,4 @@
-<script vapor lang="ts">
+<script setup lang="ts">
 import { Button, Pagination, PaginationEllipsis, PaginationList, PaginationListItem } from "@tb-dev/vue-components";
 
 interface Props {

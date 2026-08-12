@@ -1,4 +1,4 @@
-<script vapor lang="ts">
+<script setup lang="ts">
 import type { Option } from "@tb-dev/utils";
 import type { Db_CardLocalId } from "@/lib/bindings";
 import type { DeckCardImpl } from "@/lib/model/deck-card";
