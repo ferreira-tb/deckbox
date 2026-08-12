@@ -1,4 +1,4 @@
-<script vapor lang="ts">
+<script setup lang="ts">
 import { computed } from "vue";
 import type { Option } from "@tb-dev/utils";
 import { useSettings } from "@/stores/settings";

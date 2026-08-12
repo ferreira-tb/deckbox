@@ -1,4 +1,4 @@
-<script vapor lang="ts">
+<script setup lang="ts">
 import { cn } from "@tb-dev/vue-components";
 import type { CardImpl } from "@/lib/model/card";
 import { useWishlist } from "@/composables/useWishlist";
